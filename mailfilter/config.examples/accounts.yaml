@@ -1,0 +1,6 @@
+accounts:
+  test:
+    server: imap.server.de
+    username: imap@account.de
+    password: secure_password
+    sort_mailbox: INBOX

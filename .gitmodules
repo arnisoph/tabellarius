@@ -1,0 +1,3 @@
+[submodule "mailfilter/imapclient"]
+	path = mailfilter/imapclient
+	url = https://github.com/bechtoldt/imapclient.git

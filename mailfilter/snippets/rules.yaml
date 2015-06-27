@@ -1,0 +1,32 @@
+filters:
+  Spam:
+    commands:
+      - type: move
+        target: Test
+    filters:
+      - or:
+          - subject: test_subjectt
+          - subject: Git Notifier daily
+      - and:
+          - to: imapfilterasasd
+      - or:
+          - and:
+            - subject: test2
+          - and:
+            - subject: test2
+          - or:
+            - to: foo
+      - and:
+        - or:
+          - subject: foo
+          - to: imapfilter
+        - or:
+          - and:
+            - to: imapfilter
+
+
+settings:
+  actions:
+    move: Trash
+  or:
+    - subject: w00t
