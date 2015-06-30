@@ -31,7 +31,7 @@ import yaml
 import logging, logging.config
 
 # Third party libs
-sys.path.insert(0, './imapclient/imapclient') #TODO this is ugly, improve it
+sys.path.insert(0, './imapclient/imapclient')  #TODO this is ugly, improve it
 import argparse
 import email.message
 import pprint
@@ -40,30 +40,30 @@ from imapclient import IMAPClient
 
 class Mail(dict):
     mail_native = email.message.Message()
+
     def __init__(self, mail=None):
         self.mail_native = mail
         self.parse_email_object()
 
-
     def parse_email_object(self):
-        fields_to_store = {'to': None,
-                           'from': None,
-                           'subject': None,
-                           'return-path': None,
-                           'delivered-to': {'multiple': True},
-                           'date': None,
-                           'user-agent': None,
-                           'content-type': None,
-                           'message-id': None,
-                           'received': {'multiple': True}}
+        fields_to_store = {
+            'to': None,
+            'from': None,
+            'subject': None,
+            'return-path': None,
+            'delivered-to': {'multiple': True},
+            'date': None,
+            'user-agent': None,
+            'content-type': None,
+            'message-id': None,
+            'received': {'multiple': True}
+        }
 
         for field, properties in fields_to_store.items():
             if type(properties) is dict and properties.get('multiple', None):
                 self[field] = self.mail_native.get_all(field)
             else:
                 self[field] = self.mail_native.get(field)
-
-
 
 
 class RuleSet(object):
@@ -76,27 +76,20 @@ class RuleSet(object):
         self.imap = imap
         self.supported_rule_operators = ['or', 'and']
 
-
     def process(self):
         mail_uids = self.imap.search_mails(self.mailbox)
         mails = self.imap.fetch_mails(uids=mail_uids, mailbox=self.mailbox)
         match = False
         for uid, mail in mails.items():
-            self.logger.debug('Checking whether mail uid="%s"; message-id="%s"; subject="%s" matches to ruleset %s',
-                              uid,
-                              mail.get('message-id'),
-                              mail.get('subject'),
-                              self.name)
+            self.logger.debug('Checking whether mail uid="%s"; message-id="%s"; subject="%s" matches to ruleset %s', uid,
+                              mail.get('message-id'), mail.get('subject'), self.name)
             match = self.parse_ruleset(mail, self.ruleset)
             if match:
                 self.logger.debug('Ruleset matches!')
                 return self.apply_commands(uid, mail, self.mailbox)
 
-
     def apply_commands(self, uid, mail, mailbox):
-        self.logger.debug('Applying commands for mail message-id="%s" of ruleset %s',
-                          mail.get('message-id'),
-                          self.name)
+        self.logger.debug('Applying commands for mail message-id="%s" of ruleset %s', mail.get('message-id'), self.name)
 
         for command in self.commands:
             cmd_type = command.get('type')
@@ -109,7 +102,6 @@ class RuleSet(object):
                 self.imap.move_mail(mail, mailbox, cmd_target, set_flags=cmd_flags_set)
                 #mail.imap_move(imap_conn=imap_conn, target=command['target'])
 
-
     def parse_ruleset(self, mail, ruleset):
         for rule in ruleset:
             operator = sorted(rule.keys())[0]
@@ -117,7 +109,6 @@ class RuleSet(object):
             match = self.filter_match(mail, operator, conditions)
             if match:
                 return match
-
 
     def filter_match(self, mail, operator, conditions):
         #print('Check match: operator={0} conditions={1}'.format(operator, conditions))
@@ -176,11 +167,9 @@ class IMAP(object):
     def process_error(self, exception):
         self.logger.error('Catching IMAP exception: %s', exception)
 
-
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)
         return self.conn.select_folder(mailbox)
-
 
     def search_mails(self, mailbox, criteria='ALL'):
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
@@ -193,7 +182,6 @@ class IMAP(object):
             self.process_error(e)
             result = []
         return list(mail_uids)
-
 
     def fetch_raw_mails(self, uids, mailbox, return_fields=[b'RFC822']):
         if len(uids) == 0:
@@ -211,7 +199,6 @@ class IMAP(object):
             self.process_error(e)
         return mails
 
-
     def fetch_mails(self, uids, mailbox):
         if type(uids) is not list:
             uids = [uids]
@@ -225,70 +212,47 @@ class IMAP(object):
             mails[raw_uid] = Mail(mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))
         return mails
 
-
     def move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
         if self.test:
             self.logger.info('Would have moved mail message-id="%s" from "%s" to "%s", skipping because of beeing in testmode',
-                             mail.get('message-id'),
-                             source,
-                             destination)
+                             mail.get('message-id'), source, destination)
         else:
             self.select_mailbox(source)
             self._move_mail(mail, source, destination, delete_old, expunge, set_flags)
 
-
     def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
-       self.logger.info('Moving mail message-id="%s" from "%s" to "%s"',
-                        mail.get('message-id'),
-                        source,
-                        destination)
-       result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
-       uid = result[0]
+        self.logger.info('Moving mail message-id="%s" from "%s" to "%s"', mail.get('message-id'), source, destination)
+        result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
+        uid = result[0]
 
-       self._copy_mail(uid, destination)
+        self._copy_mail(uid, destination)
 
-       if delete_old:
-           self._delete_mails(uid)
+        if delete_old:
+            self._delete_mails(uid)
 
-           if expunge:
-               self._expunge()
+            if expunge:
+                self._expunge()
 
-       if type(set_flags) is list:
-           self.select_mailbox(destination)
-           uids = self.search_mails(destination, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
-           self._set_mailflags(uids, set_flags)
-
+        if type(set_flags) is list:
+            self.select_mailbox(destination)
+            uids = self.search_mails(destination, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
+            self._set_mailflags(uids, set_flags)
 
     def _set_mailflags(self, uids, flags=[]):
         self.logger.debug('Setting flags=%s on mails uid=%s', flags, uids)
         return self.conn.set_flags(uids, flags)
 
-
     def _expunge(self):
         self.logger.info('Expunge mails')
         return self.conn.expunge()
-
 
     def _delete_mails(self, uids):
         self.logger.info('Deleting mails uid="%s"', uids)
         return self.conn.delete_messages(uids)
 
-
     def _copy_mail(self, uids, destination):
-        self.logger.info('Copying mails uid="%s" to "%s"',
-                         uids,
-                         destination)
+        self.logger.info('Copying mails uid="%s" to "%s"', uids, destination)
         return self.conn.copy(uids, destination)
-
-
-
-        #result = imap_conn.copy(mail_uid, target)
-        #result = imap_conn.delete_messages(mail_uid)
-        #result = imap_conn.expunge()
-        #result = imap_conn.select_folder(target)
-        #result = imap_conn.search(criteria='HEADER Message-ID "{0}"'.format(mail.get('message-id')))
-        #mail_uid = result[0]
-        #result = imap_conn.remove_flags(mail_uid, '\\Seen')
 
 
 def check_re_match(handle, pattern):
@@ -305,20 +269,15 @@ def clean_field_names(field):
         return (field, field, False)
 
 
-
-
 class ConfigParser(object):
     def __init__(self, confdir, config=None):
         self.confdir = confdir
 
         if not config:
-            config = {'settings': {},
-                      'accounts': {},
-                      'filters': {}}
+            config = {'settings': {}, 'accounts': {}, 'filters': {}}
         self.config = config
 
         self.parse_directory()
-
 
     def parse_directory(self):
         for dirname, subdirectories, files in os.walk(self.confdir):
@@ -360,8 +319,16 @@ def main():
 
     # General args
     parser.add_argument('-V', action='version', version='%(prog)s {version}'.format(version=version))
-    parser.add_argument('-t', '--test', action='store_true', dest='test', help='Run in test mode, run read-only IMAP commands only', default=None)
-    parser.add_argument('--confdir', action='store', dest='confdir', help='directory to search for configuration files (default: config/)', default='config/')
+    parser.add_argument('-t', '--test',
+                        action='store_true',
+                        dest='test',
+                        help='Run in test mode, run read-only IMAP commands only',
+                        default=None)
+    parser.add_argument('--confdir',
+                        action='store',
+                        dest='confdir',
+                        help='directory to search for configuration files (default: config/)',
+                        default='config/')
 
     parser_results = parser.parse_args()
     confdir = parser_results.confdir
@@ -392,7 +359,7 @@ def main():
                     username=acc_settings.get('username'),
                     password=acc_settings.get('password'),
                     test=test)
-        imap.connect() # TODO error handling
+        imap.connect()  # TODO error handling
         imap_pool[acc] = imap
 
     while True:
