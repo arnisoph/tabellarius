@@ -101,7 +101,6 @@ class RuleSet(object):
             if cmd_type == 'move':
                 cmd_target = command.get('target')
                 self.imap.move_mail(mail, mailbox, cmd_target, set_flags=cmd_flags_set)
-                #mail.imap_move(imap_conn=imap_conn, target=command['target'])
 
     def parse_ruleset(self, mail, ruleset):
         for rule in ruleset:
@@ -413,9 +412,6 @@ def main():
     # Let's start working now
     logger.debug('Starting new instance of %s', program_name)
     logger.debug('Raw configuration: %s', config)
-
-    #pp = pprint.PrettyPrinter(indent=4)
-    #pp.pprint(config)
 
     # Initialize connection pools
     imap_pool = {}
