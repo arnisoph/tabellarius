@@ -13,8 +13,8 @@ TODO:
 * TLS communication is UNCONFIGURED (using library defaults)
 * support IDLE connections
 * improve error handling, throw excetions?
-* filtering fields like deliverd-to/ received are not supported yet
-* create missing mailboxes
+* filtering fields like deliverd-to/ received/ body are not supported yet
+* manage different namespaces
 
 Notes:
 
@@ -28,13 +28,14 @@ import re
 import ssl
 import sys
 import yaml
-import logging, logging.config
+import logging
+import logging.config
 
 # Third party libs
-sys.path.insert(0, './imapclient/imapclient')  #TODO this is ugly, improve it
 import argparse
 import email.message
 import pprint
+sys.path.insert(0, './imapclient/imapclient')  #TODO this is ugly, improve it
 from imapclient import IMAPClient
 
 
@@ -123,7 +124,10 @@ class RuleSet(object):
                     if last_match:
                         return True
                 else:
-                    last_match = check_re_match(mail.get(field), pattern)
+                    _last_match = check_basic_match(mail.get(field), pattern)
+                    if not _last_match:
+                        last_match = check_re_match(mail.get(field), pattern)
+                    last_match = _last_match
                     if invert:
                         last_match = not last_match
                     if last_match:
@@ -139,7 +143,10 @@ class RuleSet(object):
                     if not last_match:
                         return False
                 else:
-                    last_match = check_re_match(mail.get(field), pattern)
+                    _last_match = check_basic_match(mail.get(field), pattern)
+                    if not _last_match:
+                        _last_match = check_re_match(mail.get(field), pattern)
+                    last_match = _last_match
                     #print(last_match)
                     if invert:
                         last_match = not last_match
@@ -169,18 +176,22 @@ class IMAP(object):
 
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)
-        return self.conn.select_folder(mailbox)
+        try:
+            result = self.conn.select_folder(mailbox)
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            result = None
+        return result
 
     def search_mails(self, mailbox, criteria='ALL'):
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:
-            mail_uids = []
             result = self.select_mailbox(mailbox)
             result = self.conn.search(criteria=criteria)
             mail_uids = result
         except IMAPClient.Error as e:
             self.process_error(e)
-            result = []
+            mail_uids = []
         return list(mail_uids)
 
     def fetch_raw_mails(self, uids, mailbox, return_fields=[b'RFC822']):
@@ -240,26 +251,81 @@ class IMAP(object):
 
     def _set_mailflags(self, uids, flags=[]):
         self.logger.debug('Setting flags=%s on mails uid=%s', flags, uids)
-        return self.conn.set_flags(uids, flags)
+        try:
+            result = self.conn.set_flags(uids, flags)
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            result = None
+        return result
 
     def _expunge(self):
         self.logger.info('Expunge mails')
-        return self.conn.expunge()
+        try:
+            result = self.conn.expunge()
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            result = None
+        return result
+
+    def _create_mailbox(self, mailbox):
+        self.logger.info('Creating mailbox %s', mailbox)
+        try:
+            result = self.conn.create_folder(mailbox)
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            result = None
+        return result
+
+    def _mailbox_exists(self, mailbox):
+        self.logger.debug('Checking wether mailbox %s exists', mailbox)
+        try:
+            result = self.conn.folder_exists(mailbox)
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            result = None
+        return result
 
     def _delete_mails(self, uids):
         self.logger.info('Deleting mails uid="%s"', uids)
-        return self.conn.delete_messages(uids)
+        try:
+            result = self.conn.delete_messages(uids)
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            result = None
+        return result
 
     def _copy_mail(self, uids, destination):
         self.logger.info('Copying mails uid="%s" to "%s"', uids, destination)
-        return self.conn.copy(uids, destination)
+        try:
+            result = self.conn.copy(uids, destination)
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            if not self._mailbox_exists(destination):
+                self.logger.info('Mailbox %s doesn\'t even exist! Creating it for you now', destination)
+                result = self._create_mailbox(destination)
+                result = self._copy_mail(uids, destination)
+            else:
+                result = None
+        return result
+
+
+def check_basic_match(handle, pattern):
+    if handle is None:
+        return False
+    if pattern in handle:
+        return True
+    else:
+        return False
 
 
 def check_re_match(handle, pattern):
     if handle is None:
         return False
     pattern_re = re.compile(pattern)
-    return pattern_re.match(handle)
+    if pattern_re.match(handle):
+        return True
+    else:
+        return False
 
 
 def clean_field_names(field):
