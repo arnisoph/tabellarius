@@ -57,13 +57,16 @@ class Mail(dict):
             'user-agent': None,
             'content-type': None,
             'message-id': None,
-            'received': {'multiple': True}
+            'received': {'multiple': True},
+            'list-id': None,
         }
 
         for field, properties in fields_to_store.items():
             if type(properties) is dict and properties.get('multiple', None):
                 self[field] = self.mail_native.get_all(field)
             else:
+                if field == 'from':
+                    print(self.mail_native.get(field), 'w000t')
                 self[field] = self.mail_native.get(field)
 
 
@@ -87,7 +90,7 @@ class RuleSet(object):
             match = self.parse_ruleset(mail, self.ruleset)
             if match:
                 self.logger.debug('Ruleset matches!')
-                return self.apply_commands(uid, mail, self.mailbox)
+                result = self.apply_commands(uid, mail, self.mailbox)
 
     def apply_commands(self, uid, mail, mailbox):
         self.logger.debug('Applying commands for mail message-id="%s" of ruleset %s', mail.get('message-id'), self.name)
@@ -146,7 +149,6 @@ class RuleSet(object):
                     if not _last_match:
                         _last_match = check_re_match(mail.get(field), pattern)
                     last_match = _last_match
-                    #print(last_match)
                     if invert:
                         last_match = not last_match
                     if not last_match:
@@ -363,7 +365,10 @@ class ConfigParser(object):
                                         self.config[root][account].update(settings)
                             elif root == 'filters':
                                 for account, filter_set in value.items():
-                                    self.config[root][account] = filter_set
+                                    for filterset_name, filterset_data in filter_set.items():
+                                        if account not in self.config[root].keys():
+                                            self.config[root][account] = {}
+                                        self.config[root][account].update({filterset_name: filterset_data})
 
     def dump(self):
         return self.config
