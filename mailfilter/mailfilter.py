@@ -48,25 +48,32 @@ class Mail(dict):
 
     def parse_email_object(self):
         fields_to_store = {
-            'to': None,
-            'from': None,
-            'subject': None,
-            'return-path': None,
-            'delivered-to': {'multiple': True},
-            'date': None,
-            'user-agent': None,
             'content-type': None,
-            'message-id': None,
-            'received': {'multiple': True},
+            'date': None,
+            'delivered-to': {'multiple': True},
+            'from': None,
             'list-id': None,
+            'message-id': None,
+            'received': {'multiple': True, 'split': True},
+            'return-path': None,
+            'subject': None,
+            'to': None,
+            'user-agent': None,
         }
 
         for field, properties in fields_to_store.items():
-            if type(properties) is dict and properties.get('multiple', None):
-                self[field] = self.mail_native.get_all(field)
+            if type(properties) is dict:
+                if properties.get('multiple', None):
+                    fields = self.mail_native.get_all(field)
+                    if properties.get('split', None):
+                        _fields = []
+                        for f in fields:
+                            _fields.append(f.split('\r\n'))
+                        _fields = fields
+                    self[field] = fields
+                else:
+                    self[field] = self.mail_native.get(field)
             else:
-                if field == 'from':
-                    print(self.mail_native.get(field), 'w000t')
                 self[field] = self.mail_native.get(field)
 
 
@@ -126,10 +133,13 @@ class RuleSet(object):
                     if last_match:
                         return True
                 else:
-                    _last_match = check_basic_match(mail.get(field), pattern)
-                    if not _last_match:
-                        last_match = check_re_match(mail.get(field), pattern)
-                    last_match = _last_match
+                    lines = mail.get(field)
+                    if type(lines) is not list:
+                        lines = [lines]
+                    for line in lines:
+                        last_match = check_match(line, pattern)
+                        if last_match:
+                            break
                     if invert:
                         last_match = not last_match
                     if last_match:
@@ -145,10 +155,13 @@ class RuleSet(object):
                     if not last_match:
                         return False
                 else:
-                    _last_match = check_basic_match(mail.get(field), pattern)
-                    if not _last_match:
-                        _last_match = check_re_match(mail.get(field), pattern)
-                    last_match = _last_match
+                    lines = mail.get(field)
+                    if type(lines) is not list:
+                        lines = [lines]
+                    for line in lines:
+                        last_match = check_match(line, pattern)
+                        if not last_match:
+                            break
                     if invert:
                         last_match = not last_match
                     if not last_match:
@@ -310,23 +323,20 @@ class IMAP(object):
         return result
 
 
-def check_basic_match(handle, pattern):
-    if handle is None:
+def check_match(string, pattern):
+    if string is None or len(string) == 0:
         return False
-    if pattern in handle:
+
+    # Basic match
+    if pattern in string:
         return True
-    else:
-        return False
 
-
-def check_re_match(handle, pattern):
-    if handle is None:
-        return False
+    # RegEx match
     pattern_re = re.compile(pattern)
-    if pattern_re.match(handle):
+    if pattern_re.match(string):
         return True
-    else:
-        return False
+
+    return False
 
 
 def clean_field_names(field):
