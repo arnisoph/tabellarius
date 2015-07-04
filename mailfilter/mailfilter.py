@@ -339,7 +339,11 @@ class ConfigParser(object):
                                         self.config[root][account].update(settings)
                             elif root == 'filters':
                                 for account, filter_set in value.items():
-                                    self.config[root][account] = filter_set
+                                    if account not in self.config[root].keys():
+                                        self.config[root][account] = filter_set
+                                    else:
+                                        self.config[root][account].update(filter_set)
+
 
     def dump(self):
         return self.config
