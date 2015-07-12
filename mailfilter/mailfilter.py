@@ -15,6 +15,7 @@ TODO:
 * improve error handling, throw excetions?
 * filtering fields like deliverd-to/ received/ body are not supported yet
 * manage different namespaces
+* expunge at the end only
 
 Notes:
 
@@ -134,10 +135,13 @@ class RuleSet(object):
                         return True
                 else:
                     lines = mail.get(field)
+                    if lines is None:
+                        last_match = False
+                        continue
                     if type(lines) is not list:
                         lines = [lines]
                     for line in lines:
-                        last_match = check_match(line, pattern)
+                        last_match = check_match(line, pattern) # TODO improve
                         if last_match:
                             break
                     if invert:
@@ -156,10 +160,12 @@ class RuleSet(object):
                         return False
                 else:
                     lines = mail.get(field)
+                    #if lines is None:
+                    #    continue
                     if type(lines) is not list:
                         lines = [lines]
                     for line in lines:
-                        last_match = check_match(line, pattern)
+                        last_match = check_match(line, pattern) # TODO improve
                         if not last_match:
                             break
                     if invert:
@@ -234,7 +240,8 @@ class IMAP(object):
         raw_mails = self.fetch_raw_mails(uids, mailbox)
         mails = {}
         for raw_uid, raw_mail in raw_mails.items():
-            mails[raw_uid] = Mail(mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))
+            mail = Mail(mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))
+            mails[raw_uid] = mail
         return mails
 
     def move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
@@ -443,7 +450,7 @@ def main():
         for acc, acc_settings in config.get('accounts').items():
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
             sort_mailbox = acc_settings.get('sort_mailbox', 'INBOX')
-            for filter_name, filter_rulesets in config.get('filters').get(acc).items():
+            for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
                 set_commands = filter_rulesets.get('commands', None)
                 set_rules = filter_rulesets.get('rules', None)
                 set_mailbox = filter_rulesets.get('mailbox', pre_inbox)
