@@ -448,6 +448,8 @@ def main():
 
     while True:
         for acc, acc_settings in config.get('accounts').items():
+            if not acc_settings.get('enabled', False):
+                continue
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
             sort_mailbox = acc_settings.get('sort_mailbox', 'INBOX')
             for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
