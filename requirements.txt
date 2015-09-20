@@ -1,2 +1,1 @@
-argparse
-#imapclient
+PyYAML==3.11

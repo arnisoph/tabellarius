@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 """mailfilter
@@ -23,10 +23,10 @@ Imap class:
 * before calling a private function, always issue a new SELECT command
 """
 
-from time import sleep
+#from time import sleep
 import os
 import re
-import ssl
+#import ssl
 import sys
 import yaml
 import logging
@@ -35,8 +35,8 @@ import logging.config
 # Third party libs
 import argparse
 import email.message
-import pprint
-sys.path.insert(0, './imapclient/imapclient')  #TODO this is ugly, improve it
+#import pprint
+sys.path.insert(0, './imapclient/imapclient')  # TODO this is ugly, improve it
 from imapclient import IMAPClient
 
 
@@ -98,7 +98,7 @@ class RuleSet(object):
             match = self.parse_ruleset(mail, self.ruleset)
             if match:
                 self.logger.debug('Ruleset matches!')
-                result = self.apply_commands(uid, mail, self.mailbox)
+                self.apply_commands(uid, mail, self.mailbox)
 
     def apply_commands(self, uid, mail, mailbox):
         self.logger.debug('Applying commands for mail message-id="%s" of ruleset %s', mail.get('message-id'), self.name)
@@ -106,8 +106,8 @@ class RuleSet(object):
         for command in self.commands:
             cmd_type = command.get('type')
             cmd_flags_set = command.get('all_flags', [])
-            cmd_flags_delete = command.get('delete_flags', [])
-            cmd_flags_add = command.get('add_flags', [])
+            #cmd_flags_delete = command.get('delete_flags', [])
+            #cmd_flags_add = command.get('add_flags', [])
 
             if cmd_type == 'move':
                 cmd_target = command.get('target')
@@ -141,7 +141,7 @@ class RuleSet(object):
                     if type(lines) is not list:
                         lines = [lines]
                     for line in lines:
-                        last_match = check_match(line, pattern) # TODO improve
+                        last_match = check_match(line, pattern)  # TODO improve
                         if last_match:
                             break
                     if invert:
@@ -153,7 +153,6 @@ class RuleSet(object):
             for condition in conditions:
                 field_original, field, invert = clean_field_names(sorted(condition.keys())[0])
                 pattern = condition.get(field_original)
-                #print('field: ===> {0}/ {1} / {2}'.format(field, pattern, invert))
                 if field in self.supported_rule_operators:
                     last_match = self.filter_match(mail=mail, operator=field, conditions=pattern)
                     if not last_match:
@@ -165,7 +164,7 @@ class RuleSet(object):
                     if type(lines) is not list:
                         lines = [lines]
                     for line in lines:
-                        last_match = check_match(line, pattern) # TODO improve
+                        last_match = check_match(line, pattern)  # TODO improve
                         if not last_match:
                             break
                     if invert:
@@ -462,7 +461,7 @@ def main():
                                   commands=set_commands,
                                   imap=imap_pool[acc],
                                   mailbox=set_mailbox)
-                match = ruleset.process()
+                ruleset.process()
 
             logger.info('Searching for mails that did not match any filter and moving them to %s', sort_mailbox)
             uids = imap_pool[acc].search_mails(pre_inbox, 'ALL')
