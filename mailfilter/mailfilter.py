@@ -19,7 +19,7 @@ TODO:
 
 Notes:
 
-IMAP class:
+Imap class:
 * before calling a private function, always issue a new SELECT command
 """
 
