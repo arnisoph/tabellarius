@@ -9,5 +9,7 @@ addons:
   apt:
     packages:
       - tree
+install:
+    - pip install tox
 script:
   - tox -e $TOX_ENV
