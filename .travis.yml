@@ -5,10 +5,10 @@ python:
 env:
   - TOX_ENV=standard
   - TOX_ENV=flake8
-addons:
-  apt:
-    packages:
-      - tree
+#addons:
+#  apt:
+#    packages:
+#      - tree
 install:
     - pip install tox
 script:
