@@ -20,10 +20,9 @@ TODO:
 # Third party libs
 import argparse
 
-from configparser import ConfigParser
 from imap import IMAP
 from ruleset import RuleSet
-from misc import Helper
+from misc import ConfigParser, Helper
 
 
 def main():

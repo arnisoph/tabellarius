@@ -9,7 +9,6 @@ import sys
 
 # Third party libs
 import email.message
-#import pprint
 sys.path.insert(0, './imapclient/imapclient')  # TODO this is ugly, improve it
 from imapclient import IMAPClient
 
