@@ -44,7 +44,7 @@ import imaplib
 #    for mail in mails:
 #        #print(mail)
 #        print('Running filters for mail with subject="{0}" message-id={1}'.format(mail.get('subject'), mail.get('message-id')))
-#        filters = mailfilter_config.get('filters', {})
+#        filters = tabellarius_config.get('filters', {})
 #        match = False
 #        for filter_name, filter_settings in filters.items():
 #            match = parse_filter(mail, filter_name, filter_settings)

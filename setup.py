@@ -3,11 +3,10 @@
 
 from distutils.core import setup
 
-setup(name='Mailfilter',
+setup(name='tabellarius',
       version='0.0.1',
-      description='A mail filtering tool that is less annoying',
+      description='A mail-sorting tool that is less annoying',
       author='Arnold Bechtoldt',
       author_email='mail@arnoldbechtoldt.com',
-      url='https://github.com/bechtoldt/mailfilter',
-      #packages=['gathergit'],
+      url='https://github.com/bechtoldt/tabellarius',
      )

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
-"""mailfilter
+"""tabellarius
 
 Loglevels in use:
 * DEBUG
@@ -27,8 +27,8 @@ from misc import ConfigParser, Helper
 
 def main():
     version = '0.0.1'
-    program_name = 'mailfilter'
-    parser = argparse.ArgumentParser(prog=program_name, description='A mail filtering tool that is less annoying')
+    program_name = 'tabellarius'
+    parser = argparse.ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 
     # General args
     parser.add_argument('-V', action='version', version='%(prog)s {version}'.format(version=version))
@@ -105,7 +105,7 @@ def main():
 
         break
 
-    logger.debug('Shutting down mailfilter instance..')
+    logger.debug('Shutting down tabellarius instance..')
 
 
 if __name__ == '__main__':
