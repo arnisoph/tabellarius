@@ -1,0 +1,37 @@
+# vim: ts=2 sw=2 et
+
+filters:
+  test:
+    Arnold:
+      commands:
+        - type: move
+          target: w00t
+          all_flags:
+            - '\Flagged'
+      rules:
+        - or:
+          - from: '.*arnoldbechtoldt.com'
+    Twitter:
+      commands:
+        - type: move
+          target: w00t
+      rules:
+        - or:
+          - subject: Twitter
+    w00tfilter:
+      commands:
+        - type: move
+          target: w00t
+      rules:
+        - or:
+          - subject: w00t
+    Spam:
+      commands:
+        - type: move
+          target: Test
+          #all_flags:
+            #- '\SEEN'
+            #- '\Flagged'
+      rules:
+        - or:
+          - subject: filterme

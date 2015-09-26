@@ -1,0 +1,32 @@
+settings:
+  # https://docs.python.org/3/library/logging.config.html#logging-config-dictschem# https://docs.python.org/3/library/logging.config.html#logging-config-dictschemaa
+  logging:
+    version: 1
+    disable_existing_loggers: False
+    formatters:
+        simple:
+          format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        styled:
+          format: '%(asctime)s [%(process)d] [%(levelname)s]: %(message)s'
+    handlers:
+        console:
+            class: logging.StreamHandler
+            level: DEBUG
+            formatter: styled
+            stream: ext://sys.stdout
+        standard_file_handler:
+            class: logging.handlers.RotatingFileHandler
+            level: DEBUG
+            formatter: styled
+            filename: mailfilter.log
+            #maxBytes: 10485760 # 10MB
+            #backupCount: 20
+            encoding: utf8
+    loggers:
+        standard:
+            handlers: [console]
+            propagate: no
+    root:
+        level: DEBUG
+        #handlers: [console, info_file_handler, error_file_handler]
+        handlers: [console, standard_file_handler]

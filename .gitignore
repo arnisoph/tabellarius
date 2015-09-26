@@ -59,6 +59,6 @@ test/nodes.yaml
 *.box
 
 
-mailfilter/config
+config.dist/accounts.yaml
 docs/_build
 MANIFEST
