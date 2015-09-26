@@ -1,7 +1,10 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
-#from time import sleep
+"""
+Notes:
+
+* before calling a private function, always issue a new SELECT command
+"""
 import sys
 
 # Third party libs

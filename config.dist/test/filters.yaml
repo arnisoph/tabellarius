@@ -9,14 +9,14 @@ filters:
           all_flags:
             - '\Flagged'
       rules:
-        - or:
+        - and:
           - from: '.*arnoldbechtoldt.com'
     Twitter:
       commands:
         - type: move
           target: w00t
       rules:
-        - or:
+        - and:
           - subject: Twitter
     w00tfilter:
       commands:
@@ -25,6 +25,20 @@ filters:
       rules:
         - or:
           - subject: w00t
+    Test:
+      commands:
+        - type: move
+          target: test
+      rules:
+        - or:
+          - subject: test
+    Template:
+      commands:
+        - type: move
+          target: w00t
+      rules:
+        - or:
+          - subject: template
     Spam:
       commands:
         - type: move

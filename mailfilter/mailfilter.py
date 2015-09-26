@@ -16,11 +16,6 @@ TODO:
 * filtering fields like deliverd-to/ received/ body are not supported yet
 * manage different namespaces
 * expunge at the end only
-
-Notes:
-
-IMAP class:
-* before calling a private function, always issue a new SELECT command
 """
 # Third party libs
 import argparse
@@ -84,17 +79,24 @@ def main():
                 continue
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
             sort_mailbox = acc_settings.get('sort_mailbox', 'INBOX')
-            for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
-                set_commands = filter_rulesets.get('commands', None)
-                set_rules = filter_rulesets.get('rules', None)
-                set_mailbox = filter_rulesets.get('mailbox', pre_inbox)
-                ruleset = RuleSet(logger=logger,
-                                  name=filter_name,
-                                  ruleset=set_rules,
-                                  commands=set_commands,
-                                  imap=imap_pool[acc],
-                                  mailbox=set_mailbox)
-                ruleset.process()
+            mail_uids = imap.search_mails(pre_inbox)
+            mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
+
+            for uid, mail in mails.items():
+                for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
+                    set_commands = filter_rulesets.get('commands', None)
+                    set_rules = filter_rulesets.get('rules', None)
+                    ruleset = RuleSet(logger=logger,
+                                      name=filter_name,
+                                      ruleset=set_rules,
+                                      commands=set_commands,
+                                      imap=imap_pool[acc],
+                                      mail=(uid, mail),
+                                      mailbox=pre_inbox)
+                    match = ruleset.process()
+
+                    if match:
+                        break
 
             logger.info('Searching for mails that did not match any filter and moving them to %s', sort_mailbox)
             uids = imap_pool[acc].search_mails(pre_inbox, 'ALL')

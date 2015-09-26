@@ -4,6 +4,7 @@ python:
   - '2.7'
 env:
   - TOX_ENV=standard
+  #- TOX_ENV=standard_noop #TODO
   - TOX_ENV=flake8
 #addons:
 #  apt:

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
@@ -6,26 +5,27 @@ from misc import Helper
 
 
 class RuleSet(object):
-    def __init__(self, logger, name, mailbox, ruleset=[], commands=[], imap=None):
+    def __init__(self, logger, name, mailbox, mail, ruleset=[], commands=[], imap=None):
         self.logger = logger
         self.name = name
         self.mailbox = mailbox
+        self.mail = mail
         self.ruleset = ruleset
         self.commands = commands
         self.imap = imap
         self.supported_rule_operators = ['or', 'and']
 
     def process(self):
-        mail_uids = self.imap.search_mails(self.mailbox)
-        mails = self.imap.fetch_mails(uids=mail_uids, mailbox=self.mailbox)
         match = False
-        for uid, mail in mails.items():
-            self.logger.debug('Checking whether mail uid="%s"; message-id="%s"; subject="%s" matches to ruleset %s', uid,
-                              mail.get('message-id'), mail.get('subject'), self.name)
-            match = self.parse_ruleset(mail, self.ruleset)
-            if match:
-                self.logger.debug('Ruleset matches!')
-                self.apply_commands(uid, mail, self.mailbox)
+        uid, mail = self.mail
+        self.logger.debug('Checking whether mail uid="%s"; message-id="%s"; subject="%s" matches to ruleset %s', uid,
+                          mail.get('message-id'), mail.get('subject'), self.name)
+        match = self.parse_ruleset(mail, self.ruleset)
+        if match:
+            self.logger.debug('Ruleset matches!')
+            self.apply_commands(uid, mail, self.mailbox)
+
+        return match
 
     def apply_commands(self, uid, mail, mailbox):
         self.logger.debug('Applying commands for mail message-id="%s" of ruleset %s', mail.get('message-id'), self.name)
