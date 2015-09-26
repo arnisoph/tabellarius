@@ -13,17 +13,17 @@ mailfilter
 
 .. image:: https://img.shields.io/badge/license-Apache--2.0-blue.svg
     :alt: Apache-2.0-licensed
-    :target: https://github.com/bechtoldt/mailfiter/blob/master/LICENSE
+    :target: https://github.com/bechtoldt/mailfilter/blob/master/LICENSE
 
 .. image:: https://img.shields.io/badge/chat-gitter-brightgreen.svg
     :alt: Join Gitter Chat
-    :target: https://gitter.im/bechtoldt/mailfiter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+    :target: https://gitter.im/bechtoldt/mailfilter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-.. image:: https://travis-ci.org/bechtoldt/mailfiter.svg?branch=master
-       :target: https://travis-ci.org/bechtoldt/mailfiter
+.. image:: https://travis-ci.org/bechtoldt/mailfilter.svg?branch=master
+       :target: https://travis-ci.org/bechtoldt/mailfilter
 
-.. image:: https://img.shields.io/pypi/dm/mailfiter.svg
-    :target: https://pypi.python.org/pypi/mailfiter
+.. image:: https://img.shields.io/pypi/dm/mailfilter.svg
+    :target: https://pypi.python.org/pypi/mailfilter
     :alt: Number of Pypi package downloads
 
 A mail filtering tool that is less annoying
