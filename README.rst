@@ -26,4 +26,4 @@ tabellarius
     :target: https://pypi.python.org/pypi/tabellarius
     :alt: Number of Pypi package downloads
 
-A mail filtering tool that is less annoying
+A mail-sorting tool that is less annoying
