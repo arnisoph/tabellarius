@@ -28,6 +28,8 @@ class Mail(dict):
             'subject': None,
             'to': None,
             'user-agent': None,
+            'x-redmine-project': None,
+            'x-redmine-host': None,
         }
 
         for field, properties in fields_to_store.items():

@@ -1,1 +1,1 @@
-yapf --style=yapf.ini -i tabellarius/tabellarius.py
+yapf --style=yapf.ini -ri tabellarius/*.py

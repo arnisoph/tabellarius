@@ -64,8 +64,11 @@ def main():
     # Initialize connection pools
     imap_pool = {}
     for acc, acc_settings in config.get('accounts').items():
+        if not acc_settings.get('enabled', False):
+            continue
         imap = IMAP(logger=logger,
                     server=acc_settings.get('server'),
+                    port=acc_settings.get('port'),
                     username=acc_settings.get('username'),
                     password=acc_settings.get('password'),
                     test=test)

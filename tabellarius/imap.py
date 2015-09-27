@@ -16,17 +16,26 @@ from mail import Mail
 
 
 class IMAP(object):
-    def __init__(self, logger, username, password, server='localhost', port=143, test=False):
+    def __init__(self, logger, username, password, server='localhost', port=143, ssl=None, startls=None, test=False):
         self.logger = logger
         self.username = username
         self.password = password
         self.server = server
         self.port = port
+        self.ssl = ssl
+        self.starttls = None
         self.test = test
 
     def connect(self):
         self.logger.debug('Establishing IMAP TLS connection to %s and logging in with user %s', self.server, self.username)
-        self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, starttls=True)
+
+        if self.port == 143:
+            self.starttls = True
+        else:
+            self.starttls = None
+            self.ssl = True
+
+        self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, starttls=self.starttls, ssl=self.ssl)
         self.conn.login(self.username, self.password)
 
     def process_error(self, exception):
