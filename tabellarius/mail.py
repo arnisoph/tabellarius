@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
-#from time import sleep
 import sys
 
 # Third party libs
@@ -11,7 +10,9 @@ sys.path.insert(0, './imapclient/imapclient')  # TODO this is ugly, improve it
 class Mail(dict):
     mail_native = email.message.Message()
 
-    def __init__(self, mail=None):
+    def __init__(self, logger, uid, mail=None):
+        self.logger = logger
+        self.uid = uid
         self.mail_native = mail
         self.parse_email_object()
 
@@ -36,6 +37,10 @@ class Mail(dict):
             if type(properties) is dict:
                 if properties.get('multiple', None):
                     fields = self.mail_native.get_all(field)
+                    if fields is None:
+                        self.logger.debug('Unable to parse raw mail with uid=%s: %s', self.uid, self.mail_native)
+                        raise ValueError('Unable to parse raw mail with uid=%s' % (self.uid))
+
                     if properties.get('split', None):
                         _fields = []
                         for f in fields:

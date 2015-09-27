@@ -55,7 +55,7 @@ class RuleSet(object):
             for condition in conditions:
                 field_original, field, invert = Helper().clean_field_names(sorted(condition.keys())[0])
                 pattern = condition.get(field_original)
-                #print('field: {0}/ {1}'.format(field, pattern))
+
                 if field in self.supported_rule_operators:
                     last_match = self.filter_match(mail=mail, operator=field, conditions=pattern)
                     if last_match:

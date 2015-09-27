@@ -81,9 +81,13 @@ def main():
                 continue
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
             sort_mailbox = acc_settings.get('sort_mailbox', 'INBOX')
-            mail_uids = imap.search_mails(pre_inbox)
-            mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
 
+            mail_uids = imap.search_mails(pre_inbox)
+            if not mail_uids:
+                logger.debug('No mails found, continue with next mail account..')
+                continue
+
+            mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
             for uid, mail in mails.items():
                 for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
                     set_commands = filter_rulesets.get('commands', None)
