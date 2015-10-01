@@ -103,7 +103,9 @@ def main():
                     if match:
                         break
 
-            logger.info('%s: Searching for mails that did not match any filter and moving them to %s', acc_settings.get('username') , sort_mailbox)
+            logger.info('%s: Searching for mails that did not match any filter and moving them to %s',
+                        acc_settings.get('username'),
+                        sort_mailbox)
             uids = imap_pool[acc].search_mails(pre_inbox, 'ALL')
             mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
             for mail in mails:
