@@ -66,14 +66,13 @@ def main():
     for acc, acc_settings in config.get('accounts').items():
         if not acc_settings.get('enabled', False):
             continue
-        imap = IMAP(logger=logger,
-                    server=acc_settings.get('server'),
-                    port=acc_settings.get('port'),
-                    username=acc_settings.get('username'),
-                    password=acc_settings.get('password'),
-                    test=test)
-        imap.connect()  # TODO error handling
-        imap_pool[acc] = imap
+        imap_pool[acc] = IMAP(logger=logger,
+                              server=acc_settings.get('server'),
+                              port=acc_settings.get('port'),
+                              username=acc_settings.get('username'),
+                              password=acc_settings.get('password'),
+                              test=test)
+        imap_pool[acc].connect()  # TODO error handling
 
     while True:
         for acc, acc_settings in config.get('accounts').items():
@@ -82,9 +81,9 @@ def main():
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
             sort_mailbox = acc_settings.get('sort_mailbox', 'INBOX')
 
-            mail_uids = imap.search_mails(pre_inbox)
+            mail_uids = imap_pool[acc].search_mails(pre_inbox)
             if not mail_uids:
-                logger.debug('No mails found, continue with next mail account..')
+                logger.debug('%s: No mails found, continue with next mail account..', acc_settings.get('username'))
                 continue
 
             mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
@@ -104,7 +103,7 @@ def main():
                     if match:
                         break
 
-            logger.info('Searching for mails that did not match any filter and moving them to %s', sort_mailbox)
+            logger.info('%s: Searching for mails that did not match any filter and moving them to %s', acc_settings.get('username') , sort_mailbox)
             uids = imap_pool[acc].search_mails(pre_inbox, 'ALL')
             mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
             for mail in mails:
