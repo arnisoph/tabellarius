@@ -79,9 +79,10 @@ def main():
             if not acc_settings.get('enabled', False):
                 continue
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
-            sort_mailbox = acc_settings.get('sort_mailbox', 'INBOX')
+            pre_inbox_search = acc_settings.get('pre_inbox_search', 'ALL')
+            sort_mailbox = acc_settings.get('sort_mailbox', None)
 
-            mail_uids = imap_pool[acc].search_mails(pre_inbox)
+            mail_uids = imap_pool[acc].search_mails(pre_inbox, pre_inbox_search)
             if not mail_uids:
                 logger.debug('%s: No mails found, continue with next mail account..', acc_settings.get('username'))
                 continue
@@ -103,13 +104,14 @@ def main():
                     if match:
                         break
 
-            logger.info('%s: Searching for mails that did not match any filter and moving them to %s',
-                        acc_settings.get('username'),
-                        sort_mailbox)
-            uids = imap_pool[acc].search_mails(pre_inbox, 'ALL')
-            mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
-            for mail in mails:
-                imap_pool[acc].move_mail(mails[mail], pre_inbox, sort_mailbox, set_flags=[])
+            if sort_mailbox:
+                logger.info('%s: Searching for mails that did not match any filter and moving them to %s',
+                            acc_settings.get('username'),
+                            sort_mailbox)
+                uids = imap_pool[acc].search_mails(pre_inbox)
+                mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
+                for mail in mails:
+                    imap_pool[acc].move_mail(mails[mail], pre_inbox, sort_mailbox, set_flags=[])
 
         break
 
