@@ -89,6 +89,7 @@ def main():
 
             mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
             for uid, mail in mails.items():
+                match = False
                 for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
                     set_commands = filter_rulesets.get('commands', None)
                     set_rules = filter_rulesets.get('rules', None)
@@ -100,9 +101,10 @@ def main():
                                       mail=(uid, mail),
                                       mailbox=pre_inbox)
                     match = ruleset.process()
-
                     if match:
                         break
+                if not match and not sort_mailbox:
+                    imap_pool[acc].set_mailflags([uid], pre_inbox, ['\Seen', '\Flagged'])
 
             if sort_mailbox:
                 logger.info('%s: Searching for mails that did not match any filter and moving them to %s',

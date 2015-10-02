@@ -99,6 +99,13 @@ class IMAP(object):
             self.select_mailbox(source)
             self._move_mail(mail, source, destination, delete_old, expunge, set_flags)
 
+    def set_mailflags(self, uids, mailbox, flags=[]):
+        if self.test:
+            self.logger.info('Would have set mail flags on message uids "%s"', str(uids))
+        else:
+            self.select_mailbox(mailbox)
+            return self._set_mailflags(uids, flags)
+
     def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
         self.logger.info('Moving mail message-id="%s" from "%s" to "%s"', mail.get('message-id'), source, destination)
         result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
