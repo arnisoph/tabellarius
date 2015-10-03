@@ -61,16 +61,44 @@ def main():
     logger.debug('Starting new instance of %s', program_name)
     logger.debug('Raw configuration: %s', config)
 
+    # Import gnupg if necessary
+    use_gpg = False
+    # There is a better solution for the following for sure
+    for acc, acc_settings in config.get('accounts').items():
+        if not acc_settings.get('enabled', False):
+            continue
+        if 'password_enc' in acc_settings:
+            use_gpg = True
+            break
+    if use_gpg:
+        import gnupg
+        gpg = gnupg.GPG(homedir=config.get('settings').get('gpg_homedir', '~/.gnupg/'),
+                        use_agent=config.get('settings').get('gpg_use_agent', True),
+                        binary=config.get('settings').get('gpg_binary', 'gpg2'))
+        gpg.encoding = 'utf-8'
+
     # Initialize connection pools
     imap_pool = {}
     for acc, acc_settings in config.get('accounts').items():
         if not acc_settings.get('enabled', False):
             continue
+
+        # Check whether we got a plaintext password
+        acc_password = acc_settings.get('password')
+        if not acc_password:
+            # Switch to GPG-encrypted password
+            enc_password = gpg.decrypt(acc_settings.get('password_enc'))
+            if not enc_password.ok:
+                logger.error('%s: Failed to decrypt GPG message: %s', acc_settings.get('username'), enc_password.status)
+                logger.debug('%s: GPG error: %s', acc_settings.get('username'), enc_password.stderr)
+                exit(1)
+            acc_password = str(enc_password)
+
         imap_pool[acc] = IMAP(logger=logger,
                               server=acc_settings.get('server'),
                               port=acc_settings.get('port'),
                               username=acc_settings.get('username'),
-                              password=acc_settings.get('password'),
+                              password=acc_password,
                               test=test)
         imap_pool[acc].connect()  # TODO error handling
 
@@ -107,8 +135,7 @@ def main():
                     imap_pool[acc].set_mailflags([uid], pre_inbox, ['\Seen', '\Flagged'])
 
             if sort_mailbox:
-                logger.info('%s: Searching for mails that did not match any filter and moving them to %s',
-                            acc_settings.get('username'),
+                logger.info('%s: Searching for mails that did not match any filter and moving them to %s', acc_settings.get('username'),
                             sort_mailbox)
                 uids = imap_pool[acc].search_mails(pre_inbox)
                 mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)

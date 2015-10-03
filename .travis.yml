@@ -12,6 +12,6 @@ env:
 #    packages:
 #      - tree
 install:
-    - pip install tox
+  - pip install tox
 script:
   - tox -e $TOX_ENV

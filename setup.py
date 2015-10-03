@@ -9,5 +9,4 @@ setup(name='tabellarius',
       author='Arnold Bechtoldt',
       author_email='mail@arnoldbechtoldt.com',
       url='https://github.com/bechtoldt/tabellarius',
-      packages = ['tabellarius'],
-     )
+      packages=['tabellarius'], )
