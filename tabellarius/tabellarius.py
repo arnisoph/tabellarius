@@ -65,9 +65,7 @@ def main():
     use_gpg = False
     # There is a better solution for the following for sure
     for acc, acc_settings in config.get('accounts').items():
-        if not acc_settings.get('enabled', False):
-            continue
-        if 'password_enc' in acc_settings:
+        if acc_settings.get('enabled', False) and 'password_enc' in acc_settings:
             use_gpg = True
             break
     if use_gpg:
