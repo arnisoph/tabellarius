@@ -7,10 +7,11 @@ env:
   - TOX_ENV=standard
   #- TOX_ENV=standard_noop #TODO
   - TOX_ENV=flake8
+#addons:
+#  apt:
+#    packages:
+#      - tree
 install:
   - pip install tox
 script:
   - tox -e $TOX_ENV
-addons:
-  code_climate:
-    repo_token: 17448b1f55a3527393940316e18df7dfda3db632994bed4b765af140a98dab20
