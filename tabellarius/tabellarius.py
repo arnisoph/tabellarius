@@ -130,7 +130,7 @@ def main():
                     if match:
                         break
                 if not match and not sort_mailbox:
-                    imap_pool[acc].set_mailflags([uid], pre_inbox, ['\Seen', '\Flagged'])
+                    imap_pool[acc].set_mailflags([uid], pre_inbox, acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
 
             if sort_mailbox:
                 logger.info('%s: Searching for mails that did not match any filter and moving them to %s', acc_settings.get('username'),
