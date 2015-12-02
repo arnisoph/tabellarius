@@ -17,7 +17,7 @@ class Mail(dict):
         self.parse_email_object()
 
     def parse_email_object(self):
-        fields_to_store = {
+        fields_to_store = { # TODO store as much as possible, get rid of this static list
             'content-type': None,
             'date': None,
             'delivered-to': {'multiple': True},
@@ -31,6 +31,7 @@ class Mail(dict):
             'user-agent': None,
             'x-redmine-project': None,
             'x-redmine-host': None,
+            'x-gitlab-project': None,
         }
 
         for field, properties in fields_to_store.items():
