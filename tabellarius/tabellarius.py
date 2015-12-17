@@ -26,7 +26,7 @@ from misc import ConfigParser, Helper
 
 
 def main():
-    version = '0.1.1'
+    version = '0.1.2'
     program_name = 'tabellarius'
     parser = argparse.ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 

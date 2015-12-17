@@ -4,7 +4,7 @@
 from distutils.core import setup
 
 setup(name='tabellarius',
-      version='0.1.1',
+      version='0.1.2',
       description='A mail-sorting tool that is less annoying',
       author='Arnold Bechtoldt',
       author_email='mail@arnoldbechtoldt.com',
