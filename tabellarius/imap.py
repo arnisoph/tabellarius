@@ -5,8 +5,6 @@ Notes:
 
 * before calling a private function, always issue a new SELECT command
 """
-import sys
-
 # Third party libs
 import email.message
 from imapclient import IMAPClient
