@@ -96,7 +96,7 @@ def main():
 
     # Initialize connection pools
     imap_pool = {}
-    for acc, acc_settings in config.get('accounts').items():
+    for acc, acc_settings in sorted(config.get('accounts').items()):
         if not acc_settings.get('enabled', False):
             continue
 
@@ -127,7 +127,7 @@ def main():
                               test=test)
 
     while True:
-        for acc, acc_settings in config.get('accounts').items():
+        for acc, acc_settings in sorted(config.get('accounts').items()):
             if not acc_settings.get('enabled', False):
                 continue
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
