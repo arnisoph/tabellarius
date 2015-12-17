@@ -111,7 +111,7 @@ class IMAP(object):
             return self._set_mailflags(uids, flags)
 
     def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
-        self.logger.info('Moving mail message-id="%s" from "%s" to "%s"', mail.get('message-id'), source, destination)
+        self.logger.debug('Moving mail message-id="%s" from "%s" to "%s"', mail.get('message-id'), source, destination)
         result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
         uid = result[0]
 
@@ -137,7 +137,7 @@ class IMAP(object):
             return None
 
     def _expunge(self):
-        self.logger.info('Expunge mails')
+        self.logger.debug('Expunge mails')
         try:
             return self.conn.expunge()
         except IMAPClient.Error as e:
@@ -145,7 +145,7 @@ class IMAP(object):
             return None
 
     def _create_mailbox(self, mailbox):
-        self.logger.info('Creating mailbox %s', mailbox)
+        self.logger.debug('Creating mailbox %s', mailbox)
         try:
             return self.conn.create_folder(mailbox)
         except IMAPClient.Error as e:
@@ -161,7 +161,7 @@ class IMAP(object):
             return None
 
     def _delete_mails(self, uids):
-        self.logger.info('Deleting mails uid="%s"', uids)
+        self.logger.debug('Deleting mails uid="%s"', uids)
         try:
             return self.conn.delete_messages(uids)
         except IMAPClient.Error as e:
@@ -169,13 +169,13 @@ class IMAP(object):
             return None
 
     def _copy_mail(self, uids, destination):
-        self.logger.info('Copying mails uid="%s" to "%s"', uids, destination)
+        self.logger.debug('Copying mails uid="%s" to "%s"', uids, destination)
         try:
             return self.conn.copy(uids, destination)
         except IMAPClient.Error as e:
             self.process_error(e)
             if not self._mailbox_exists(destination):
-                self.logger.info('Mailbox %s doesn\'t even exist! Creating it for you now', destination)
+                self.logger.debug('Mailbox %s doesn\'t even exist! Creating it for you now', destination)
                 self._create_mailbox(destination)
                 return self._copy_mail(uids, destination)
 
