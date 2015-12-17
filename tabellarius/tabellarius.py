@@ -19,6 +19,8 @@ TODO:
 """
 # Third party libs
 import argparse
+from getpass import getpass
+from time import sleep
 
 from imap import IMAP
 from ruleset import RuleSet
@@ -42,6 +44,12 @@ def main():
                         dest='gpg_homedir',
                         help='Override gpg home dir setting (default: ~/.gnupg/)',
                         default='~/.gnupg/')
+    parser.add_argument('--sleep',
+                        action='store',
+                        dest='imap_sleep_time',
+                        help='Sleep time between IMAP parsing for e-mails (default: 2)',
+                        type=int,
+                        default=2)
     parser.add_argument('--confdir',
                         action='store',
                         dest='confdir',
@@ -53,6 +61,7 @@ def main():
     confdir = parser_results.confdir
     test = parser_results.test
     gpg_homedir = parser_results.gpg_homedir
+    imap_sleep_time = parser_results.imap_sleep_time
 
     # Config Parsing
     cfg_parser = ConfigParser(confdir)
@@ -81,7 +90,7 @@ def main():
             gpg_homedir = config.get('settings').get('gpg_homedir')
 
         gpg = gnupg.GPG(homedir=gpg_homedir,
-                        use_agent=config.get('settings').get('gpg_use_agent', True),
+                        use_agent=config.get('settings').get('gpg_use_agent', False),
                         binary=config.get('settings').get('gpg_binary', 'gpg2'))
         gpg.encoding = 'utf-8'
 
@@ -95,20 +104,27 @@ def main():
         acc_password = acc_settings.get('password')
         if not acc_password:
             # Switch to GPG-encrypted password
-            enc_password = gpg.decrypt(acc_settings.get('password_enc'))
-            if not enc_password.ok:
-                logger.error('%s: Failed to decrypt GPG message: %s', acc_settings.get('username'), enc_password.status)
-                logger.debug('%s: GPG error: %s', acc_settings.get('username'), enc_password.stderr)
-                exit(1)
-            acc_password = str(enc_password)
+            enc_password = None
 
+            # Shall we use gpg-agent or use Python's getpass to retreive the plain text password
+            if config.get('settings').get('gpg_use_agent', False):
+                enc_password = gpg.decrypt(message=acc_settings.get('password_enc'))
+
+                if not enc_password.ok:
+                    logger.error('%s: Failed to decrypt GPG message: %s', acc_settings.get('username'), enc_password.status)
+                    logger.debug('%s: GPG error: %s', acc_settings.get('username'), enc_password.stderr)
+                    exit(1)
+                acc_password = str(enc_password)
+            else:
+                acc_password = getpass('Please enter the IMAP password for {0} ({1}): '.format(acc, acc_settings.get('username')))
+
+        logger.info('%s: Setting up IMAP connection', acc_settings.get('username'))
         imap_pool[acc] = IMAP(logger=logger,
                               server=acc_settings.get('server'),
                               port=acc_settings.get('port', 143),
                               username=acc_settings.get('username'),
                               password=acc_password,
                               test=test)
-        imap_pool[acc].connect()  # TODO error handling
 
     while True:
         for acc, acc_settings in config.get('accounts').items():
@@ -150,7 +166,7 @@ def main():
                 for mail in mails:
                     imap_pool[acc].move_mail(mails[mail], pre_inbox, sort_mailbox, set_flags=[])
 
-        break
+        sleep(imap_sleep_time)
 
     logger.debug('Shutting down tabellarius instance..')
 
