@@ -62,3 +62,4 @@ test/nodes.yaml
 config.dist/accounts.yaml
 docs/_build
 MANIFEST
+tabellarius.egg-info
