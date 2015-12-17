@@ -37,15 +37,22 @@ def main():
                         dest='test',
                         help='Run in test mode, run read-only IMAP commands only',
                         default=None)
+    parser.add_argument('--gpg-homedir',
+                        action='store',
+                        dest='gpg_homedir',
+                        help='Override gpg home dir setting (default: ~/.gnupg/)',
+                        default='~/.gnupg/')
     parser.add_argument('--confdir',
                         action='store',
                         dest='confdir',
-                        help='directory to search for configuration files (default: config/)',
-                        default='config/')
+                        help='Directory to search for configuration files (default: config/)',
+                        default='config/',
+                        required=True)
 
     parser_results = parser.parse_args()
     confdir = parser_results.confdir
     test = parser_results.test
+    gpg_homedir = parser_results.gpg_homedir
 
     # Config Parsing
     cfg_parser = ConfigParser(confdir)
@@ -70,7 +77,10 @@ def main():
             break
     if use_gpg:
         import gnupg
-        gpg = gnupg.GPG(homedir=config.get('settings').get('gpg_homedir', '~/.gnupg/'),
+        if config.get('settings').get('gpg_homedir', None):
+            gpg_homedir = config.get('settings').get('gpg_homedir')
+
+        gpg = gnupg.GPG(homedir=gpg_homedir,
                         use_agent=config.get('settings').get('gpg_use_agent', True),
                         binary=config.get('settings').get('gpg_binary', 'gpg2'))
         gpg.encoding = 'utf-8'
