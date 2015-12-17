@@ -125,6 +125,11 @@ def main():
                               username=acc_settings.get('username'),
                               password=acc_password,
                               test=test)
+        connect = imap_pool[acc].connect()
+
+        if not connect:
+            logger.error('%s: Failed to login, abort..', acc_settings.get('username'))
+            exit(127)
 
     while True:
         for acc, acc_settings in sorted(config.get('accounts').items()):

@@ -34,10 +34,15 @@ class IMAP(object):
             self.ssl = True
             self.logger.debug('Establishing IMAP connection using SSL/993 to %s and logging in with user %s', self.server, self.username)
 
-        self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.ssl)
-        if self.starttls:
-            self.conn.starttls()
-        self.conn.login(self.username, self.password)
+        try:
+            self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.ssl)
+
+            if self.starttls:
+                self.conn.starttls()
+            return self.conn.login(self.username, self.password)
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            return None
 
     def process_error(self, exception):
         self.logger.error('Catching IMAP exception: %s', exception)
@@ -45,30 +50,28 @@ class IMAP(object):
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)
         try:
-            result = self.conn.select_folder(mailbox)
+            return self.conn.select_folder(mailbox)
         except IMAPClient.Error as e:
             self.process_error(e)
-            result = None
-        return result
+            return None
 
     def search_mails(self, mailbox, criteria='ALL'):
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:
             result = self.select_mailbox(mailbox)
             result = self.conn.search(criteria=criteria)
-            mail_uids = result
+            return list(result)
         except IMAPClient.Error as e:
             self.process_error(e)
-            mail_uids = []
-        return list(mail_uids)
+            return []
 
     def fetch_raw_mails(self, uids, mailbox, return_fields=[b'RFC822']):
         if len(uids) == 0:
             return []
         self.logger.debug('Fetching raw mails with uids %s', uids)
 
+        mails = {}
         try:
-            mails = {}
             for uid in uids:
                 result = self.select_mailbox(mailbox)
                 result = self.conn.fetch(uid, return_fields)
@@ -128,58 +131,52 @@ class IMAP(object):
     def _set_mailflags(self, uids, flags=[]):
         self.logger.debug('Setting flags=%s on mails uid=%s', flags, uids)
         try:
-            result = self.conn.set_flags(uids, flags)
+            return self.conn.set_flags(uids, flags)
         except IMAPClient.Error as e:
             self.process_error(e)
-            result = None
-        return result
+            return None
 
     def _expunge(self):
         self.logger.info('Expunge mails')
         try:
-            result = self.conn.expunge()
+            return self.conn.expunge()
         except IMAPClient.Error as e:
             self.process_error(e)
-            result = None
-        return result
+            return None
 
     def _create_mailbox(self, mailbox):
         self.logger.info('Creating mailbox %s', mailbox)
         try:
-            result = self.conn.create_folder(mailbox)
+            return self.conn.create_folder(mailbox)
         except IMAPClient.Error as e:
             self.process_error(e)
-            result = None
-        return result
+            return None
 
     def _mailbox_exists(self, mailbox):
         self.logger.debug('Checking wether mailbox %s exists', mailbox)
         try:
-            result = self.conn.folder_exists(mailbox)
+            return self.conn.folder_exists(mailbox)
         except IMAPClient.Error as e:
             self.process_error(e)
-            result = None
-        return result
+            return None
 
     def _delete_mails(self, uids):
         self.logger.info('Deleting mails uid="%s"', uids)
         try:
-            result = self.conn.delete_messages(uids)
+            return self.conn.delete_messages(uids)
         except IMAPClient.Error as e:
             self.process_error(e)
-            result = None
-        return result
+            return None
 
     def _copy_mail(self, uids, destination):
         self.logger.info('Copying mails uid="%s" to "%s"', uids, destination)
         try:
-            result = self.conn.copy(uids, destination)
+            return self.conn.copy(uids, destination)
         except IMAPClient.Error as e:
             self.process_error(e)
             if not self._mailbox_exists(destination):
                 self.logger.info('Mailbox %s doesn\'t even exist! Creating it for you now', destination)
-                result = self._create_mailbox(destination)
-                result = self._copy_mail(uids, destination)
-            else:
-                result = None
-        return result
+                self._create_mailbox(destination)
+                return self._copy_mail(uids, destination)
+
+            return None
