@@ -29,7 +29,8 @@ class IMAP(object):
         if self.port == 143:
             self.starttls = True
             self.ssl = False
-            self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server, self.username)
+            self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server,
+                              self.username)
         else:
             self.starttls = None
             self.ssl = True

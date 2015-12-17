@@ -17,7 +17,8 @@ class Mail(dict):
         self.parse_email_object()
 
     def parse_email_object(self):
-        fields_to_store = {  # TODO store as much as possible, get rid of this static list
+        fields_to_store = {
+            # TODO store as much as possible, get rid of this static list
             'content-type': None,
             'date': None,
             'delivered-to': {'multiple': True},
