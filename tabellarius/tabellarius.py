@@ -26,7 +26,7 @@ from misc import ConfigParser, Helper
 
 
 def main():
-    version = '0.0.1'
+    version = '0.1.0'
     program_name = 'tabellarius'
     parser = argparse.ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 
@@ -94,7 +94,7 @@ def main():
 
         imap_pool[acc] = IMAP(logger=logger,
                               server=acc_settings.get('server'),
-                              port=acc_settings.get('port'),
+                              port=acc_settings.get('port', 143),
                               username=acc_settings.get('username'),
                               password=acc_password,
                               test=test)

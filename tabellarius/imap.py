@@ -9,33 +9,35 @@ import sys
 
 # Third party libs
 import email.message
-sys.path.insert(0, './imapclient/imapclient')  # TODO this is ugly, improve it
 from imapclient import IMAPClient
 
 from mail import Mail
 
 
 class IMAP(object):
-    def __init__(self, logger, username, password, server='localhost', port=143, ssl=None, startls=None, test=False):
+    def __init__(self, logger, username, password, server='localhost', port=143, test=False):
         self.logger = logger
         self.username = username
         self.password = password
         self.server = server
         self.port = port
-        self.ssl = ssl
-        self.starttls = None
+        self.ssl = False
+        self.starttls = True
         self.test = test
 
     def connect(self):
-        self.logger.debug('Establishing IMAP TLS connection to %s and logging in with user %s', self.server, self.username)
-
         if self.port == 143:
             self.starttls = True
+            self.ssl = False
+            self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server, self.username)
         else:
             self.starttls = None
             self.ssl = True
+            self.logger.debug('Establishing IMAP connection using SSL/993 to %s and logging in with user %s', self.server, self.username)
 
-        self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, starttls=self.starttls, ssl=self.ssl)
+        self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.ssl)
+        if self.starttls:
+            self.conn.starttls()
         self.conn.login(self.username, self.password)
 
     def process_error(self, exception):

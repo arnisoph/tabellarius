@@ -1,3 +1,0 @@
-[submodule "tabellarius/imapclient"]
-	path = tabellarius/imapclient
-	url = https://github.com/bechtoldt/imapclient.git
