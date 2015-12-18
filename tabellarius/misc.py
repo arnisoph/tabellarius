@@ -8,7 +8,7 @@ import logging.config
 import yaml
 
 
-class ConfigParser(object):
+class ConfigParser(object):  # TODO test
     def __init__(self, confdir, config=None):
         self.confdir = confdir
 
@@ -53,6 +53,9 @@ class Helper(object):
 
     @staticmethod
     def check_match(string, pattern):
+        """
+        Test whether a string matches a pattern
+        """
         if string is None or len(string) == 0:
             return False
 
@@ -68,7 +71,14 @@ class Helper(object):
         return False
 
     @staticmethod
-    def clean_field_names(field):
+    def clean_field_names(field):  # TODO rename method
+        """
+        Parse a rule condition and return a tuple
+
+        'from' results to ('from', 'from', false)
+        'from!' results to ('from!', 'from', true)
+        'to!' results to ('to!', 'to', true)
+        """
         if field[-1:] == '!':
             return (field, field[0:-1], True)
         else:
@@ -76,6 +86,9 @@ class Helper(object):
 
     @staticmethod
     def create_logger(program_name, config=None):
+        """
+        Setup and return Python logger
+        """
         if not config:
             config = {'version': 1}
         logger = logging.getLogger(program_name)

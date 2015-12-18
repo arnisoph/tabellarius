@@ -3,6 +3,7 @@
 
 from setuptools import setup
 
+
 setup(name='tabellarius',
       version='0.1.3',
       description='A mail-sorting tool that is less annoying',

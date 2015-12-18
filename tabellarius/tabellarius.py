@@ -16,6 +16,7 @@ TODO:
 * filtering fields like deliverd-to/ received/ body are not supported yet
 * manage different namespaces
 * expunge at the end only
+* use decorators for imap methods (refresh_folder, check_login, etc.)
 """
 # Third party libs
 import argparse

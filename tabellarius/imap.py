@@ -95,6 +95,7 @@ class IMAP(object):
             mails[raw_uid] = mail
         return mails
 
+    #@refresh_folders
     def move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
         if self.test:
             self.logger.info('Would have moved mail message-id="%s" from "%s" to "%s", skipping because of beeing in testmode',
