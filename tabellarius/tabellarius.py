@@ -3,12 +3,6 @@
 # vim: ts=4 sw=4 et
 """tabellarius
 
-Loglevels in use:
-* DEBUG
-* ERROR
-* CRITICAL
-* INFO
-
 TODO:
 * TLS communication is UNCONFIGURED (using library defaults)
 * support IDLE connections
@@ -38,8 +32,13 @@ def main():
     parser.add_argument('-t', '--test',
                         action='store_true',
                         dest='test',
-                        help='Run in test mode, run read-only IMAP commands only',
+                        help='Run in test mode, run read-only IMAP commands only (WARNING: Bare Implementation!)',
                         default=None)
+    parser.add_argument('-l', '--log-level',
+                        action='store',
+                        dest='log_level',
+                        help='Override log level setting (DEBUG|ERROR|CRITICAL|INFO)',
+                        default='')
     parser.add_argument('--gpg-homedir',
                         action='store',
                         dest='gpg_homedir',
@@ -61,6 +60,11 @@ def main():
     parser_results = parser.parse_args()
     confdir = parser_results.confdir
     test = parser_results.test
+
+    log_level = parser_results.log_level
+    if log_level and log_level not in ['DEBUG', 'ERROR', 'CRITICAL', 'INFO']:
+        print('log_level %s is not supported', log_level)
+
     gpg_homedir = parser_results.gpg_homedir
     imap_sleep_time = parser_results.imap_sleep_time
 
@@ -72,6 +76,8 @@ def main():
 
     # Logging
     logconfig = config.get('settings', {}).get('logging', {})
+    if log_level:
+        logconfig['root']['level'] = log_level
     logger = Helper().create_logger(program_name, logconfig)
 
     # Let's start working now
@@ -173,16 +179,15 @@ def main():
                     for mail in mails:
                         imap_pool[acc].move_mail(mails[mail], pre_inbox, sort_mailbox, set_flags=[])
             #except IMAPClient.Error as e:
-            #    logger.error('%s: Catching exception: %s. This is bad and I am sad. Going to sleep for a few seconds and trying then again..', acc_settings.get('username'), exception)
+            #    logger.error('%s: Catching exception: %s. This is bad and I am sad. Going to sleep for a few seconds and trying again..',
+            #                 acc_settings.get('username'), e)
             #    sleep(10)
 
-            except:
-                logger.error('%s: Catching unknown exception: %s. Going to die hard now..', acc_settings.get('username'), exception)
+            except Exception as e:
+                logger.error('%s: Catching unknown exception: %s. Going to die hard now..', acc_settings.get('username'), e)
                 exit(1)
 
         sleep(imap_sleep_time)
-
-    logger.debug('Shutting down tabellarius instance..')
 
 
 if __name__ == '__main__':
