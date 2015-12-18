@@ -31,3 +31,12 @@ class HelperTest(TabellariusTest):
     def test_logger(self):
         import logging
         self.assertIsInstance(tabellarius.misc.Helper().create_logger('program_name', {}), logging.Logger)
+
+
+class ConfigParserTest(TabellariusTest):
+    def test_configparser(self):
+        cfg_parser = tabellarius.misc.ConfigParser('config.dist')
+        config = cfg_parser.dump()
+
+        self.assertIn('accounts', config)
+        self.assertIn('Twitter', config.get('filters', {}).get('test', {}))

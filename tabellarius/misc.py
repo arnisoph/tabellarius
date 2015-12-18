@@ -8,7 +8,7 @@ import logging.config
 import yaml
 
 
-class ConfigParser(object):  # TODO test
+class ConfigParser(object):
     def __init__(self, confdir, config=None):
         self.confdir = confdir
 

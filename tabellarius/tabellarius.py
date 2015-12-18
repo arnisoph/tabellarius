@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
-
 """tabellarius
 
 Loglevels in use:
@@ -20,7 +19,7 @@ TODO:
 * use decorators for imap methods (refresh_folder, check_login, etc.)
 """
 
-import argparse
+from argparse import ArgumentParser
 from getpass import getpass
 from time import sleep
 
@@ -32,7 +31,7 @@ from misc import ConfigParser, Helper
 def main():
     version = '0.1.3'
     program_name = 'tabellarius'
-    parser = argparse.ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
+    parser = ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 
     # General args
     parser.add_argument('-V', action='version', version='%(prog)s {version}'.format(version=version))
