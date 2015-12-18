@@ -164,7 +164,7 @@ def main():
                     imap_pool[acc].set_mailflags([uid], pre_inbox, acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
 
             if sort_mailbox:
-                logger.info('%s: Searching for mails that did not match any filter and moving them to %s', acc_settings.get('username'),
+                logger.debug('%s: Searching for mails that did not match any filter and moving them to %s', acc_settings.get('username'),
                             sort_mailbox)
                 uids = imap_pool[acc].search_mails(pre_inbox)
                 mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
