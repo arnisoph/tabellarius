@@ -140,37 +140,45 @@ def main():
             pre_inbox_search = acc_settings.get('pre_inbox_search', 'ALL')
             sort_mailbox = acc_settings.get('sort_mailbox', None)
 
-            mail_uids = imap_pool[acc].search_mails(pre_inbox, pre_inbox_search)
-            if not mail_uids:
-                logger.debug('%s: No mails found, continue with next mail account..', acc_settings.get('username'))
-                continue
+            try:
+                mail_uids = imap_pool[acc].search_mails(pre_inbox, pre_inbox_search)
+                if not mail_uids:
+                    logger.debug('%s: No mails found, continue with next mail account..', acc_settings.get('username'))
+                    continue
 
-            mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
-            for uid, mail in mails.items():
-                match = False
-                for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
-                    set_commands = filter_rulesets.get('commands', None)
-                    set_rules = filter_rulesets.get('rules', None)
-                    ruleset = RuleSet(logger=logger,
-                                      name=filter_name,
-                                      ruleset=set_rules,
-                                      commands=set_commands,
-                                      imap=imap_pool[acc],
-                                      mail=(uid, mail),
-                                      mailbox=pre_inbox)
-                    match = ruleset.process()
-                    if match:
-                        break
-                if not match and not sort_mailbox:
-                    imap_pool[acc].set_mailflags([uid], pre_inbox, acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
+                mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
+                for uid, mail in mails.items():
+                    match = False
+                    for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
+                        set_commands = filter_rulesets.get('commands', None)
+                        set_rules = filter_rulesets.get('rules', None)
+                        ruleset = RuleSet(logger=logger,
+                                          name=filter_name,
+                                          ruleset=set_rules,
+                                          commands=set_commands,
+                                          imap=imap_pool[acc],
+                                          mail=(uid, mail),
+                                          mailbox=pre_inbox)
+                        match = ruleset.process()
+                        if match:
+                            break
+                    if not match and not sort_mailbox:
+                        imap_pool[acc].set_mailflags([uid], pre_inbox, acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
 
-            if sort_mailbox:
-                logger.debug('%s: Searching for mails that did not match any filter and moving them to %s', acc_settings.get('username'),
-                             sort_mailbox)
-                uids = imap_pool[acc].search_mails(pre_inbox)
-                mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
-                for mail in mails:
-                    imap_pool[acc].move_mail(mails[mail], pre_inbox, sort_mailbox, set_flags=[])
+                if sort_mailbox:
+                    logger.debug('%s: Searching for mails that did not match any filter and moving them to %s',
+                                 acc_settings.get('username'), sort_mailbox)
+                    uids = imap_pool[acc].search_mails(pre_inbox)
+                    mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
+                    for mail in mails:
+                        imap_pool[acc].move_mail(mails[mail], pre_inbox, sort_mailbox, set_flags=[])
+            #except IMAPClient.Error as e:
+            #    logger.error('%s: Catching exception: %s. This is bad and I am sad. Going to sleep for a few seconds and trying then again..', acc_settings.get('username'), exception)
+            #    sleep(10)
+
+            except:
+                logger.error('%s: Catching unknown exception: %s. Going to die hard now..', acc_settings.get('username'), exception)
+                exit(1)
 
         sleep(imap_sleep_time)
 

@@ -9,6 +9,9 @@ import yaml
 
 
 class ConfigParser(object):
+    """
+    Recursive YAML file parsing for Tabellarius configuration
+    """
     def __init__(self, confdir, config=None):
         self.confdir = confdir
 
