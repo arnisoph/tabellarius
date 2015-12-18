@@ -63,7 +63,8 @@ def main():
 
     log_level = parser_results.log_level
     if log_level and log_level not in ['DEBUG', 'ERROR', 'CRITICAL', 'INFO']:
-        print('log_level %s is not supported', log_level)
+        print('LOG_LEVEL %s is not supported, supported log levels are DEBUG, ERROR, CRITICAL, INFO', log_level)
+        exit(127)
 
     gpg_homedir = parser_results.gpg_homedir
     imap_sleep_time = parser_results.imap_sleep_time
