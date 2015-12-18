@@ -157,12 +157,10 @@ def main():
                 for uid, mail in mails.items():
                     match = False
                     for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
-                        set_commands = filter_rulesets.get('commands', None)
-                        set_rules = filter_rulesets.get('rules', None)
                         ruleset = RuleSet(logger=logger,
                                           name=filter_name,
-                                          ruleset=set_rules,
-                                          commands=set_commands,
+                                          ruleset=filter_rulesets.get('rules', None),
+                                          commands=filter_rulesets.get('commands', None),
                                           imap=imap_pool[acc],
                                           mail=(uid, mail),
                                           mailbox=pre_inbox)
