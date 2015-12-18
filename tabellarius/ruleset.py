@@ -53,7 +53,7 @@ class RuleSet(object):
         if operator == 'or':
             last_match = True
             for condition in conditions:
-                field_original, field, invert = Helper().clean_field_names(sorted(condition.keys())[0])
+                field_original, field, invert = Helper().clean_field_name(sorted(condition.keys())[0])
                 pattern = condition.get(field_original)
 
                 if field in self.supported_rule_operators:
@@ -78,7 +78,7 @@ class RuleSet(object):
             return last_match
         elif operator == 'and':
             for condition in conditions:
-                field_original, field, invert = Helper().clean_field_names(sorted(condition.keys())[0])
+                field_original, field, invert = Helper().clean_field_name(sorted(condition.keys())[0])
                 pattern = condition.get(field_original)
                 if field in self.supported_rule_operators:
                     last_match = self.filter_match(mail=mail, operator=field, conditions=pattern)

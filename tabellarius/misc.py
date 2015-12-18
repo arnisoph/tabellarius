@@ -71,9 +71,9 @@ class Helper(object):
         return False
 
     @staticmethod
-    def clean_field_names(field):  # TODO rename method
+    def clean_field_name(field):
         """
-        Parse a rule condition and return a tuple
+        Parse a rule field name and return a tuple
 
         'from' results to ('from', 'from', false)
         'from!' results to ('from!', 'from', true)

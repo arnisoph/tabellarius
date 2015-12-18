@@ -23,10 +23,10 @@ class HelperTest(TabellariusTest):
         self.assertTrue(tabellarius.misc.Helper().check_match('foo@example.com', '^.*@example.(com|net)$'))
         self.assertTrue(tabellarius.misc.Helper().check_match('Sönderzäichen', '^Sönder.*'))
 
-    def test_clean_field_names(self):
-        self.assertEqual(tabellarius.misc.Helper().clean_field_names('from'), ('from', 'from', False))
-        self.assertEqual(tabellarius.misc.Helper().clean_field_names('from!'), ('from!', 'from', True))
-        self.assertNotEqual(tabellarius.misc.Helper().clean_field_names('from!'), ('from!', 'from', False))
+    def test_clean_field_name(self):
+        self.assertEqual(tabellarius.misc.Helper().clean_field_name('from'), ('from', 'from', False))
+        self.assertEqual(tabellarius.misc.Helper().clean_field_name('from!'), ('from!', 'from', True))
+        self.assertNotEqual(tabellarius.misc.Helper().clean_field_name('from!'), ('from!', 'from', False))
 
     def test_logger(self):
         import logging
