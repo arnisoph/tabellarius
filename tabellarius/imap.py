@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
-"""
-Notes:
 
-* before calling a private function, always issue a new SELECT command
-"""
-# Third party libs
 import email.message
 from imapclient import IMAPClient
 

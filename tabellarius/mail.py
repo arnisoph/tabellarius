@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
-import sys
 
-# Third party libs
+import sys
 import email.message
-sys.path.insert(0, './imapclient/imapclient')  # TODO this is ugly, improve it
 
 
 class Mail(dict):

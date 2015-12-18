@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
+
 """tabellarius
 
 Loglevels in use:
@@ -18,7 +19,7 @@ TODO:
 * expunge at the end only
 * use decorators for imap methods (refresh_folder, check_login, etc.)
 """
-# Third party libs
+
 import argparse
 from getpass import getpass
 from time import sleep
