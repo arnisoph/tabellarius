@@ -15,6 +15,7 @@ from mail import Mail
 class IMAP(object):
     def __init__(self, logger, username, password, server='localhost', port=143, starttls=False, imaps=False, tlsverify=True, test=False):
         """
+        Central class for IMAP server communication
         """
         self.logger = logger
         self.username = username
@@ -64,12 +65,16 @@ class IMAP(object):
             return (False, None)
 
     def process_error(self, exception):
+        """
+        Process Python exception by logging a message and optionally showing traceback
+        """
         trace_info = exc_info()
-        self.logger.error('Catching IMAP exception: %s', exception)
+        self.logger.error('Catching IMAP exception %s: %s', type(exception), exception)
 
         if self.logger.isEnabledFor(loglevel_DEBUG):
             print_exception(*trace_info)
         del trace_info
+        return exception
 
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)
