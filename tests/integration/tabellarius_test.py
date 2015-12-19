@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 
+import redis
 import sys
 import unittest
 
@@ -21,7 +22,18 @@ class TabellariusTest(unittest.TestCase):
         critical = debug
         error = debug
 
+    def create_imap_user(self, username, password):
+        for authdb in ['userdb', 'passdb']:
+            name = 'dovecot/{0}/{1}'.format(authdb, username)
+            value = '{{"uid":"65534","gid":"65534","home":"/tmp/{0}","username":"{0}","password":"{1}"}}'.format(username, password)
+            self.rconn.set(name=name, value=value)  # TODO
+
+    def remove_imap_user(self, username='test'):
+        for authdb in ['userdb', 'passdb']:
+            self.rconn.delete('dovecot/{0}/{1}'.format(authdb, username))  # TODO
+
     logger = LoggerDummy()
+    rconn = redis.StrictRedis(host='127.0.0.1', port=6379)
 
 
 if __name__ == "__main__":

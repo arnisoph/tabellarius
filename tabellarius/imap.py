@@ -5,6 +5,7 @@ from email import message_from_bytes
 from imapclient import IMAPClient
 from logging import DEBUG as loglevel_DEBUG
 from sys import exc_info
+from time import sleep
 from traceback import print_exception
 import backports.ssl as ssl
 
@@ -31,7 +32,7 @@ class IMAP(object):
 
         self.test = test
 
-    def connect(self):
+    def connect(self, retry=True, logout=False):
         if self.starttls:
             self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server,
                               self.username)
@@ -40,15 +41,25 @@ class IMAP(object):
                               self.server,
                               self.username)
 
+        login = ''
         try:
             self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.imaps, ssl_context=self.sslcontext)
 
             if self.starttls:
                 self.conn.starttls()
-            return self.conn.login(self.username, self.password)
+            login = self.conn.login(self.username, self.password)
+
+            if logout:
+                return (login == b'Logged in', self.conn.logout())
+            else:
+                return (login == b'Logged in', login)
         except IMAPClient.Error as e:
             self.process_error(e)
-            return None
+            if retry:
+                self.logger.error('Trying one more time to login')
+                sleep(2)
+                return self.connect(retry=False, logout=logout)
+            return (False, None)
 
     def process_error(self, exception):
         trace_info = exc_info()
