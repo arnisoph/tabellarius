@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-from email import message_from_bytes
+import email
 from imapclient import IMAPClient
 from logging import DEBUG as loglevel_DEBUG
 from sys import exc_info
@@ -116,7 +116,7 @@ class IMAP(object):
         raw_mails = self.fetch_raw_mails(uids, mailbox)
         mails = {}
         for raw_uid, raw_mail in raw_mails.items():
-            mail = Mail(logger=self.logger, uid=raw_uid, mail=message_from_bytes(raw_mails[raw_uid][b'RFC822']))
+            mail = Mail(logger=self.logger, uid=raw_uid, mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))  # TODO doesn't work with PY27
             mails[raw_uid] = mail
         return mails
 
