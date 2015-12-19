@@ -30,9 +30,9 @@ class IMAPTest(TabellariusTest):
         # Test simple imap via STARTTLS connection
         self.assertEqual(imap.IMAP(logger=self.logger,
                                    server='127.0.0.1',
-                                   port=10993,
-                                   starttls=False,
-                                   imaps=True,
+                                   port=10143,
+                                   starttls=True,
+                                   imaps=False,
                                    tlsverify=False,  # TODO test tls verification?
                                    username=username,
                                    password=password).connect(logout=True), (True, b'Logging out'))
