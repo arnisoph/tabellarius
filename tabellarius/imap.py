@@ -41,6 +41,18 @@ class IMAP(object):
 
         self.test = test
 
+    def process_error(self, exception):
+        """
+        Process Python exception by logging a message and optionally showing traceback
+        """
+        trace_info = exc_info()
+        self.logger.error('Catching IMAP exception %s: %s', type(exception), exception)
+
+        if self.logger.isEnabledFor(loglevel_DEBUG):
+            print_exception(*trace_info)
+        del trace_info
+        return exception
+
     def connect(self, retry=True, logout=False):
         """
         Connect to IMAP server and login
@@ -83,17 +95,19 @@ class IMAP(object):
         """
         return self.conn.logout()  # TODO do more?
 
-    def process_error(self, exception):
+    def list_folders(self, directory='', pattern='*'):
         """
-        Process Python exception by logging a message and optionally showing traceback
+        Get a listing of folders on the server
         """
-        trace_info = exc_info()
-        self.logger.error('Catching IMAP exception %s: %s', type(exception), exception)
+        raw_list = self.conn.list_folders(directory, pattern)
+        nice_list = []
 
-        if self.logger.isEnabledFor(loglevel_DEBUG):
-            print_exception(*trace_info)
-        del trace_info
-        return exception
+        for folder in raw_list:
+            flags = []
+            for flag in folder[0]:
+                flags.append(flag.decode("utf-8"))
+            nice_list.append({'name': folder[2], 'flags': flags, 'delimiter': folder[1].decode("utf-8")})
+        return nice_list
 
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)

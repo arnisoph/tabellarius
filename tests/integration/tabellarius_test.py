@@ -6,6 +6,7 @@ from __future__ import print_function
 import redis
 import sys
 import unittest
+import time
 
 sys.path.insert(0, './tabellarius')
 
@@ -24,11 +25,12 @@ class TabellariusTest(unittest.TestCase):
         critical = debug
         error = debug
 
-    def create_imap_user(self, username, password):
+    def create_imap_user(self, username='test-{0}@example.com'.format(int(round(time.time() * 1000))), password='test'):
         for authdb in ['userdb', 'passdb']:
             name = 'dovecot/{0}/{1}'.format(authdb, username)
             value = '{{"uid":"65534","gid":"65534","home":"/tmp/{0}","username":"{0}","password":"{1}"}}'.format(username, password)
             self.rconn.set(name=name, value=value)  # TODO
+        return (username, password)
 
     def remove_imap_user(self, username='test'):
         for authdb in ['userdb', 'passdb']:

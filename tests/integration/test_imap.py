@@ -9,17 +9,16 @@ from .tabellarius_test import TabellariusTest
 
 
 class IMAPTest(TabellariusTest):
-    imap_users = {'test@example.com': 'test'}
+    #imap_users = {'test@example.com': 'test'}
 
-    def setUp(self):
-        for username, password in sorted(self.imap_users.items()):
-            self.create_imap_user(username, password)
+    #def setUp(self):
+    #    for username, password in sorted(self.imap_users.items()):
+    #        self.create_imap_user(username, password)
 
     def test_connect(self):
-        username = 'test@example.com'
-        password = self.imap_users['test@example.com']
 
         # Test simple plaintext imap connection
+        username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
                                    server='127.0.0.1',
                                    port=10143,
@@ -31,6 +30,7 @@ class IMAPTest(TabellariusTest):
         else:
             expect = '[AUTHENTICATIONFAILED] Authentication failed.'
 
+        username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
                                    server='127.0.0.1',
                                    port=10143,
@@ -38,11 +38,13 @@ class IMAPTest(TabellariusTest):
                                    password='wrongpassword').connect(logout=True), (False, expect))
 
         # Manually logging out
+        username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(logout=False), (True, b'Logged in'))
         self.assertEqual(imapconn.disconnect(), b'Logging out')
 
         # Test simple imap via STARTTLS connection
+        username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
                                    server='127.0.0.1',
                                    port=10143,
@@ -53,6 +55,7 @@ class IMAPTest(TabellariusTest):
                                    password=password).connect(logout=True), (True, b'Logging out'))
 
         # Test simple imaps connection
+        username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
                                    server='127.0.0.1',
                                    port=10993,
@@ -63,15 +66,32 @@ class IMAPTest(TabellariusTest):
                                    password=password).connect(logout=True), (True, b'Logging out'))
 
     def test_process_error(self):
-        username = 'test@example.com'
-        password = self.imap_users['test@example.com']
-
         try:
             raise KeyError('test')
         except KeyError as e:
+            username, password = self.create_imap_user()
             imapconn = self.create_basic_imap_object(username, password)
             self.assertIsInstance(imapconn.process_error(e), KeyError)
 
-    def tearDown(self):
-        for username, password in sorted(self.imap_users.items()):
-            self.remove_imap_user(username)
+    def test_list_folders(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        expect = [{'delimiter': '/',
+                   'flags': ['\\HasNoChildren', '\\Trash'],
+                   'name': 'Trash'}, {'delimiter': '/',
+                                      'flags': ['\\HasNoChildren', '\\Drafts'],
+                                      'name': 'Drafts'}, {'delimiter': '/',
+                                                          'flags': ['\\HasNoChildren', '\\Sent'],
+                                                          'name': 'Sent'},
+                  {'delimiter': '/',
+                   'flags': ['\\HasNoChildren', '\\Junk'],
+                   'name': 'Junk'}, {'delimiter': '/',
+                                     'flags': ['\\HasNoChildren'],
+                                     'name': 'INBOX'}]
+        self.assertEqual(imapconn.list_folders(), expect)
+
+    #def tearDown(self):
+    #    for username, password in sorted(self.imap_users.items()):  # TODO
+    #        self.remove_imap_user(username)
