@@ -9,7 +9,7 @@ sys.path.insert(0, './tabellarius')
 
 class TabellariusTest(unittest.TestCase):
     class LoggerDummy:
-        def isEnabledFor(*arg):
+        def isEnabledFor(self, *arg):
             return True
 
         def debug(self, *arg):
