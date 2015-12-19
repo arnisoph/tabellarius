@@ -59,7 +59,6 @@ test/nodes.yaml
 *.box
 
 
-config.dist/accounts.yaml
 docs/_build
 MANIFEST
 tabellarius.egg-info
