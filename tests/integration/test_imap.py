@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
+from six import PY3
+
 import imap
 
 from .tabellarius_test import TabellariusTest
@@ -24,12 +26,16 @@ class IMAPTest(TabellariusTest):
                                    username=username,
                                    password=password).connect(logout=True), (True, b'Logging out'))
 
+        if PY3:
+            expect = "b'[AUTHENTICATIONFAILED] Authentication failed.'"
+        else:
+            expect = '[AUTHENTICATIONFAILED] Authentication failed.'
+
         self.assertEqual(imap.IMAP(logger=self.logger,
                                    server='127.0.0.1',
                                    port=10143,
                                    username=username,
-                                   password='wrongpassword').connect(logout=True),
-                         (False, "b'[AUTHENTICATIONFAILED] Authentication failed.'"))
+                                   password='wrongpassword').connect(logout=True), (False, expect))
 
         # Manually logging out
         imapconn = self.create_basic_imap_object(username, password)
