@@ -116,16 +116,39 @@ class IMAPTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
 
-        self.assertTrue(imapconn.add_mail(folder='INBOX', message='hi', flags=['FLAG', 'WAVE']))
-        self.assertTrue(imapconn.add_mail(folder='INBOX',
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message='hi', flags=['FLAG', 'WAVE']))
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=b'bye',
                                           flags=['FLAG', 'WAVE'],
                                           msg_time=datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))))
         self.assertEqual(
-            imapconn.add_mail(folder='DoesNotExist',
+            imapconn.add_mail(mailbox='DoesNotExist',
                               message=b'bye',
                               flags=['FLAG', 'WAVE'],
                               msg_time=datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))),
             'append failed: [TRYCREATE] Mailbox doesn\'t exist: DoesNotExist')
 
         self.assertEqual(imapconn.disconnect(), b'Logging out')
+
+    def test_search_mail(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        # Adding some mails to search for
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message='hi', flags=['FLAG', 'WAVE']))
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message='I am Arnold', flags=['\\Seen']))
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX',
+                                          message=b'bye',
+                                          flags=['FLAG', 'WAVE'],
+                                          msg_time=datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))))
+
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='ALL'), [1, 2, 3])
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='UNSEEN'), [1, 3])
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SEEN'), [2])
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SINCE 13-Apr-2015'), [1, 2])
+        self.assertEqual(imapconn.search_mails(mailbox='DoesNotExist',
+                                               criteria='ALL'), 'select failed: Mailbox doesn\'t exist: DoesNotExist')
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX',
+                                               criteria='DoesNotExist'),
+                         'SEARCH command error: BAD [b\'Error in IMAP command UID SEARCH: Unknown argument DOESNOTEXIST\']')

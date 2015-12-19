@@ -110,6 +110,9 @@ class IMAP(object):
         return nice_list
 
     def select_mailbox(self, mailbox):
+        """
+        Select a mailbox to work on
+        """
         self.logger.debug('Switching to mailbox %s', mailbox)
         try:
             return self.conn.select_folder(mailbox)  # TODO convert byte strings
@@ -117,9 +120,13 @@ class IMAP(object):
             self.process_error(e)
             return str(e)
 
-    def add_mail(self, folder, message, flags=(), msg_time=None):
+    def add_mail(self, mailbox, message, flags=(), msg_time=None):
+        """
+        Add/append a mail to a mailbox
+        """
+        self.logger.debug('Adding a mail into mailbox %s', mailbox)
         try:
-            self.conn.append(folder, message, flags, msg_time)
+            self.conn.append(mailbox, message, flags, msg_time)
             # According to rfc4315 we must not return the UID of the appended message
             return True
         except IMAPClient.Error as e:
@@ -127,14 +134,21 @@ class IMAP(object):
             return str(e)
 
     def search_mails(self, mailbox, criteria='ALL'):
+        """
+        Search for mails in a mailbox
+        """
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:
             result = self.select_mailbox(mailbox)
+
+            if result == 'select failed: Mailbox doesn\'t exist: DoesNotExist':
+                return result
+
             result = self.conn.search(criteria=criteria)
             return list(result)
         except IMAPClient.Error as e:
             self.process_error(e)
-            return []
+            return str(e)
 
     def fetch_raw_mails(self, uids, mailbox, return_fields=[b'RFC822']):
         if len(uids) == 0:
