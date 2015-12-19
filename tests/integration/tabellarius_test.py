@@ -42,7 +42,8 @@ class TabellariusTest(unittest.TestCase):
                              imaps=True,
                              tlsverify=False,  # TODO
                              username=username,
-                             password=password)
+                             password=password,
+                             timeout=5)
         return imapconn
 
     logger = LoggerDummy()

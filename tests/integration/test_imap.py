@@ -24,7 +24,14 @@ class IMAPTest(TabellariusTest):
                                    username=username,
                                    password=password).connect(logout=True), (True, b'Logging out'))
 
-        # manually logging out
+        self.assertEqual(imap.IMAP(logger=self.logger,
+                                   server='127.0.0.1',
+                                   port=10143,
+                                   username=username,
+                                   password='wrongpassword').connect(logout=True),
+                         (False, "b'[AUTHENTICATIONFAILED] Authentication failed.'"))
+
+        # Manually logging out
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(logout=False), (True, b'Logged in'))
         self.assertEqual(imapconn.disconnect(), b'Logging out')

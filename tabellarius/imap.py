@@ -13,7 +13,14 @@ from mail import Mail
 
 
 class IMAP(object):
-    def __init__(self, logger, username, password, server='localhost', port=143, starttls=False, imaps=False, tlsverify=True, test=False):
+    def __init__(self, logger, username, password,
+                 server='localhost',
+                 port=143,
+                 starttls=False,
+                 imaps=False,
+                 tlsverify=True,
+                 test=False,
+                 timeout=None):
         """
         Central class for IMAP server communication
         """
@@ -24,6 +31,7 @@ class IMAP(object):
         self.port = port
         self.imaps = imaps
         self.starttls = starttls
+        self.timeout = timeout
 
         self.sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)  # TODO add proto arg
         if tlsverify:
@@ -46,7 +54,12 @@ class IMAP(object):
 
         login = ''
         try:
-            self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.imaps, ssl_context=self.sslcontext)
+            self.conn = IMAPClient(host=self.server,
+                                   port=self.port,
+                                   use_uid=True,
+                                   ssl=self.imaps,
+                                   ssl_context=self.sslcontext,
+                                   timeout=self.timeout)
 
             if self.starttls:
                 self.conn.starttls(ssl_context=self.sslcontext)
@@ -62,7 +75,7 @@ class IMAP(object):
                 self.logger.error('Trying one more time to login')
                 sleep(2)
                 return self.connect(retry=False, logout=logout)
-            return (False, None)
+            return (False, str(e))
 
     def disconnect(self):
         """
