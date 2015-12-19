@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
+from __future__ import print_function
+
 import sys
 import unittest
 
@@ -13,7 +15,7 @@ class TabellariusTest(unittest.TestCase):
             return True
 
         def debug(self, *arg):
-            print (*arg)
+            print(*arg)
 
         info = debug
         critical = debug
