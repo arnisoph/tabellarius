@@ -71,8 +71,8 @@ class Helper(object):
         pattern_re = re.compile(pattern)
         if pattern_re.match(string):
             return True
-
-        return False
+        else:
+            return False
 
     @staticmethod
     def clean_field_name(field):
