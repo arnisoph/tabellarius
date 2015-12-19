@@ -16,7 +16,6 @@ class IMAPTest(TabellariusTest):
     #        self.create_imap_user(username, password)
 
     def test_connect(self):
-
         # Test simple plaintext imap connection
         username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
@@ -73,7 +72,7 @@ class IMAPTest(TabellariusTest):
             imapconn = self.create_basic_imap_object(username, password)
             self.assertIsInstance(imapconn.process_error(e), KeyError)
 
-    def test_list_folders(self):
+    def test_list_mailboxes(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
@@ -90,7 +89,17 @@ class IMAPTest(TabellariusTest):
                    'name': 'Junk'}, {'delimiter': '/',
                                      'flags': ['\\HasNoChildren'],
                                      'name': 'INBOX'}]
-        self.assertEqual(imapconn.list_folders(), expect)
+        self.assertEqual(imapconn.list_mailboxes(), expect)
+        self.assertEqual(imapconn.disconnect(), b'Logging out')
+
+    def test_select_mailbox(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        result = imapconn.select_mailbox(mailbox='INBOX')
+        self.assertEqual(result[b'FLAGS'], (b'\\Answered', b'\\Flagged', b'\\Deleted', b'\\Seen', b'\\Draft'))
+        self.assertEqual(imapconn.disconnect(), b'Logging out')
 
     #def tearDown(self):
     #    for username, password in sorted(self.imap_users.items()):  # TODO

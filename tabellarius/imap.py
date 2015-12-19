@@ -93,26 +93,26 @@ class IMAP(object):
         """
         Disconnect from IMAP server
         """
-        return self.conn.logout()  # TODO do more?
+        return self.conn.logout()  # TODO do more?  #TODO check if logged in
 
-    def list_folders(self, directory='', pattern='*'):
+    def list_mailboxes(self, directory='', pattern='*'):
         """
-        Get a listing of folders on the server
+        Get a listing of folders (mailboxes) on the server
         """
         raw_list = self.conn.list_folders(directory, pattern)
         nice_list = []
 
-        for folder in raw_list:
+        for mailbox in raw_list:
             flags = []
-            for flag in folder[0]:
+            for flag in mailbox[0]:
                 flags.append(flag.decode("utf-8"))
-            nice_list.append({'name': folder[2], 'flags': flags, 'delimiter': folder[1].decode("utf-8")})
+            nice_list.append({'name': mailbox[2], 'flags': flags, 'delimiter': mailbox[1].decode("utf-8")})
         return nice_list
 
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)
         try:
-            return self.conn.select_folder(mailbox)
+            return self.conn.select_folder(mailbox)  # TODO convert byte strings
         except IMAPClient.Error as e:
             self.process_error(e)
             return None
