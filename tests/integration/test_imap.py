@@ -29,7 +29,6 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.connect(logout=False), (True, b'Logged in'))
         self.assertEqual(imapconn.disconnect(), b'Logging out')
 
-
         # Test simple imap via STARTTLS connection
         self.assertEqual(imap.IMAP(logger=self.logger,
                                    server='127.0.0.1',
