@@ -9,9 +9,9 @@ python:
 env:
   - TOX_ENV=app_tests
   - TOX_ENV=app_flake8
-  - TOX_ENV=app_todo
+  #- TOX_ENV=app_todo
   - TOX_ENV=tests_flake8
-  - TOX_ENV=tests_todo
+  #- TOX_ENV=tests_todo
 addons:
   apt:
     packages:

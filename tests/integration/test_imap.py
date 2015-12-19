@@ -49,4 +49,4 @@ class IMAPTest(TabellariusTest):
 
     def tearDown(self):
         for username, password in sorted(self.imap_users.items()):
-            self.create_imap_user(username)
+            self.remove_imap_user(username)
