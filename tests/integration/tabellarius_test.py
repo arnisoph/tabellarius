@@ -25,7 +25,12 @@ class TabellariusTest(unittest.TestCase):
         critical = debug
         error = debug
 
-    def create_imap_user(self, username='test-{0}@example.com'.format(int(round(time.time() * 1000))), password='test'):
+    def create_imap_user(self, username=None, password=None):
+        if username is None:
+            username = 'test-{0}@example.com'.format(int(round(time.time() * 1000)))
+        if password is None:
+            password = 'test'
+
         for authdb in ['userdb', 'passdb']:
             name = 'dovecot/{0}/{1}'.format(authdb, username)
             value = '{{"uid":"65534","gid":"65534","home":"/tmp/{0}","username":"{0}","password":"{1}"}}'.format(username, password)

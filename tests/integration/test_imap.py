@@ -14,6 +14,9 @@ class IMAPTest(TabellariusTest):
     #def setUp(self):
     #    for username, password in sorted(self.imap_users.items()):
     #        self.create_imap_user(username, password)
+    #def tearDown(self):
+    #    for username, password in sorted(self.imap_users.items()):  # TODO
+    #        self.remove_imap_user(username)
 
     def test_connect(self):
         # Test simple plaintext imap connection
@@ -90,6 +93,7 @@ class IMAPTest(TabellariusTest):
                                      'flags': ['\\HasNoChildren'],
                                      'name': 'INBOX'}]
         self.assertEqual(imapconn.list_mailboxes(), expect)
+
         self.assertEqual(imapconn.disconnect(), b'Logging out')
 
     def test_select_mailbox(self):
@@ -99,8 +103,8 @@ class IMAPTest(TabellariusTest):
 
         result = imapconn.select_mailbox(mailbox='INBOX')
         self.assertEqual(result[b'FLAGS'], (b'\\Answered', b'\\Flagged', b'\\Deleted', b'\\Seen', b'\\Draft'))
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
 
-    #def tearDown(self):
-    #    for username, password in sorted(self.imap_users.items()):  # TODO
-    #        self.remove_imap_user(username)
+        result = imapconn.select_mailbox(mailbox='DoesNotExist')
+        self.assertEqual(result, 'select failed: Mailbox doesn\'t exist: DoesNotExist')
+
+        self.assertEqual(imapconn.disconnect(), b'Logging out')

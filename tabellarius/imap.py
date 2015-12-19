@@ -115,7 +115,7 @@ class IMAP(object):
             return self.conn.select_folder(mailbox)  # TODO convert byte strings
         except IMAPClient.Error as e:
             self.process_error(e)
-            return None
+            return str(e)
 
     def search_mails(self, mailbox, criteria='ALL'):
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
