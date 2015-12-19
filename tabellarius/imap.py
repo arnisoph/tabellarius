@@ -33,6 +33,9 @@ class IMAP(object):
         self.test = test
 
     def connect(self, retry=True, logout=False):
+        """
+        Connect to IMAP server and login
+        """
         if self.starttls:
             self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server,
                               self.username)
