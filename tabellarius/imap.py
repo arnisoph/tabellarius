@@ -117,6 +117,15 @@ class IMAP(object):
             self.process_error(e)
             return str(e)
 
+    def add_mail(self, folder, message, flags=(), msg_time=None):
+        try:
+            self.conn.append(folder, message, flags, msg_time)
+            # According to rfc4315 we must not return the UID of the appended message
+            return True
+        except IMAPClient.Error as e:
+            self.process_error(e)
+            return str(e)
+
     def search_mails(self, mailbox, criteria='ALL'):
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:

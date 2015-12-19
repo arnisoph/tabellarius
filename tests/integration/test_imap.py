@@ -2,6 +2,8 @@
 # vim: ts=4 sw=4 et
 
 from six import PY3
+import datetime
+import imapclient.fixed_offset
 
 import imap
 
@@ -106,5 +108,24 @@ class IMAPTest(TabellariusTest):
 
         result = imapconn.select_mailbox(mailbox='DoesNotExist')
         self.assertEqual(result, 'select failed: Mailbox doesn\'t exist: DoesNotExist')
+
+        self.assertEqual(imapconn.disconnect(), b'Logging out')
+
+    def test_add_mail(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        self.assertTrue(imapconn.add_mail(folder='INBOX', message='hi', flags=['FLAG', 'WAVE']))
+        self.assertTrue(imapconn.add_mail(folder='INBOX',
+                                          message=b'bye',
+                                          flags=['FLAG', 'WAVE'],
+                                          msg_time=datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))))
+        self.assertEqual(
+            imapconn.add_mail(folder='DoesNotExist',
+                              message=b'bye',
+                              flags=['FLAG', 'WAVE'],
+                              msg_time=datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))),
+            'append failed: [TRYCREATE] Mailbox doesn\'t exist: DoesNotExist')
 
         self.assertEqual(imapconn.disconnect(), b'Logging out')
