@@ -22,6 +22,7 @@ class HelperTest(TabellariusTest):
         self.assertTrue(misc.Helper().check_match('foo@example.com', '^.*@example.com$'))
         self.assertTrue(misc.Helper().check_match('foo@example.com', '^.*@example.(com|net)$'))
         self.assertTrue(misc.Helper().check_match('Sönderzäichen', '^Sönder.*'))
+        self.assertFalse(misc.Helper().check_match('foo', '^fo+!$'))
 
     def test_clean_field_name(self):
         self.assertEqual(misc.Helper().clean_field_name('from'), ('from', 'from', False))
@@ -39,4 +40,5 @@ class ConfigParserTest(TabellariusTest):
         config = cfg_parser.dump()
 
         self.assertIn('accounts', config)
+        self.assertIn('settings', config)
         self.assertIn('Twitter', config.get('filters', {}).get('test', {}))
