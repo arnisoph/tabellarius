@@ -51,14 +51,8 @@ class IMAPTest(TabellariusTest):
         try:
             raise KeyError('test')
         except KeyError as e:
-            self.assertIsInstance(imap.IMAP(logger=self.logger,
-                                  server='127.0.0.1',
-                                  port=10993,
-                                  starttls=False,
-                                  imaps=True,
-                                  tlsverify=False,  # TODO test tls verification?
-                                  username=username,
-                                  password=password).process_error(e), KeyError)
+            imapconn = self.create_basic_imap_object(username, password)
+            self.assertIsInstance(imapconn.process_error(e), KeyError)
 
     def tearDown(self):
         for username, password in sorted(self.imap_users.items()):

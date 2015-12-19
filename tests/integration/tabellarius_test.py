@@ -9,6 +9,7 @@ import unittest
 
 sys.path.insert(0, './tabellarius')
 
+import imap
 
 class TabellariusTest(unittest.TestCase):
     class LoggerDummy:
@@ -31,6 +32,17 @@ class TabellariusTest(unittest.TestCase):
     def remove_imap_user(self, username='test'):
         for authdb in ['userdb', 'passdb']:
             self.rconn.delete('dovecot/{0}/{1}'.format(authdb, username))  # TODO
+
+    def create_basic_imap_object(self, username, password):
+        imapconn = imap.IMAP(logger=self.logger,
+                             server='127.0.0.1',
+                             port=10993,
+                             starttls=False,
+                             imaps=True,
+                             tlsverify=False,  # TODO
+                             username=username,
+                             password=password)
+        return imapconn
 
     logger = LoggerDummy()
     rconn = redis.StrictRedis(host='127.0.0.1', port=6379)
