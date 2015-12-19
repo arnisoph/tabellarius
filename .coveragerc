@@ -1,0 +1,2 @@
+[run]
+omit = tabellarius/__init__.py
