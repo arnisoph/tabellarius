@@ -49,7 +49,6 @@ class RuleSet(object):
                 return match
 
     def filter_match(self, mail, operator, conditions):
-        #print('Check match: operator={0} conditions={1}'.format(operator, conditions))
         if operator == 'or':
             last_match = True
             for condition in conditions:

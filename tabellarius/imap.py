@@ -1,36 +1,47 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-import email.message
+from email import message_from_bytes
 from imapclient import IMAPClient
+from logging import DEBUG as loglevel_DEBUG
+from sys import exc_info
+from traceback import print_exception
+import backports.ssl as ssl
 
 from mail import Mail
 
 
 class IMAP(object):
-    def __init__(self, logger, username, password, server='localhost', port=143, test=False):
+    def __init__(self, logger, username, password, server='localhost', port=143, starttls=False, imaps=False, tlsverify=True, test=False):
+        """
+        """
         self.logger = logger
         self.username = username
         self.password = password
         self.server = server
         self.port = port
-        self.ssl = False
-        self.starttls = True
+        self.imaps = imaps
+        self.starttls = starttls
+
+        self.sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)  # TODO add proto arg
+        if tlsverify:
+            self.sslcontext.verify_mode = ssl.CERT_REQUIRED
+        else:
+            self.sslcontext.verify_mode = ssl.CERT_NONE  # TODO improve?
+
         self.test = test
 
     def connect(self):
-        if self.port == 143:
-            self.starttls = True
-            self.ssl = False
+        if self.starttls:
             self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server,
                               self.username)
-        else:
-            self.starttls = None
-            self.ssl = True
-            self.logger.debug('Establishing IMAP connection using SSL/993 to %s and logging in with user %s', self.server, self.username)
+        elif self.imaps:
+            self.logger.debug('Establishing IMAP connection using SSL/993 (imaps) to %s and logging in with user %s',
+                              self.server,
+                              self.username)
 
         try:
-            self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.ssl)
+            self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.imaps, ssl_context=self.sslcontext)
 
             if self.starttls:
                 self.conn.starttls()
@@ -40,7 +51,12 @@ class IMAP(object):
             return None
 
     def process_error(self, exception):
+        trace = exc_info()
         self.logger.error('Catching IMAP exception: %s', exception)
+
+        if self.logger.isEnabledFor(loglevel_DEBUG):
+            print_exception(*exc_info)
+        del trace
 
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)
@@ -86,7 +102,7 @@ class IMAP(object):
         raw_mails = self.fetch_raw_mails(uids, mailbox)
         mails = {}
         for raw_uid, raw_mail in raw_mails.items():
-            mail = Mail(logger=self.logger, uid=raw_uid, mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))
+            mail = Mail(logger=self.logger, uid=raw_uid, mail=message_from_bytes(raw_mails[raw_uid][b'RFC822']))
             mails[raw_uid] = mail
         return mails
 

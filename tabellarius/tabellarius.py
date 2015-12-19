@@ -130,6 +130,9 @@ def main():
         imap_pool[acc] = IMAP(logger=logger,
                               server=acc_settings.get('server'),
                               port=acc_settings.get('port', 143),
+                              starttls=acc_settings.get('starttls', False),
+                              imaps=acc_settings.get('imaps', False),
+                              tlsverify=acc_settings.get('tlsverify', True),
                               username=acc_settings.get('username'),
                               password=acc_password,
                               test=test)
