@@ -40,8 +40,7 @@ class IMAP(object):
             self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server,
                               self.username)
         elif self.imaps:
-            self.logger.debug('Establishing IMAP connection using SSL/993 (imaps) to %s and logging in with user %s',
-                              self.server,
+            self.logger.debug('Establishing IMAP connection using SSL/993 (imaps) to %s and logging in with user %s', self.server,
                               self.username)
 
         login = ''
@@ -116,7 +115,9 @@ class IMAP(object):
         raw_mails = self.fetch_raw_mails(uids, mailbox)
         mails = {}
         for raw_uid, raw_mail in raw_mails.items():
-            mail = Mail(logger=self.logger, uid=raw_uid, mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))  # TODO doesn't work with PY27
+            mail = Mail(logger=self.logger,
+                        uid=raw_uid,
+                        mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))  # TODO doesn't work with PY27
             mails[raw_uid] = mail
         return mails
 
