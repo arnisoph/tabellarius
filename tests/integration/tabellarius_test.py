@@ -11,6 +11,7 @@ sys.path.insert(0, './tabellarius')
 
 import imap
 
+
 class TabellariusTest(unittest.TestCase):
     class LoggerDummy:
         def isEnabledFor(self, *arg):
