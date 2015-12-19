@@ -13,7 +13,7 @@ class TabellariusTest(unittest.TestCase):
             return True
 
         def debug(self, *arg):
-            print(*arg)
+            print (*arg)
 
         info = debug
         critical = debug

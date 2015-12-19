@@ -51,12 +51,12 @@ class IMAP(object):
             return None
 
     def process_error(self, exception):
-        trace = exc_info()
+        trace_info = exc_info()
         self.logger.error('Catching IMAP exception: %s', exception)
 
         if self.logger.isEnabledFor(loglevel_DEBUG):
-            print_exception(*exc_info)
-        del trace
+            print_exception(*trace_info)
+        del trace_info
 
     def select_mailbox(self, mailbox):
         self.logger.debug('Switching to mailbox %s', mailbox)
