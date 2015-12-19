@@ -64,6 +64,12 @@ class IMAP(object):
                 return self.connect(retry=False, logout=logout)
             return (False, None)
 
+    def disconnect(self):
+        """
+        Disconnect from IMAP server
+        """
+        return self.conn.logout()  # TODO do more?
+
     def process_error(self, exception):
         """
         Process Python exception by logging a message and optionally showing traceback
