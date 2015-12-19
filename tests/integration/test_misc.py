@@ -39,6 +39,12 @@ class ConfigParserTest(TabellariusTest):
         cfg_parser = misc.ConfigParser('config.dist')
         config = cfg_parser.dump()
 
-        self.assertIn('accounts', config)
+        # Check accounts
+        self.assertTrue(config.get('accounts', {}).get('gmail', {}).get('enabled'))
+        self.assertTrue(config.get('accounts', {}).get('gmail', {}).get('username'))
+
+        # Check settings
         self.assertIn('settings', config)
+
+        # Check filters
         self.assertIn('Twitter', config.get('filters', {}).get('test', {}))

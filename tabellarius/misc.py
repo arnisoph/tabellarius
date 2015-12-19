@@ -36,9 +36,8 @@ class ConfigParser(object):
                             elif root == 'accounts':
                                 for account, settings in value.items():
                                     if account not in self.config[root].keys():
-                                        self.config[root][account] = settings
-                                    else:
-                                        self.config[root][account].update(settings)
+                                        self.config[root][account] = {}
+                                    self.config[root][account].update(settings)
                             elif root == 'filters':
                                 for account, filter_set in value.items():
                                     for filterset_name, filterset_data in filter_set.items():
