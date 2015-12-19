@@ -49,7 +49,7 @@ class IMAP(object):
             self.conn = IMAPClient(host=self.server, port=self.port, use_uid=True, ssl=self.imaps, ssl_context=self.sslcontext)
 
             if self.starttls:
-                self.conn.starttls()
+                self.conn.starttls(ssl_context=self.sslcontext)
             login = self.conn.login(self.username, self.password)
 
             if logout:
