@@ -153,7 +153,6 @@ class IMAP(object):
             self.process_error(e)
             return str(e)
 
-    #def fetch_mails(self, uids, mailbox, return_fields=[b'RFC822']):
     def fetch_mails(self, uids, return_fields=None):
         """
         Retrieve mails
@@ -182,20 +181,44 @@ class IMAP(object):
             self.process_error(e)
             return str(e)
 
-    def move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
-        if self.test:
-            self.logger.info('Would have moved mail message-id="%s" from "%s" to "%s", skipping because of beeing in testmode',
-                             mail.get('message-id'), source, destination)
-        else:
-            self.select_mailbox(source)
-            self._move_mail(mail, source, destination, delete_old, expunge, set_flags)
-
     def set_mailflags(self, uids, mailbox, flags=[]):
         if self.test:
             self.logger.info('Would have set mail flags on message uids "%s"', str(uids))
+            return True
         else:
             self.select_mailbox(mailbox)
             return self._set_mailflags(uids, flags)
+
+    def move_mail(self, message_id, source, destination, delete_old=True, expunge=True, set_flags=None):  # TODO error handling is missing
+        """
+        Move a mail from a mailbox to another
+        """
+        if self.test:
+            self.logger.info('Would have moved mail message-id="%s" from "%s" to "%s", skipping because of beeing in testmode', message_id,
+                             source, destination)
+            return True
+        else:
+            try:
+                self.select_mailbox(source)
+                self.logger.debug('Moving mail message-id="%s" from "%s" to "%s"', message_id, source, destination)
+                result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
+                uid = result[0]
+
+                self._copy_mail(uid, destination)
+
+                if delete_old:
+                    self._delete_mails(uid)
+
+                    if expunge:
+                        self._expunge()
+
+                if type(set_flags) is list:
+                    self.select_mailbox(destination)
+                    uids = self.search_mails(destination, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
+                    self._set_mailflags(uids, set_flags)
+            except IMAPClient.Error as e:
+                self.process_error(e)
+                return str(e)
 
     def _append(self, folder, msg, flags=(), msg_time=None):  # TODO
         """
@@ -204,12 +227,9 @@ class IMAP(object):
         if msg_time:
             if not msg_time.tzinfo:
                 msg_time = msg_time.replace(tzinfo=FixedOffset.for_system())
-            time_val = '"{0}"'.format(msg_time.strftime("%d-%b-%Y %H:%M:%S %z"))
 
-            if PY3:
-                time_val = imapclient.imapclient.to_unicode(time_val)
-            else:
-                time_val = imapclient.imapclient.to_bytes(time_val)
+            time_val = '"{0}"'.format(msg_time.strftime("%d-%b-%Y %H:%M:%S %z"))
+            time_val = imapclient.imapclient.to_unicode(time_val)
         else:
             time_val = None
 
@@ -217,24 +237,6 @@ class IMAP(object):
                                             time_val, to_bytes(s=msg,
                                                                encoding='utf-8'),
                                             unpack=True)
-
-    def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
-        self.logger.debug('Moving mail message-id="%s" from "%s" to "%s"', mail.get('message-id'), source, destination)
-        result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
-        uid = result[0]
-
-        self._copy_mail(uid, destination)
-
-        if delete_old:
-            self._delete_mails(uid)
-
-            if expunge:
-                self._expunge()
-
-        if type(set_flags) is list:
-            self.select_mailbox(destination)
-            uids = self.search_mails(destination, criteria='HEADER MESSAGE-ID "{0}"'.format(mail.get('message-id')))
-            self._set_mailflags(uids, set_flags)
 
     def _set_mailflags(self, uids, flags=[]):
         self.logger.debug('Setting flags=%s on mails uid=%s', flags, uids)

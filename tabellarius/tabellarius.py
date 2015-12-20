@@ -179,7 +179,10 @@ def main():
                     uids = imap_pool[acc].search_mails(pre_inbox)
                     mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
                     for mail in mails:
-                        imap_pool[acc].move_mail(mails[mail], pre_inbox, sort_mailbox, set_flags=[])
+                        imap_pool[acc].move_mail(message_id=mails[mail].get('message-id'),
+                                                 source=pre_inbox,
+                                                 destination=sort_mailbox,
+                                                 set_flags=[])
             #except IMAPClient.Error as e:
             #    logger.error('%s: Catching exception: %s. This is bad and I am sad. Going to sleep for a few seconds and trying again..',
             #                 acc_settings.get('username'), e)

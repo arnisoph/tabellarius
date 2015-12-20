@@ -38,7 +38,7 @@ class RuleSet(object):
 
             if cmd_type == 'move':
                 cmd_target = command.get('target')
-                self.imap.move_mail(mail, mailbox, cmd_target, set_flags=cmd_flags_set)
+                self.imap.move_mail(message_id=mail.get('message-id'), source=mailbox, destination=cmd_target, set_flags=cmd_flags_set)
 
     def parse_ruleset(self, mail, ruleset):
         for rule in ruleset:

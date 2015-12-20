@@ -56,14 +56,19 @@ class TabellariusTest(unittest.TestCase):
         return imapconn
 
     def create_email(self, headers=None, body='This is a test mäil.'):
-        if headers is None:
-            headers = {'From': '<test@example.com>', 'To': '<test@example.com>', 'Subject': 'Testmäil'}
+        _headers = {'From': '<test@example.com>', 'To': '<test@example.com>', 'Subject': 'Testmäil'}
+
+        if headers is not None:
+            _headers.update(headers)
+
+        if 'Message-Id' not in _headers.keys():
+            _headers['Message-Id'] = '<very_unique_id_{0}@example.com>'.format(int(round(time.time() * 1000)))
 
         message = email.message.Message()
         email.charset.add_charset('utf-8', email.charset.QP, email.charset.QP)
         c = email.charset.Charset('utf-8')
         message.set_charset(c)
-        for field_name, field_value in headers.items():
+        for field_name, field_value in _headers.items():
             message[field_name] = field_value
         message.set_payload(body)
 

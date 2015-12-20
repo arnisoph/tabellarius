@@ -128,7 +128,7 @@ class IMAPTest(TabellariusTest):
 
         self.assertEqual(imapconn.disconnect(), b'Logging out')
 
-    def test_search_mail(self):
+    def test_search_mail(self):  # TODO see meth impl
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
@@ -149,6 +149,8 @@ class IMAPTest(TabellariusTest):
                                                criteria='DoesNotExist'),
                          'SEARCH command error: BAD [b\'Error in IMAP command UID SEARCH: Unknown argument DOESNOTEXIST\']')
 
+        self.assertEqual(imapconn.disconnect(), b'Logging out')
+
     def test_fetch_mails(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
@@ -160,7 +162,7 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['\\Seen']))
         self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['FLAG', 'WAVE'], msg_time=example_date))
 
-        # (Manually) Select Mailbox  # TODO
+        # (Manually) selecting a Mailbox  # TODO
         result = imapconn.select_mailbox(mailbox='INBOX')
         self.assertEqual(result[b'FLAGS'], (b'\\Answered', b'\\Flagged', b'\\Deleted', b'\\Seen', b'\\Draft', b'FLAG', b'WAVE'))
 
@@ -169,3 +171,25 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.fetch_mails([1, 2])[2]['subject'], 'Testmäil')
         self.assertEqual(imapconn.fetch_mails([1337]), {})
         self.assertEqual(imapconn.fetch_mails([-1337]), 'FETCH command error: BAD [b\'Error in IMAP command UID FETCH: Invalid uidset\']')
+
+        self.assertEqual(imapconn.disconnect(), b'Logging out')
+
+    def test_move_mail(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        # Adding some mails to search for
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX',
+                                          message=str(self.create_email(headers={'Subject': 'Moved Mail'})),
+                                          flags=['FLAG', 'WAVE']))
+
+        # (Manually) selecting a Mailbox  # TODO
+        imapconn.select_mailbox(mailbox='INBOX')
+        message_id = imapconn.fetch_mails([1])[1].get('message-id')
+        self.assertTrue(message_id.startswith('<very_unique_id_'))
+
+        self.assertEqual(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'), None)
+        self.assertEqual(imapconn.search_mails(mailbox='Trash', criteria='HEADER Subject "Moved Mail"'), [1])
+
+        self.assertEqual(imapconn.disconnect(), b'Logging out')
