@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-from six import PY3
 import datetime
 import imapclient.fixed_offset
 
@@ -20,7 +19,7 @@ class IMAPTest(TabellariusTest):
     #    for username, password in sorted(self.imap_users.items()):  # TODO
     #        self.remove_imap_user(username)
 
-    def test_connect(self):  # TODO test is damn slow, reduce test time
+    def test_connect(self):
         # Test simple plaintext imap connection
         username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
@@ -29,10 +28,7 @@ class IMAPTest(TabellariusTest):
                                    username=username,
                                    password=password).connect(logout=True), (True, b'Logging out'))
 
-        if PY3:
-            expect = "b'[AUTHENTICATIONFAILED] Authentication failed.'"  # TODO looks strange
-        else:
-            expect = '[AUTHENTICATIONFAILED] Authentication failed.'
+        expect = "b'[AUTHENTICATIONFAILED] Authentication failed.'"  # TODO looks strange
 
         username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
