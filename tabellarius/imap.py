@@ -336,15 +336,16 @@ class IMAP(object):
                     if expunge:  # TODO don't expunge by default
                         result = self.expunge(mailbox=source)
                         if not result[0]:
-                            self.logger.error('Failed to expunge on mailbox %s: %s', source, result[1])
-                            return result
+                            self.logger.error('Failed to expunge on mailbox %s: %s', source, result[1])  # pragma: no cover
+                            return result  # pragma: no cover
 
                 dest_uids = []
                 for message_id in message_ids:
                     result = self.search_mails(mailbox=destination, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
                     if not result[0]:
-                        self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"', message_id)
-                        return result
+                        self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"',
+                                          message_id)  # pragma: no cover
+                        return result  # pragma: no cover
                     dest_uids.append(result[1][0])
 
                 if set_flags:
