@@ -230,6 +230,8 @@ class IMAPTest(TabellariusTest):
 
         self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen']), (True, None))
 
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
+
     def test_get_and_set_mailflags_error(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
@@ -285,6 +287,8 @@ class IMAPTest(TabellariusTest):
 
         # Move
         self.assertEqual(imapconn.move_mail(message_ids=[message_id], source='INBOX', destination='Trash'), (True, None))
+
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
     def test_copy_mails(self):
         username, password = self.create_imap_user()
@@ -369,3 +373,57 @@ class IMAPTest(TabellariusTest):
 
         # Copy
         self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash'), (True, None))
+
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
+
+    def test_mailbox_exists(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        # Adding some mails to search for
+        self.assertEqual(imapconn.mailbox_exists(mailbox='INBOX'), (True, True))
+
+        self.assertEqual(imapconn.mailbox_exists(mailbox='INBOX!'), (True, False))
+        self.assertEqual(imapconn.create_mailbox(mailbox='INBOX!'), (True, True))
+        self.assertEqual(imapconn.mailbox_exists(mailbox='INBOX!'), (True, True))
+
+        self.assertEqual(imapconn.mailbox_exists(mailbox='Ördnerß'), (True, False))
+
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
+
+    def test_delete_mails_and_expunge(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        # Adding some mails to search for
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE']), (True, 1))
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
+
+        # Test fetching works
+        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1][2])
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2]['subject'], 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1][2]['subject'], 'Testmäil')
+
+        # Delete mails
+        self.assertTrue(imapconn.delete_mails(uids=[1], mailbox='INBOX'))
+        self.assertTrue(imapconn.delete_mails(uids=[2], mailbox='INBOX'))
+
+        # Check their flags
+        self.assertIn('\\Deleted', imapconn.get_mailflags(uids=[1], mailbox='INBOX')[1][1])
+        self.assertIn('FLAG', imapconn.get_mailflags(uids=[1], mailbox='INBOX')[1][1])
+        self.assertIn('WAVE', imapconn.get_mailflags(uids=[1], mailbox='INBOX')[1][1])
+
+        self.assertIn('\\Deleted', imapconn.get_mailflags(uids=[2], mailbox='INBOX')[1][2])
+        self.assertIn('\\Seen', imapconn.get_mailflags(uids=[2], mailbox='INBOX')[1][2])
+
+        # Expuuuuunge
+        self.assertEqual(imapconn.expunge(mailbox='INBOX'), (True, True))
+
+        # Check whether they are still there
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822']), (True, {}))
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX'), (True, {}))
+        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX'), (True, {}))
+
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))

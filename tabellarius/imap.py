@@ -380,7 +380,7 @@ class IMAP(object):
         """
         self.logger.debug('Expunge mails')
         try:
-            return (True, self.conn.expunge())
+            return (True, b'Expunge completed.' in self.conn.expunge())
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -390,7 +390,7 @@ class IMAP(object):
         """
         self.logger.debug('Creating mailbox %s', mailbox)
         try:
-            return (True, self.conn.create_folder(mailbox))
+            return (True, self.conn.create_folder(mailbox) == b'Create completed.')
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -398,7 +398,6 @@ class IMAP(object):
         """
         Check whether a mailbox exists
         """
-        self.logger.debug('Checking wether mailbox %s exists', mailbox)
         try:
             return (True, self.conn.folder_exists(mailbox))
         except IMAPClient.Error as e:
@@ -411,7 +410,17 @@ class IMAP(object):
         """
         self.logger.debug('Deleting mails with uid="%s"', uids)
         try:
-            return (True, self.conn.delete_messages(uids))
+            result = self.conn.delete_messages(uids)
+            flags = {}
+
+            for uid in uids:
+                flags[uid] = []
+                if uid not in result.keys():
+                    self.logger.error('Failed to get flags for mail with uid=%s after deleting it: %s', uid, result)
+                    return (False, None)
+                for flag in result[uid]:
+                    flags[uid].append(flag.decode('utf-8'))
+            return (True, flags)
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -427,4 +436,4 @@ def to_bytes(s, encoding='ascii'):
 #        if PY3:
 #        else:
 #        return bytearray(s)
-    return s
+    return s  # pragma: no cover
