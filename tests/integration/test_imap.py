@@ -67,14 +67,14 @@ class IMAPTest(TabellariusTest):
 
         # Test connection refused
         username, password = self.create_imap_user()
-        self.assertEqual(imap.IMAP(logger=self.logger,
-                                   server='127.0.0.1',
-                                   port=1337,
-                                   starttls=False,
-                                   imaps=True,
-                                   tlsverify=False,  # TODO test tls verification?
-                                   username=username,
-                                   password=password).connect(), (False, '[Errno 61] Connection refused'))
+        self.assertTrue(imap.IMAP(logger=self.logger,
+                                  server='127.0.0.1',
+                                  port=1337,
+                                  starttls=False,
+                                  imaps=True,
+                                  tlsverify=False,  # TODO test tls verification?
+                                  username=username,
+                                  password=password).connect()[1], '] Connection refused')
 
     def test_process_error(self):
         try:
@@ -88,6 +88,7 @@ class IMAPTest(TabellariusTest):
     def test_list_mailboxes(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
+
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
 
         expect = [{'delimiter': '/',
@@ -105,6 +106,9 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.list_mailboxes()[1], expect)
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
+
+        # Test exception handling
+        self.assertEqual(imapconn.list_mailboxes(), (False, 'command LIST illegal in state LOGOUT, only allowed in states AUTH, SELECTED'))
 
     def test_select_mailbox(self):
         username, password = self.create_imap_user()
@@ -153,7 +157,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SINCE 13-Apr-2015')[1], [1, 2])
         self.assertRaises(RuntimeError, imapconn.search_mails, mailbox='DoesNotExist', criteria='ALL')  # tests do_select_mailbox
         self.assertRaises(AttributeError, imapconn.search_mails, 'DoesNotExist', criteria='ALL')  # tests do_select_mailbox
-        self.assertRaises(AttributeError, imapconn.search_mails, criteria='ALL')  # tests do_select_mailbox
+        self.assertRaises(KeyError, imapconn.search_mails, criteria='ALL')  # tests do_select_mailbox
         self.assertEqual(imapconn.search_mails(mailbox='INBOX',
                                                criteria='DoesNotExist')[1],
                          'SEARCH command error: BAD [b\'Error in IMAP command UID SEARCH: Unknown argument DOESNOTEXIST\']')
