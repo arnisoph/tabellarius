@@ -16,4 +16,10 @@ setup(name='tabellarius',
           'gnupg==2.0.2',
           'IMAPClient==1.0.0',
           'backports.ssl==0.0.9',
-      ])
+      ],
+      classifiers=[
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: 3.5',])

@@ -16,7 +16,12 @@ tabellarius
     :target: https://gitter.im/bechtoldt/tabellarius?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 .. image:: https://travis-ci.org/bechtoldt/tabellarius.svg?branch=master
+    :alt: Travis CI
     :target: https://travis-ci.org/bechtoldt/tabellarius
+
+.. image:: https://img.shields.io/pypi/pyversions/tabellarius.svg
+    :alt: Python versions supported
+    :target: https://pypi.python.org/pypi/tabellarius
 
 .. image:: https://coveralls.io/repos/bechtoldt/tabellarius/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/bechtoldt/tabellarius?branch=master
