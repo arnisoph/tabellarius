@@ -311,6 +311,13 @@ class IMAPTest(TabellariusTest):
         self.assertIn('\\Draft', result[1][1])
         self.assertIn('CUSTOM', result[1][1])
 
+    def test_get_and_set_mailflags_testmode(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password, test=True)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen']), (True, None))
+
     def test_get_and_set_mailflags_error(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
