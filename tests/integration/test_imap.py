@@ -295,6 +295,7 @@ class IMAPTest(TabellariusTest):
                                           message=self.create_email(headers={'Subject': 'Copied Mäil'}),
                                           flags=['FLAG', 'WAVE'])[0])
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
+        self.assertEqual(imapconn.get_mailflags(uids=[2], mailbox='INBOX'), (True, {2: ['\\Seen']}))
         self.assertEqual(imapconn.add_mail(mailbox='INBOX',
                                            message=self.create_email(),
                                            flags=['FLAG', 'WAVE'],
@@ -304,7 +305,7 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
-        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash')[0])
+        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash', set_flags=['\Flagged'])[0])
         self.assertEqual(imapconn.copy_mails(message_ids=['<w00t>'], source='INBOX', destination='Trash'), (False, []))
 
         # Check old and copied

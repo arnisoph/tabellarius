@@ -348,7 +348,7 @@ class IMAP(object):
                     dest_uids.append(result[1][0])
 
                 if set_flags:
-                    self.set_mailflags(uids, set_flags)
+                    self.set_mailflags(uids=uids, mailbox=destination, flags=set_flags)
 
                 return (True, dest_uids)
 
