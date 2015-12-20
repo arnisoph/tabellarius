@@ -97,10 +97,10 @@ class Mail(dict):
         Parses the native (email.message.Message()) object
         """
         if not self.mail_native.is_multipart():
-            if PY3:
-                self['body'] = self.mail_native.get_payload(decode=True).decode('utf-8')
-            else:
-                self['body'] = self.mail_native.get_payload(decode=True)
+            #if PY3:
+            self['body'] = self.mail_native.get_payload(decode=True).decode('utf-8')
+            #else:
+            #    self['body'] = self.mail_native.get_payload(decode=True)
 
         for field_name in self.mail_native.keys():
             field_name = field_name.lower()
