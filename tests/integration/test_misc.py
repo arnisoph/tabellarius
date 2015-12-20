@@ -7,8 +7,7 @@ from .tabellarius_test import TabellariusTest
 
 
 class HelperTest(TabellariusTest):
-    def test_check_match(self):
-        # Basic match
+    def test_check_match_basic(self):
         self.assertTrue(misc.Helper().check_match('foo@example.com', '@example.com'))
         self.assertTrue(misc.Helper().check_match('foo@example.com', 'foo@example.com'))
         self.assertFalse(misc.Helper().check_match('', 'foo'))
@@ -16,7 +15,7 @@ class HelperTest(TabellariusTest):
         self.assertTrue(misc.Helper().check_match('Sönderzäichen', 'nderz'))
         self.assertTrue(misc.Helper().check_match('Sönderzäichen', 'Sönder'))
 
-        # RegEx match
+    def test_check_match_regex(self):
         self.assertTrue(misc.Helper().check_match('foo', '^.*$'))
         self.assertTrue(misc.Helper().check_match('foo', '^fo+$'))
         self.assertTrue(misc.Helper().check_match('foo@example.com', '^.*@example.com$'))
