@@ -2,7 +2,6 @@
 # vim: ts=4 sw=4 et
 
 from email.header import decode_header
-from six import PY3
 
 #class Mail(dict):
 #    mail_native = email.message.Message()
@@ -73,11 +72,11 @@ class Mail(dict):
         """
         Converts value to utf-8 encoding
         """
-        if PY3:
-            if isinstance(value, bytes):
-                return value.decode(encoding)
-        elif encoding not in ['utf-8', None]:
-            return value.decode(encoding).encode('utf-8')
+        #if PY3:
+        if isinstance(value, bytes):
+            return value.decode(encoding)
+        #elif encoding not in ['utf-8', None]:
+        #    return value.decode(encoding).encode('utf-8')
         return value
 
 #    def _normalize_string(self, text):
