@@ -228,6 +228,9 @@ class IMAP(object):
 
             for uid in uids:
                 flags[uid] = []
+                if uid not in result.keys():
+                    self.logger.error('Failed to get flags for mail with uid=%s: %s', uid, result)
+                    return (False, None)
                 for flag in result[uid]:
                     flags[uid].append(flag.decode('utf-8'))
             return (True, flags)
@@ -251,6 +254,9 @@ class IMAP(object):
                 _flags = {}
                 for uid in uids:
                     _flags[uid] = []
+                    if uid not in result.keys():
+                        self.logger.error('Failed to set and get flags for mail with uid=%s: %s', uid, result)
+                        return (False, None)
                     for flag in result[uid]:
                         _flags[uid].append(flag.decode('utf-8'))
                 return (True, _flags)

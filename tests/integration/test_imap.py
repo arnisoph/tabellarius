@@ -311,4 +311,18 @@ class IMAPTest(TabellariusTest):
         self.assertIn('\\Draft', result[1][1])
         self.assertIn('CUSTOM', result[1][1])
 
+    def test_get_and_set_mailflags_error(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email()), (True, 1))
+        self.assertEqual(imapconn.set_mailflags(uids=[1],
+                                                mailbox='INBOX',
+                                                flags=['\S!een']),
+                         (False, 'UID command error: BAD [b\'Error in IMAP command UID STORE: Invalid system flag \\\\S!EEN\']'))
+
+        self.assertEqual(imapconn.set_mailflags(uids=[1337], mailbox='INBOX'), (False, None))
+        self.assertEqual(imapconn.get_mailflags(uids=[1337], mailbox='INBOX'), (False, None))
+
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
