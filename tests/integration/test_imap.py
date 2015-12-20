@@ -124,8 +124,7 @@ class IMAPTest(TabellariusTest):
             imapconn.add_mail(mailbox='DoesNotExist',
                               message=str(self.create_email()),
                               flags=['FLAG', 'WAVE'],
-                              msg_time=example_date),
-            'append failed: [TRYCREATE] Mailbox doesn\'t exist: DoesNotExist')
+                              msg_time=example_date), 'append failed: [TRYCREATE] Mailbox doesn\'t exist: DoesNotExist')
 
         self.assertEqual(imapconn.disconnect(), b'Logging out')
 
@@ -161,8 +160,12 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['\\Seen']))
         self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['FLAG', 'WAVE'], msg_time=example_date))
 
-        uids = imapconn.search_mails(mailbox='INBOX', criteria='SEEN')
-        self.assertEqual(uids, [2])
+        # (Manually) Select Mailbox  # TODO
+        result = imapconn.select_mailbox(mailbox='INBOX')
+        self.assertEqual(result[b'FLAGS'], (b'\\Answered', b'\\Flagged', b'\\Deleted', b'\\Seen', b'\\Draft', b'FLAG', b'WAVE'))
 
-        self.assertIn(b'RFC822', imapconn.fetch_mails(uids, [b'RFC822'])[2])
-        self.assertEqual(imapconn.fetch_mails(uids)[2]['subject'], 'Testmäil')
+        self.assertIn(b'RFC822', imapconn.fetch_mails([2], [b'RFC822'])[2])
+        self.assertEqual(imapconn.fetch_mails([2])[2]['subject'], 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails([1, 2])[2]['subject'], 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails([1337]), {})
+        self.assertEqual(imapconn.fetch_mails([-1337]), 'FETCH command error: BAD [b\'Error in IMAP command UID FETCH: Invalid uidset\']')

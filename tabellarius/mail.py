@@ -108,7 +108,6 @@ class Mail(dict):
             if field_name in ['subject', 'from', 'to']:
                 field_value = decode_header(field_value)
                 field_value = self.clean_value(field_value[0][0], field_value[0][1])
-                print(field_value)
 
             self[field_name] = field_value
 

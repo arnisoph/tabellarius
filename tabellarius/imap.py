@@ -175,9 +175,7 @@ class IMAP(object):
                 for uid in uids:
                     result = self.conn.fetch(uid, [b'RFC822'])
                     for fetch_uid, raw_mail in result.items():
-                        mail = Mail(logger=self.logger,
-                                    uid=uid,
-                                    mail=email.message_from_bytes(raw_mail[b'RFC822']))
+                        mail = Mail(logger=self.logger, uid=uid, mail=email.message_from_bytes(raw_mail[b'RFC822']))
                         mails[uid] = mail
             return mails
         except IMAPClient.Error as e:
@@ -216,7 +214,8 @@ class IMAP(object):
             time_val = None
 
         return self.conn._command_and_check('append', self.conn._normalise_folder(folder), imapclient.imapclient.seq_to_parenstr(flags),
-                                            time_val, to_bytes(s=msg, encoding='utf-8'),
+                                            time_val, to_bytes(s=msg,
+                                                               encoding='utf-8'),
                                             unpack=True)
 
     def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):

@@ -99,4 +99,4 @@ class RuleSet(object):
                         return False
             return True
         else:
-            print('operator {0} is not supported yet'.format(operator))
+            raise 'operator {0} is not supported yet'.format(operator)
