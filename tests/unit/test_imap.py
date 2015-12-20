@@ -427,3 +427,33 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX'), (True, {}))
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
+
+    def test_delete_mails_and_expunge_errors(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        # Adding some mails to search for
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE']), (True, 1))
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
+
+        # Test fetching works
+        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1][2])
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2]['subject'], 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1][2]['subject'], 'Testmäil')
+
+        # Delete mails
+        self.assertEqual(imapconn.delete_mails(uids=[42], mailbox='INBOX'), (False, None))
+        self.assertEqual(imapconn.delete_mails(uids=['INVALID'],
+                                               mailbox='INBOX'),
+                         (False, 'UID command error: BAD [b\'Error in IMAP command UID STORE: Invalid uidset\']'))
+
+        # Expuuuuunge
+        self.assertEqual(imapconn.expunge(mailbox='INBOX'), (True, True))
+
+        # Check whether they are still there
+        self.assertIn(2, imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1])
+        self.assertIn(2, imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1])
+        self.assertIn(1, imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1])
+
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
