@@ -120,6 +120,10 @@ class IMAP(object):
                 return (login == b'Logged in', login)
         except IMAPClient.Error as e:
             err_return = self.process_error(e)
+
+            if str(e) == "b'[AUTHENTICATIONFAILED] Authentication failed.'":  # TODO
+                return (False, str(e))
+
             if retry:
                 self.logger.error('Trying one more time to login')
                 sleep(2)
