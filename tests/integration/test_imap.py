@@ -30,7 +30,7 @@ class IMAPTest(TabellariusTest):
                                    password=password).connect(logout=True), (True, b'Logging out'))
 
         if PY3:
-            expect = "b'[AUTHENTICATIONFAILED] Authentication failed.'"
+            expect = "b'[AUTHENTICATIONFAILED] Authentication failed.'"  # TODO looks strange
         else:
             expect = '[AUTHENTICATIONFAILED] Authentication failed.'
 

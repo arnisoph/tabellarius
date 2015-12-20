@@ -5,7 +5,7 @@ language: python
 python:
   - '3.5'
   - '3.4'
-  - '2.7'
+#  - '2.7'
 env:
   - TOX_ENV=app_tests
   - TOX_ENV=app_flake8
