@@ -4,12 +4,9 @@
 """tabellarius
 
 TODO:
-* TLS communication is UNCONFIGURED (using library defaults)
 * support IDLE connections
-* improve error handling, throw excetions?
 * filtering fields like deliverd-to/ received/ body are not supported yet
 * manage different namespaces
-* expunge at the end only
 """
 
 from argparse import ArgumentParser
