@@ -260,7 +260,6 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
-        print(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash'))
         self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash')[0])
 
         # Check old and copied
@@ -289,5 +288,27 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
-        print(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash'))
         self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash')[0])
+
+    def test_get_and_set_mailflags(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email()), (True, 1))
+        self.assertEqual(imapconn.get_mailflags(uids=[1], mailbox='INBOX'), (True, {1: []}))
+
+        self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen']), (True, {1: ['\\Seen']}))
+        self.assertEqual(imapconn.get_mailflags(uids=[1], mailbox='INBOX'), (True, {1: ['\\Seen']}))
+
+        result = imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen', '\Answered', '\Flagged', '\Deleted', '\Draft', 'CUSTOM'])
+
+        self.assertTrue(result[0])
+        self.assertIn('\\Seen', result[1][1])
+        self.assertIn('\\Answered', result[1][1])
+        self.assertIn('\\Flagged', result[1][1])
+        self.assertIn('\\Deleted', result[1][1])
+        self.assertIn('\\Draft', result[1][1])
+        self.assertIn('CUSTOM', result[1][1])
+
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))

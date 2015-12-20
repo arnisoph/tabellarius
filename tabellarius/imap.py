@@ -16,6 +16,10 @@ from mail import Mail
 
 
 class IMAP(object):
+    """
+    Central class for IMAP server communication
+    """
+
     def __init__(self, logger, username, password,
                  server='localhost',
                  port=143,
@@ -24,9 +28,6 @@ class IMAP(object):
                  tlsverify=True,
                  test=False,
                  timeout=None):
-        """
-        Central class for IMAP server communication
-        """
         self.logger = logger
         self.username = username
         self.password = password
@@ -219,14 +220,42 @@ class IMAP(object):
             return self.process_error(e)
 
     @do_select_mailbox
+    def get_mailflags(self, uids, mailbox):
+        """
+        Retrieve flags from mails
+        """
+        try:
+            result = self.conn.get_flags(uids)
+            flags = {}
+
+            for uid in uids:
+                flags[uid] = []
+                for flag in result[uid]:
+                    flags[uid].append(flag.decode('utf-8'))
+            return (True, flags)
+
+        except IMAPClient.Error as e:
+            return self.process_error(e)
+
+    @do_select_mailbox
     def set_mailflags(self, uids, mailbox, flags=[]):
+        """
+        Set and retrieve flags from mails
+        """
         if self.test:
             self.logger.info('Would have set mail flags on message uids "%s"', str(uids))
             return (True, None)
         else:
             self.logger.debug('Setting flags=%s on mails uid=%s', flags, uids)
             try:
-                return (True, self.conn.set_flags(uids, flags))
+                result = self.conn.set_flags(uids, flags)
+
+                _flags = {}
+                for uid in uids:
+                    _flags[uid] = []
+                    for flag in result[uid]:
+                        _flags[uid].append(flag.decode('utf-8'))
+                return (True, _flags)
             except IMAPClient.Error as e:
                 return self.process_error(e)
 
@@ -292,15 +321,6 @@ class IMAP(object):
 
                 self.conn.copy(uids, destination)
 
-                #if result is None:
-                #    if delete_old:
-                #        self.logger.error('Failed to move mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
-                #                          destination, result)
-                #    else:
-                #        self.logger.error('Failed to copy mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
-                #                          destination, result)
-                #    return (False, result)
-
                 if delete_old:
                     result = self.delete_mails(uids=uids, mailbox=source)
                     if not result[0]:
@@ -324,7 +344,7 @@ class IMAP(object):
                             self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"', message_id)
                             return result
                         uids.append(result[1][0])
-                    self._set_mailflags(uids, set_flags)
+                    self.set_mailflags(uids, set_flags)
                 return (True, None)
 
             except IMAPClient.Error as e:
@@ -350,6 +370,9 @@ class IMAP(object):
 
     @do_select_mailbox
     def expunge(self, mailbox):
+        """
+        Expunge mails form a mailbox
+        """
         self.logger.debug('Expunge mails')
         try:
             return (True, self.conn.expunge())
@@ -357,6 +380,9 @@ class IMAP(object):
             return self.process_error(e)
 
     def create_mailbox(self, mailbox):
+        """
+        Create a mailbox
+        """
         self.logger.debug('Creating mailbox %s', mailbox)
         try:
             return (True, self.conn.create_folder(mailbox))
@@ -364,6 +390,9 @@ class IMAP(object):
             return self.process_error(e)
 
     def mailbox_exists(self, mailbox):
+        """
+        Check whether a mailbox exists
+        """
         self.logger.debug('Checking wether mailbox %s exists', mailbox)
         try:
             return (True, self.conn.folder_exists(mailbox))
@@ -372,6 +401,9 @@ class IMAP(object):
 
     @do_select_mailbox
     def delete_mails(self, uids, mailbox):
+        """
+        Delete mails
+        """
         self.logger.debug('Deleting mails with uid="%s"', uids)
         try:
             return (True, self.conn.delete_messages(uids))
