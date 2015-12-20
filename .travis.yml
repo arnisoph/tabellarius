@@ -23,10 +23,10 @@ matrix:
       env: TOX_ENV=app_flake8
     - python: '3.5'
       env: TOX_ENV=tests_flake8
-    - python: '3.5'
-      env: TOX_ENV=app_todo
-    - python: '3.5'
-      env: TOX_ENV=tests_todo
+    #- python: '3.5'
+    #  env: TOX_ENV=app_todo
+    #- python: '3.5'
+    #  env: TOX_ENV=tests_todo
 
 addons:
   apt:
