@@ -4,7 +4,7 @@
 from imapclient import IMAPClient
 from imapclient.fixed_offset import FixedOffset
 from logging import DEBUG as loglevel_DEBUG
-from six import PY3
+from six import moves, iteritems, text_type, integer_types, PY3, binary_type, string_types  # noqa
 from sys import exc_info
 from time import sleep
 from traceback import print_exception
@@ -211,14 +211,13 @@ class IMAP(object):
 
             if PY3:
                 time_val = imapclient.imapclient.to_unicode(time_val)
-                msg = bytearray(msg, 'utf-8')
             else:
                 time_val = imapclient.imapclient.to_bytes(time_val)
         else:
             time_val = None
 
         return self.conn._command_and_check('append', self.conn._normalise_folder(folder), imapclient.imapclient.seq_to_parenstr(flags),
-                                            time_val, msg,
+                                            time_val, to_bytes(s=msg, encoding='utf-8'),
                                             unpack=True)
 
     def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
@@ -291,3 +290,14 @@ class IMAP(object):
                 return self._copy_mail(uids, destination)
 
             return None
+
+
+def to_unicode(s, encoding='ascii'):
+    if isinstance(s, binary_type):
+        return s.decode(encoding)
+    return s
+
+
+def to_bytes(s, encoding='ascii'):
+    if isinstance(s, text_type):
+        return s.encode(encoding)
