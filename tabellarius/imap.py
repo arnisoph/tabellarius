@@ -286,16 +286,16 @@ class IMAP(object):
                 if not result[0]:
                     return result
 
-                result = self.conn.copy('1', destination)
+                self.conn.copy(uids, destination)
 
-                if result is None:
-                    if delete_old:
-                        self.logger.error('Failed to move mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
-                                          destination, result)
-                    else:
-                        self.logger.error('Failed to copy mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
-                                          destination, result)
-                    return (False, result)
+                #if result is None:
+                #    if delete_old:
+                #        self.logger.error('Failed to move mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
+                #                          destination, result)
+                #    else:
+                #        self.logger.error('Failed to copy mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
+                #                          destination, result)
+                #    return (False, result)
 
                 if delete_old:
                     result = self.delete_mails(uids=uids, mailbox=source)
