@@ -185,14 +185,6 @@ class IMAP(object):
             self.process_error(e)
             return str(e)
 
-    #def fetch_mails(self, uids, mailbox):
-    #    for raw_uid, raw_mail in raw_mails.items():
-    #        mail = Mail(logger=self.logger,
-    #                    uid=raw_uid,
-    #                    mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))  # TODO doesn't work with PY27
-    #        mails[raw_uid] = mail
-    #    return mails
-
     def move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
         if self.test:
             self.logger.info('Would have moved mail message-id="%s" from "%s" to "%s", skipping because of beeing in testmode',
@@ -219,13 +211,14 @@ class IMAP(object):
 
             if PY3:
                 time_val = imapclient.imapclient.to_unicode(time_val)
+                msg = bytearray(msg, 'utf-8')
             else:
                 time_val = imapclient.imapclient.to_bytes(time_val)
         else:
             time_val = None
 
         return self.conn._command_and_check('append', self.conn._normalise_folder(folder), imapclient.imapclient.seq_to_parenstr(flags),
-                                            time_val, bytearray(msg, 'utf-8'),
+                                            time_val, msg,
                                             unpack=True)
 
     def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
