@@ -3,12 +3,12 @@
 
 from __future__ import print_function
 
-import redis
-import sys
-import unittest
-import time
 import email.charset
 import email.message
+import redis
+import sys
+import time
+import unittest
 
 sys.path.insert(0, './tabellarius')
 
@@ -43,7 +43,7 @@ class TabellariusTest(unittest.TestCase):
         for authdb in ['userdb', 'passdb']:
             self.rconn.delete('dovecot/{0}/{1}'.format(authdb, username))  # TODO
 
-    def create_basic_imap_object(self, username, password):
+    def create_basic_imap_object(self, username, password, test=None):
         imapconn = imap.IMAP(logger=self.logger,
                              server='127.0.0.1',
                              port=10993,
@@ -52,6 +52,7 @@ class TabellariusTest(unittest.TestCase):
                              tlsverify=False,  # TODO
                              username=username,
                              password=password,
+                             test=test,
                              timeout=5)
         return imapconn
 

@@ -204,7 +204,10 @@ class IMAP(object):
                 result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
                 uid = result[0]
 
-                self._copy_mail(uid, destination)
+                result = self.copy_mails([uid], source, destination)
+                if not result[0]:
+                    self.logger.error('Failed to move mail with message-id="%s": %s', message_id, result[1])
+                    return result
 
                 if delete_old:
                     self._delete_mails(uid)
@@ -216,9 +219,34 @@ class IMAP(object):
                     self.select_mailbox(destination)
                     uids = self.search_mails(destination, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
                     self._set_mailflags(uids, set_flags)
+
+                return True
             except IMAPClient.Error as e:
                 self.process_error(e)
                 return str(e)
+
+    def copy_mails(self, uids, source, destination):
+        """
+        Copies one or more mails from a mailbox into another
+        """
+        if self.test:
+            self.logger.info('Would have copied mails with uids="%s" from "%s" to "%s", skipping because of beeing in testmode', uids,
+                             source, destination)
+            return (True, None)
+        else:
+            self.logger.debug('Copying mails with uids="%s" from "%s" to "%s"', uids, destination)
+            try:
+                if not self._mailbox_exists(destination):
+                    self.logger.info('Destination mailbox %s to copy mails doesn\'t exist, creating it for you', destination)
+                    self._create_mailbox(destination)  # TODO error handling
+
+                result = self.select_mailbox(source)
+                if str(result).startswith('select failed: Mailbox doesn\'t exist: '):
+                    return (False, result)
+                return (True, self.conn.copy(uids, destination))
+            except IMAPClient.Error as e:
+                self.process_error(e)
+                return (True, str(e))
 
     def _append(self, folder, msg, flags=(), msg_time=None):  # TODO
         """
@@ -278,30 +306,17 @@ class IMAP(object):
             self.process_error(e)
             return None
 
-    def _copy_mail(self, uids, destination):
-        self.logger.debug('Copying mails uid="%s" to "%s"', uids, destination)
-        try:
-            return self.conn.copy(uids, destination)
-        except IMAPClient.Error as e:
-            self.process_error(e)
-            if not self._mailbox_exists(destination):
-                self.logger.debug('Mailbox %s doesn\'t even exist! Creating it for you now', destination)
-                self._create_mailbox(destination)
-                return self._copy_mail(uids, destination)
 
-            return None
-
-
-def to_unicode(s, encoding='ascii'):
-    if isinstance(s, binary_type):
-        return s.decode(encoding)
-    return s
+#def to_unicode(s, encoding='ascii'):
+#    if isinstance(s, binary_type):
+#        return s.decode(encoding)
+#    return s
 
 
 def to_bytes(s, encoding='ascii'):
     if isinstance(s, text_type):
-        if PY3:
-            return s.encode(encoding)
-        else:
-            return bytearray(s)
+        return s.encode(encoding)
+#        if PY3:
+#        else:
+#        return bytearray(s)
     return s

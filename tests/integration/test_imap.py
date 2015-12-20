@@ -189,7 +189,26 @@ class IMAPTest(TabellariusTest):
         message_id = imapconn.fetch_mails([1])[1].get('message-id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
-        self.assertEqual(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'), None)
+        self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'))
         self.assertEqual(imapconn.search_mails(mailbox='Trash', criteria='HEADER Subject "Moved Mail"'), [1])
+
+        self.assertEqual(imapconn.disconnect(), b'Logging out')
+
+        # Test the test mode
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password, test=True)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        # Adding some mails to search for
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX',
+                                          message=str(self.create_email(headers={'Subject': 'Moved Mail'})),
+                                          flags=['FLAG', 'WAVE']))
+
+        # (Manually) selecting a Mailbox  # TODO
+        imapconn.select_mailbox(mailbox='INBOX')
+        message_id = imapconn.fetch_mails([1])[1].get('message-id')
+        self.assertTrue(message_id.startswith('<very_unique_id_'))
+
+        self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'))
 
         self.assertEqual(imapconn.disconnect(), b'Logging out')
