@@ -314,9 +314,10 @@ class IMAP(object):
                 uids = []
                 for message_id in message_ids:
                     result = self.search_mails(mailbox=source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
-                    if not result[0]:
+
+                    if not result[0] or len(result[1]) == 0:
                         self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"', message_id)
-                        return result
+                        return (False, result[1])
                     uids.append(result[1][0])
 
                 result = self.select_mailbox(source)

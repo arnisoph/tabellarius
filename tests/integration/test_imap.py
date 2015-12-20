@@ -261,6 +261,7 @@ class IMAPTest(TabellariusTest):
 
         # Copy
         self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash')[0])
+        self.assertEqual(imapconn.copy_mails(message_ids=['<w00t>'], source='INBOX', destination='Trash'), (False, []))
 
         # Check old and copied
         self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id'), message_id)
