@@ -378,11 +378,11 @@ class IMAP(object):
         """
         Expunge mails form a mailbox
         """
-        self.logger.debug('Expunge mails')
+        self.logger.debug('Expunge mails from mailbox %s', mailbox)
         try:
             return (True, b'Expunge completed.' in self.conn.expunge())
-        except IMAPClient.Error as e:
-            return self.process_error(e)
+        except IMAPClient.Error as e:  # pragma: no cover
+            return self.process_error(e)  # pragma: no cover
 
     def create_mailbox(self, mailbox):
         """
@@ -400,8 +400,8 @@ class IMAP(object):
         """
         try:
             return (True, self.conn.folder_exists(mailbox))
-        except IMAPClient.Error as e:
-            return self.process_error(e)
+        except IMAPClient.Error as e:  # pragma: no cover
+            return self.process_error(e)  # pragma: no cover
 
     @do_select_mailbox
     def delete_mails(self, uids, mailbox):
