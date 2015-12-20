@@ -188,7 +188,7 @@ class IMAPTest(TabellariusTest):
         message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
-        self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash')[0])
+        self.assertTrue(imapconn.move_mail(message_ids=[message_id], source='INBOX', destination='Trash')[0])
         self.assertEqual(imapconn.search_mails(mailbox='Trash', criteria='HEADER Subject "Moved Mail"')[1], [1])
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
@@ -231,14 +231,15 @@ class IMAPTest(TabellariusTest):
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date)[1], 3)
 
-        subject = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('subject')
-        self.assertEqual(subject, 'Copied Mäil')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id')
+        self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
-        self.assertTrue(imapconn.copy_mails(uids=[1], source='INBOX', destination='Trash')[0])
+        print(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash'))
+        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash')[0])
 
         # Check old and copied
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('subject'), subject)
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash')[1][1].get('subject'), subject)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash')[1][1].get('message-id'), message_id)
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))

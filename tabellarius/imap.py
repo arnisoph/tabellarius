@@ -227,69 +227,102 @@ class IMAP(object):
                 return self.process_error(e)
 
     @do_select_mailbox
-    def move_mail(self, message_id, source, destination, delete_old=True, expunge=True, set_flags=None):  # TODO use copy_mails as base?
+    def move_mail(self, message_ids, source, destination, delete_old=True, expunge=True, set_flags=None):
         """
         Move a mail from a mailbox to another
         """
-        if self.test:
-            self.logger.info('Would have moved mail message-id="%s" from "%s" to "%s", skipping because of beeing in testmode', message_id,
-                             source, destination)
-            return (True, None)
-        else:
-            try:
-                self.logger.debug('Moving mail message-id="%s" from "%s" to "%s"', message_id, source, destination)
-                result = self.search_mails(mailbox=source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
-                uid = result[1][0]
-
-                result = self.copy_mails(uids=[uid], source=source, destination=destination)
-                if not result[0]:
-                    self.logger.error('Failed to move mail with message-id="%s": %s', message_id, result[1])
-                    return result
-
-                if delete_old:
-                    result = self.delete_mails(uids=[uid], mailbox=source)
-                    if not result[0]:
-                        self.logger.error('Failed to remove old mail with message-id="%s": %s', message_id, result[1])
-                        return result
-
-                    if expunge:  # TODO don't expunge by default
-                        result = self.expunge(mailbox=source)
-                        if not result[0]:
-                            self.logger.error('Failed to expunge after marking old mail with message-id="%s": %s', message_id, result[1])
-                            return result
-
-                if type(set_flags) is list:
-                    result = self.select_mailbox(destination)
-                    if not result[0]:
-                        return result
-                    uids = self.search_mails(destination, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
-                    self._set_mailflags(uids, set_flags)
-                return (True, None)
-
-            except IMAPClient.Error as e:
-                return self.process_error(e)
+        return self.copy_mails(message_ids=message_ids,
+                               source=source,
+                               destination=destination,
+                               delete_old=delete_old,
+                               expunge=expunge,
+                               set_flags=set_flags)
 
     @do_select_mailbox
-    def copy_mails(self, uids, source, destination):
+    def copy_mails(self, source, destination, message_ids=None, delete_old=False, expunge=False, set_flags=None):
         """
         Copies one or more mails from a mailbox into another
         """
         if self.test:
-            self.logger.info('Would have copied mails with uids="%s" from "%s" to "%s", skipping because of beeing in testmode', uids,
-                             source, destination)
+            if delete_old:
+                self.logger.info('Would have moved mail message-ids="%s" from "%s" to "%s", skipping because of beeing in testmode',
+                                 message_ids, source, destination)
+            else:
+                self.logger.info('Would have copied mails with message-ids="%s" from "%s" to "%s", skipping because of beeing in testmode',
+                                 message_ids, source, destination)
             return (True, None)
         else:
-            self.logger.debug('Copying mails with uids="%s" from "%s" to "%s"', uids, destination)
             try:
+                if delete_old:
+                    self.logger.debug('Moving mail message-ids="%s" from "%s" to "%s"', message_ids, source, destination)
+                else:
+                    self.logger.debug('Copying mail message-ids="%s" from "%s" to "%s"', message_ids, source, destination)
+
+                #if message_ids is None:
+                #    message_ids = []
+                #    result = self.fetch_mails(uids=uids, mailbox=source)
+                #    if not result[0]:
+                #        self.logger.error('Failed to determine message-id by uids for mail with uids "%s"', uids)
+                #        return result
+                #    message_ids.append(result[1].keys())
+
                 if not self.mailbox_exists(destination):
-                    self.logger.info('Destination mailbox %s to copy mails doesn\'t exist, creating it for you', destination)
+                    self.logger.info('Destination mailbox %s doesn\'t exist, creating it for you', destination)
 
                     result = self.create_mailbox(destination)
                     if not result[0]:
                         self.logger.error('Failed to create the mailbox %s: %s', source, result[1])
                         return result
 
-                return (True, self.conn.copy(uids, destination))
+                uids = []
+                for message_id in message_ids:
+                    result = self.search_mails(mailbox=source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
+                    if not result[0]:
+                        self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"', message_id)
+                        return result
+                    uids.append(result[1][0])
+
+                result = self.select_mailbox(source)
+                if not result[0]:
+                    return result
+
+                result = self.conn.copy('1', destination)
+
+                if result is None:
+                    if delete_old:
+                        self.logger.error('Failed to move mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
+                                          destination, result)
+                    else:
+                        self.logger.error('Failed to copy mail with message-id="%s" from "%s" to "%s": %s', message_ids, source,
+                                          destination, result)
+                    return (False, result)
+
+                if delete_old:
+                    result = self.delete_mails(uids=uids, mailbox=source)
+                    if not result[0]:
+                        self.logger.error('Failed to remove old mail with message-id="%s"/uids="%s": %s', message_ids, uids, result[1])
+                        return result
+
+                    if expunge:  # TODO don't expunge by default
+                        result = self.expunge(mailbox=source)
+                        if not result[0]:
+                            self.logger.error('Failed to expunge on mailbox %s: %s', source, result[1])
+                            return result
+
+                if type(set_flags) is list:  # TODO
+                    result = self.select_mailbox(destination)
+                    if not result[0]:
+                        return result
+                    uids = []
+                    for message_id in message_ids:
+                        result = self.search_mails(mailbox=destination, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
+                        if not result[0]:
+                            self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"', message_id)
+                            return result
+                        uids.append(result[1][0])
+                    self._set_mailflags(uids, set_flags)
+                return (True, None)
+
             except IMAPClient.Error as e:
                 return self.process_error(e)
 
