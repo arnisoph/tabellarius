@@ -113,11 +113,11 @@ class IMAP(object):
             login = self.conn.login(self.username, self.password)
 
             if logout:
-                if login != b'Logged in':
-                    return (False, login)
                 return self.disconnect()
             else:
                 return (login == b'Logged in', login)
+        except ConnectionRefusedError as e:
+            return self.process_error(e)
         except IMAPClient.Error as e:
             err_return = self.process_error(e)
 
