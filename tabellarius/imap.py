@@ -117,9 +117,7 @@ class IMAP(object):
                 return self.disconnect()
             else:
                 return (login == b'Logged in', login)
-        except ConnectionRefusedError as e:
-            return self.process_error(e)
-        except IMAPClient.Error as e:
+        except Exception as e:
             err_return = self.process_error(e)
 
             if str(e) == "b'[AUTHENTICATIONFAILED] Authentication failed.'":  # TODO
