@@ -44,7 +44,7 @@ class IMAP(object):
 
         self.test = test
 
-    def process_error(self, exception):
+    def process_error(self, exception, simple_return=False):
         """
         Process Python exception by logging a message and optionally showing traceback
         """
@@ -54,7 +54,11 @@ class IMAP(object):
         if self.logger.isEnabledFor(loglevel_DEBUG):
             print_exception(*trace_info)
         del trace_info
-        return exception
+
+        if not simple_return:
+            return (False, str(exception))
+        else:
+            return exception
 
     def connect(self, retry=True, logout=False):
         """
@@ -87,12 +91,12 @@ class IMAP(object):
             else:
                 return (login == b'Logged in', login)
         except IMAPClient.Error as e:
-            self.process_error(e)
+            err_return = self.process_error(e)
             if retry:
                 self.logger.error('Trying one more time to login')
                 sleep(2)
                 return self.connect(retry=False, logout=logout)
-            return (False, str(e))
+            return err_return
 
     def disconnect(self):
         """
@@ -105,15 +109,19 @@ class IMAP(object):
         """
         Get a listing of folders (mailboxes) on the server
         """
-        raw_list = self.conn.list_folders(directory, pattern)
-        nice_list = []
+        try:
+            raw_list = self.conn.list_folders(directory, pattern)
+            nice_list = []
 
-        for mailbox in raw_list:
-            flags = []
-            for flag in mailbox[0]:
-                flags.append(flag.decode("utf-8"))
-            nice_list.append({'name': mailbox[2], 'flags': flags, 'delimiter': mailbox[1].decode("utf-8")})
-        return nice_list
+            for mailbox in raw_list:
+                flags = []
+                for flag in mailbox[0]:
+                    flags.append(flag.decode('utf-8'))
+
+                nice_list.append({'name': mailbox[2], 'flags': flags, 'delimiter': mailbox[1].decode("utf-8")})
+            return (True, nice_list)
+        except IMAPClient.Error as e:
+            return self.process_error(e)
 
     def select_mailbox(self, mailbox):
         """
@@ -121,10 +129,9 @@ class IMAP(object):
         """
         self.logger.debug('Switching to mailbox %s', mailbox)
         try:
-            return self.conn.select_folder(mailbox)  # TODO convert byte strings
+            return (True, self.conn.select_folder(mailbox))  # TODO convert byte strings
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return str(e)
+            return self.process_error(e)
 
     def add_mail(self, mailbox, message, flags=(), msg_time=None):
         """
@@ -133,12 +140,11 @@ class IMAP(object):
         self.logger.debug('Adding a mail into mailbox %s', mailbox)
         try:
             #self.conn.append(mailbox, message, flags, msg_time)
-            self._append(mailbox, message, flags, msg_time)
-            # According to rfc4315 we must not return the UID of the appended message
-            return True
+            self._append(mailbox, str(message), flags, msg_time)
+            # According to rfc4315 we must not return the UID from the response, so we are fetching it ourselves
+            return (True, self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{0}"'.format(message.get('message-id')))[1][0])
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return str(e)
+            return self.process_error(e)
 
     def search_mails(self, mailbox, criteria='ALL'):
         """
@@ -147,18 +153,16 @@ class IMAP(object):
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:
             result = self.select_mailbox(mailbox)
-            if str(result).startswith('select failed: Mailbox doesn\'t exist: '):
+            if not result[0]:
                 return result
 
-            result = self.conn.search(criteria=criteria)
-            return list(result)
+            return (True, list(self.conn.search(criteria=criteria)))
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return str(e)
+            return self.process_error(e)
 
-    def fetch_mails(self, uids, return_fields=None):
+    def fetch_mails(self, uids, mailbox, return_fields=None):
         """
-        Retrieve mails
+        Retrieve mails from a mailbox
         """
         self.logger.debug('Fetching mails with uids %s', uids)
 
@@ -168,9 +172,14 @@ class IMAP(object):
 
         mails = {}
         try:
+            result = self.select_mailbox(mailbox)
+            if not result[0]:
+                return result
+
             if return_raw:
                 for uid in uids:
                     result = self.conn.fetch(uid, return_fields)
+
                     for fetch_uid, fetch_mail in result.items():
                         mails[uid] = fetch_mail
             else:
@@ -179,17 +188,19 @@ class IMAP(object):
                     for fetch_uid, raw_mail in result.items():
                         mail = Mail(logger=self.logger, uid=uid, mail=email.message_from_bytes(raw_mail[b'RFC822']))
                         mails[uid] = mail
-            return mails
+
+            return (True, mails)
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return str(e)
+            return self.process_error(e)
 
     def set_mailflags(self, uids, mailbox, flags=[]):
         if self.test:
             self.logger.info('Would have set mail flags on message uids "%s"', str(uids))
             return True
         else:
-            self.select_mailbox(mailbox)
+            result = self.select_mailbox(mailbox)
+            if not result[0]:
+                return result
             return self._set_mailflags(uids, flags)
 
     def move_mail(self, message_id, source, destination, delete_old=True, expunge=True, set_flags=None):  # TODO error handling is missing
@@ -199,13 +210,15 @@ class IMAP(object):
         if self.test:
             self.logger.info('Would have moved mail message-id="%s" from "%s" to "%s", skipping because of beeing in testmode', message_id,
                              source, destination)
-            return True
+            return (True, None)
         else:
             try:
-                self.select_mailbox(source)
+                result = self.select_mailbox(source)
+                if not result[0]:
+                    return result
                 self.logger.debug('Moving mail message-id="%s" from "%s" to "%s"', message_id, source, destination)
                 result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
-                uid = result[0]
+                uid = result[1][0]
 
                 result = self.copy_mails([uid], source, destination)
                 if not result[0]:
@@ -219,14 +232,15 @@ class IMAP(object):
                         self._expunge()
 
                 if type(set_flags) is list:
-                    self.select_mailbox(destination)
+                    result = self.select_mailbox(destination)
+                    if not result[0]:
+                        return result
                     uids = self.search_mails(destination, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
                     self._set_mailflags(uids, set_flags)
 
-                return True
+                return (True, None)
             except IMAPClient.Error as e:
-                self.process_error(e)
-                return str(e)
+                return self.process_error(e)
 
     def copy_mails(self, uids, source, destination):
         """
@@ -244,12 +258,11 @@ class IMAP(object):
                     self._create_mailbox(destination)  # TODO error handling
 
                 result = self.select_mailbox(source)
-                if str(result).startswith('select failed: Mailbox doesn\'t exist: '):
-                    return (False, result)
+                if not result[0]:
+                    return result
                 return (True, self.conn.copy(uids, destination))
             except IMAPClient.Error as e:
-                self.process_error(e)
-                return (True, str(e))
+                return self.process_error(e)
 
     def _append(self, folder, msg, flags=(), msg_time=None):  # TODO
         """
@@ -274,41 +287,35 @@ class IMAP(object):
         try:
             return self.conn.set_flags(uids, flags)
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return None
+            return self.process_error(e)
 
     def _expunge(self):
         self.logger.debug('Expunge mails')
         try:
             return self.conn.expunge()
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return None
+            return self.process_error(e)
 
     def _create_mailbox(self, mailbox):
         self.logger.debug('Creating mailbox %s', mailbox)
         try:
             return self.conn.create_folder(mailbox)
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return None
+            return self.process_error(e)
 
     def _mailbox_exists(self, mailbox):
         self.logger.debug('Checking wether mailbox %s exists', mailbox)
         try:
             return self.conn.folder_exists(mailbox)
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return None
+            return self.process_error(e)
 
     def _delete_mails(self, uids):
         self.logger.debug('Deleting mails uid="%s"', uids)
         try:
             return self.conn.delete_messages(uids)
         except IMAPClient.Error as e:
-            self.process_error(e)
-            return None
-
+            return self.process_error(e)
 
 #def to_unicode(s, encoding='ascii'):
 #    if isinstance(s, binary_type):

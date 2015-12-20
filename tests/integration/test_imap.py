@@ -75,7 +75,8 @@ class IMAPTest(TabellariusTest):
         except KeyError as e:
             username, password = self.create_imap_user()
             imapconn = self.create_basic_imap_object(username, password)
-            self.assertIsInstance(imapconn.process_error(e), KeyError)
+            self.assertEqual(imapconn.process_error(exception=e)[1], '\'test\'')
+            self.assertIsInstance(imapconn.process_error(exception=e, simple_return=True), KeyError)
 
     def test_list_mailboxes(self):
         username, password = self.create_imap_user()
@@ -94,7 +95,7 @@ class IMAPTest(TabellariusTest):
                    'name': 'Junk'}, {'delimiter': '/',
                                      'flags': ['\\HasNoChildren'],
                                      'name': 'INBOX'}]
-        self.assertEqual(imapconn.list_mailboxes(), expect)
+        self.assertEqual(imapconn.list_mailboxes()[1], expect)
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
@@ -104,10 +105,10 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
 
         result = imapconn.select_mailbox(mailbox='INBOX')
-        self.assertEqual(result[b'FLAGS'], (b'\\Answered', b'\\Flagged', b'\\Deleted', b'\\Seen', b'\\Draft'))
+        self.assertEqual(result[1][b'FLAGS'], (b'\\Answered', b'\\Flagged', b'\\Deleted', b'\\Seen', b'\\Draft'))
 
         result = imapconn.select_mailbox(mailbox='DoesNotExist')
-        self.assertEqual(result, 'select failed: Mailbox doesn\'t exist: DoesNotExist')
+        self.assertEqual(result[1], 'select failed: Mailbox doesn\'t exist: DoesNotExist')
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
@@ -117,14 +118,14 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
 
         example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['FLAG', 'WAVE']))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['\\Seen']))
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'])[0])
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen'])[0])
 
         self.assertEqual(
             imapconn.add_mail(mailbox='DoesNotExist',
-                              message=str(self.create_email()),
+                              message=self.create_email(),
                               flags=['FLAG', 'WAVE'],
-                              msg_time=example_date), 'append failed: [TRYCREATE] Mailbox doesn\'t exist: DoesNotExist')
+                              msg_time=example_date)[1], 'append failed: [TRYCREATE] Mailbox doesn\'t exist: DoesNotExist')
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
@@ -135,18 +136,18 @@ class IMAPTest(TabellariusTest):
 
         # Adding some mails to search for
         example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['FLAG', 'WAVE']))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['\\Seen']))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['FLAG', 'WAVE'], msg_time=example_date))
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'])[0])
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen'])[0])
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'], msg_time=example_date)[0])
 
-        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='ALL'), [1, 2, 3])
-        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='UNSEEN'), [1, 3])
-        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SEEN'), [2])
-        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SINCE 13-Apr-2015'), [1, 2])
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='ALL')[1], [1, 2, 3])
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='UNSEEN')[1], [1, 3])
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SEEN')[1], [2])
+        self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SINCE 13-Apr-2015')[1], [1, 2])
         self.assertEqual(imapconn.search_mails(mailbox='DoesNotExist',
-                                               criteria='ALL'), 'select failed: Mailbox doesn\'t exist: DoesNotExist')
+                                               criteria='ALL')[1], 'select failed: Mailbox doesn\'t exist: DoesNotExist')
         self.assertEqual(imapconn.search_mails(mailbox='INBOX',
-                                               criteria='DoesNotExist'),
+                                               criteria='DoesNotExist')[1],
                          'SEARCH command error: BAD [b\'Error in IMAP command UID SEARCH: Unknown argument DOESNOTEXIST\']')
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
@@ -158,19 +159,20 @@ class IMAPTest(TabellariusTest):
 
         # Adding some mails to search for
         example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['FLAG', 'WAVE']))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['\\Seen']))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=str(self.create_email()), flags=['FLAG', 'WAVE'], msg_time=example_date))
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'])[1], 1)
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen'])[1], 2)
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX',
+                                           message=self.create_email(),
+                                           flags=['FLAG', 'WAVE'],
+                                           msg_time=example_date)[1], 3)
 
-        # (Manually) selecting a Mailbox  # TODO
-        result = imapconn.select_mailbox(mailbox='INBOX')
-        self.assertEqual(result[b'FLAGS'], (b'\\Answered', b'\\Flagged', b'\\Deleted', b'\\Seen', b'\\Draft', b'FLAG', b'WAVE'))
-
-        self.assertIn(b'RFC822', imapconn.fetch_mails([2], [b'RFC822'])[2])
-        self.assertEqual(imapconn.fetch_mails([2])[2]['subject'], 'Testmäil')
-        self.assertEqual(imapconn.fetch_mails([1, 2])[2]['subject'], 'Testmäil')
-        self.assertEqual(imapconn.fetch_mails([1337]), {})
-        self.assertEqual(imapconn.fetch_mails([-1337]), 'FETCH command error: BAD [b\'Error in IMAP command UID FETCH: Invalid uidset\']')
+        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1][2])
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2]['subject'], 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1][2]['subject'], 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1337], mailbox='INBOX')[1], {})
+        self.assertEqual(imapconn.fetch_mails(uids=[-1337],
+                                              mailbox='INBOX')[1],
+                         'FETCH command error: BAD [b\'Error in IMAP command UID FETCH: Invalid uidset\']')
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
@@ -181,16 +183,14 @@ class IMAPTest(TabellariusTest):
 
         # Adding some mails to search for
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
-                                          message=str(self.create_email(headers={'Subject': 'Moved Mail'})),
-                                          flags=['FLAG', 'WAVE']))
+                                          message=self.create_email(headers={'Subject': 'Moved Mail'}),
+                                          flags=['FLAG', 'WAVE'])[0])
 
-        # (Manually) selecting a Mailbox  # TODO
-        imapconn.select_mailbox(mailbox='INBOX')
-        message_id = imapconn.fetch_mails([1])[1].get('message-id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
-        self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'))
-        self.assertEqual(imapconn.search_mails(mailbox='Trash', criteria='HEADER Subject "Moved Mail"'), [1])
+        self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash')[0])
+        self.assertEqual(imapconn.search_mails(mailbox='Trash', criteria='HEADER Subject "Moved Mail"')[1], [1])
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
@@ -201,14 +201,12 @@ class IMAPTest(TabellariusTest):
 
         # Adding some mails to search for
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
-                                          message=str(self.create_email(headers={'Subject': 'Moved Mail'})),
-                                          flags=['FLAG', 'WAVE']))
+                                          message=self.create_email(headers={'Subject': 'Moved Mail'}),
+                                          flags=['FLAG', 'WAVE'])[0])
 
-        # (Manually) selecting a Mailbox  # TODO
-        imapconn.select_mailbox(mailbox='INBOX')
-        message_id = imapconn.fetch_mails([1])[1].get('message-id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
-        self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'))
+        self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash')[0])
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
