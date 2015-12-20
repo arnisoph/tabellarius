@@ -308,8 +308,8 @@ class IMAP(object):
 
                     result = self.create_mailbox(destination)
                     if not result[0]:
-                        self.logger.error('Failed to create the mailbox %s: %s', source, result[1])
-                        return result
+                        self.logger.error('Failed to create the mailbox %s: %s', source, result[1])  # pragma: no cover
+                        return result  # pragma: no cover
 
                 uids = []
                 for message_id in message_ids:
@@ -322,15 +322,16 @@ class IMAP(object):
 
                 result = self.select_mailbox(source)
                 if not result[0]:
-                    return result
+                    return result  # pragma: no cover
 
                 self.conn.copy(uids, destination)
 
                 if delete_old:
                     result = self.delete_mails(uids=uids, mailbox=source)
                     if not result[0]:
-                        self.logger.error('Failed to remove old mail with message-id="%s"/uids="%s": %s', message_ids, uids, result[1])
-                        return result
+                        self.logger.error('Failed to remove old mail with message-id="%s"/uids="%s": %s', message_ids, uids,
+                                          result[1])  # pragma: no cover
+                        return result  # pragma: no cover
 
                     if expunge:  # TODO don't expunge by default
                         result = self.expunge(mailbox=source)
