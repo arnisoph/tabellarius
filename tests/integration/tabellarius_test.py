@@ -7,6 +7,8 @@ import redis
 import sys
 import unittest
 import time
+import email.charset
+import email.message
 
 sys.path.insert(0, './tabellarius')
 
@@ -52,6 +54,20 @@ class TabellariusTest(unittest.TestCase):
                              password=password,
                              timeout=5)
         return imapconn
+
+    def create_email(self, headers=None, body='This is a test mäil.'):
+        if headers is None:
+            headers = {'From': '<test@example.com>', 'To': '<test@example.com>', 'Subject': 'Testmäil'}
+
+        message = email.message.Message()
+        email.charset.add_charset('utf-8', email.charset.QP, email.charset.QP)
+        c = email.charset.Charset('utf-8')
+        message.set_charset(c)
+        for field_name, field_value in headers.items():
+            message[field_name] = field_value
+        message.set_payload(body)
+
+        return message
 
     logger = LoggerDummy()
     rconn = redis.StrictRedis(host='127.0.0.1', port=6379)

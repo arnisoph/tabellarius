@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-import email
 from imapclient import IMAPClient
+from imapclient.fixed_offset import FixedOffset
 from logging import DEBUG as loglevel_DEBUG
+from six import PY3
 from sys import exc_info
 from time import sleep
 from traceback import print_exception
 import backports.ssl as ssl
+import email
+import imapclient  # TODO required for _append
 
 from mail import Mail
 
@@ -126,7 +129,8 @@ class IMAP(object):
         """
         self.logger.debug('Adding a mail into mailbox %s', mailbox)
         try:
-            self.conn.append(mailbox, message, flags, msg_time)
+            #self.conn.append(mailbox, message, flags, msg_time)
+            self._append(mailbox, message, flags, msg_time)
             # According to rfc4315 we must not return the UID of the appended message
             return True
         except IMAPClient.Error as e:
@@ -140,8 +144,7 @@ class IMAP(object):
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:
             result = self.select_mailbox(mailbox)
-
-            if result == 'select failed: Mailbox doesn\'t exist: DoesNotExist':
+            if str(result).startswith('select failed: Mailbox doesn\'t exist: '):
                 return result
 
             result = self.conn.search(criteria=criteria)
@@ -150,37 +153,45 @@ class IMAP(object):
             self.process_error(e)
             return str(e)
 
-    def fetch_raw_mails(self, uids, mailbox, return_fields=[b'RFC822']):
-        if len(uids) == 0:
-            return []
-        self.logger.debug('Fetching raw mails with uids %s', uids)
+    #def fetch_mails(self, uids, mailbox, return_fields=[b'RFC822']):
+    def fetch_mails(self, uids, return_fields=None):
+        """
+        Retrieve mails
+        """
+        self.logger.debug('Fetching mails with uids %s', uids)
+
+        return_raw = True
+        if return_fields is None:
+            return_raw = False
 
         mails = {}
         try:
-            for uid in uids:
-                result = self.select_mailbox(mailbox)
-                result = self.conn.fetch(uid, return_fields)
-                for fetch_uid, fetch_mail in result.items():
-                    mails[fetch_uid] = fetch_mail
+            if return_raw:
+                for uid in uids:
+                    result = self.conn.fetch(uid, return_fields)
+                    for fetch_uid, fetch_mail in result.items():
+                        mails[uid] = fetch_mail
+            else:
+                for uid in uids:
+                    result = self.conn.fetch(uid, [b'RFC822'])
+                    for fetch_uid, raw_mail in result.items():
+                        mail = Mail(logger=self.logger,
+                                    uid=uid,
+                                    mail=email.message_from_bytes(raw_mail[b'RFC822']))  # TODO doesn't work with PY27
+                        mails[uid] = mail
+            print(mails)
+            return mails
         except IMAPClient.Error as e:
             self.process_error(e)
-        return mails
+            return str(e)
 
-    def fetch_mails(self, uids, mailbox):
-        if type(uids) is not list:
-            uids = [uids]
-        if len(uids) == 0:
-            return {}
-        self.logger.debug('Fetching mails with uids %s', uids)
-
-        raw_mails = self.fetch_raw_mails(uids, mailbox)
-        mails = {}
-        for raw_uid, raw_mail in raw_mails.items():
-            mail = Mail(logger=self.logger,
-                        uid=raw_uid,
-                        mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))  # TODO doesn't work with PY27
-            mails[raw_uid] = mail
-        return mails
+    #def fetch_mails(self, uids, mailbox):
+    #    for raw_uid, raw_mail in raw_mails.items():
+    #        mail = Mail(logger=self.logger,
+    #                    uid=raw_uid,
+    #                    mail=email.message_from_bytes(raw_mails[raw_uid][b'RFC822']))  # TODO doesn't work with PY27
+    #        mails[raw_uid] = mail
+    #    return mails
 
     def move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
         if self.test:
@@ -196,6 +207,26 @@ class IMAP(object):
         else:
             self.select_mailbox(mailbox)
             return self._set_mailflags(uids, flags)
+
+    def _append(self, folder, msg, flags=(), msg_time=None):  # TODO
+        """
+        FORKED FORM IMAPCLIENT
+        """
+        if msg_time:
+            if not msg_time.tzinfo:
+                msg_time = msg_time.replace(tzinfo=FixedOffset.for_system())
+            time_val = '"{0}"'.format(msg_time.strftime("%d-%b-%Y %H:%M:%S %z"))
+
+            if PY3:
+                time_val = imapclient.imapclient.to_unicode(time_val)
+            else:
+                time_val = imapclient.imapclient.to_bytes(time_val)
+        else:
+            time_val = None
+
+        return self.conn._command_and_check('append', self.conn._normalise_folder(folder), imapclient.imapclient.seq_to_parenstr(flags),
+                                            time_val, bytearray(msg, 'utf-8'),
+                                            unpack=True)
 
     def _move_mail(self, mail, source, destination, delete_old=True, expunge=True, set_flags=None):
         self.logger.debug('Moving mail message-id="%s" from "%s" to "%s"', mail.get('message-id'), source, destination)
