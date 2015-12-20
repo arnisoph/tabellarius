@@ -269,7 +269,7 @@ class IMAPTest(TabellariusTest):
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
-    def test_copy_mails_nonexisting_destination(self):
+    def test_copy_mails_errors(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
@@ -294,6 +294,10 @@ class IMAPTest(TabellariusTest):
         # Check old and copied
         self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id'), message_id)
         self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='CustomMailbox')[1][1].get('message-id'), message_id)
+
+        self.assertEqual(imapconn.copy_mails(message_ids=[message_id],
+                                             source='INBOX',
+                                             destination=''), (False, 'copy failed: [CANNOT] Invalid mailbox name: Name is empty'))
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
