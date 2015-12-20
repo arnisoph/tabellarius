@@ -8,15 +8,15 @@ matrix:
       services:
         - docker
     - python: '3.4'
-      env: TOX_ENV=app_tests
+      env: TOX_ENV=app_tests_min
       services:
         - docker
     - python: '3.3'
-      env: TOX_ENV=app_tests
+      env: TOX_ENV=app_tests_min
       services:
         - docker
     - python: '3.2'
-      env: TOX_ENV=app_tests
+      env: TOX_ENV=app_tests_min
       services:
         - docker
     - python: '3.5'
