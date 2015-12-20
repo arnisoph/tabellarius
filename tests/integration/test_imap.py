@@ -20,7 +20,7 @@ class IMAPTest(TabellariusTest):
     #    for username, password in sorted(self.imap_users.items()):  # TODO
     #        self.remove_imap_user(username)
 
-    def test_connect(self):
+    def test_connect(self):  # TODO test is damn slow, reduce test time
         # Test simple plaintext imap connection
         username, password = self.create_imap_user()
         self.assertEqual(imap.IMAP(logger=self.logger,
@@ -45,7 +45,7 @@ class IMAPTest(TabellariusTest):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(logout=False), (True, b'Logged in'))
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
         # Test simple imap via STARTTLS connection
         username, password = self.create_imap_user()
@@ -96,7 +96,7 @@ class IMAPTest(TabellariusTest):
                                      'name': 'INBOX'}]
         self.assertEqual(imapconn.list_mailboxes(), expect)
 
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
     def test_select_mailbox(self):
         username, password = self.create_imap_user()
@@ -109,7 +109,7 @@ class IMAPTest(TabellariusTest):
         result = imapconn.select_mailbox(mailbox='DoesNotExist')
         self.assertEqual(result, 'select failed: Mailbox doesn\'t exist: DoesNotExist')
 
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
     def test_add_mail(self):
         username, password = self.create_imap_user()
@@ -126,7 +126,7 @@ class IMAPTest(TabellariusTest):
                               flags=['FLAG', 'WAVE'],
                               msg_time=example_date), 'append failed: [TRYCREATE] Mailbox doesn\'t exist: DoesNotExist')
 
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
     def test_search_mail(self):  # TODO see meth impl
         username, password = self.create_imap_user()
@@ -149,7 +149,7 @@ class IMAPTest(TabellariusTest):
                                                criteria='DoesNotExist'),
                          'SEARCH command error: BAD [b\'Error in IMAP command UID SEARCH: Unknown argument DOESNOTEXIST\']')
 
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
     def test_fetch_mails(self):
         username, password = self.create_imap_user()
@@ -172,7 +172,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.fetch_mails([1337]), {})
         self.assertEqual(imapconn.fetch_mails([-1337]), 'FETCH command error: BAD [b\'Error in IMAP command UID FETCH: Invalid uidset\']')
 
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
     def test_move_mail(self):
         username, password = self.create_imap_user()
@@ -192,7 +192,7 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'))
         self.assertEqual(imapconn.search_mails(mailbox='Trash', criteria='HEADER Subject "Moved Mail"'), [1])
 
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
         # Test the test mode
         username, password = self.create_imap_user()
@@ -211,4 +211,4 @@ class IMAPTest(TabellariusTest):
 
         self.assertTrue(imapconn.move_mail(message_id=message_id, source='INBOX', destination='Trash'))
 
-        self.assertEqual(imapconn.disconnect(), b'Logging out')
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))

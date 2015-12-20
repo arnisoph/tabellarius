@@ -81,7 +81,9 @@ class IMAP(object):
             login = self.conn.login(self.username, self.password)
 
             if logout:
-                return (login == b'Logged in', self.conn.logout())
+                if login != b'Logged in':
+                    return (False, login)
+                return self.disconnect()
             else:
                 return (login == b'Logged in', login)
         except IMAPClient.Error as e:
@@ -96,7 +98,8 @@ class IMAP(object):
         """
         Disconnect from IMAP server
         """
-        return self.conn.logout()  # TODO do more?  #TODO check if logged in
+        result = self.conn.logout()  # TODO do more?  #TODO check if logged in or do a silent fail
+        return (result == b'Logging out', result)
 
     def list_mailboxes(self, directory='', pattern='*'):
         """
