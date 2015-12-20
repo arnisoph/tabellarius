@@ -2,18 +2,22 @@ sudo: required
 services:
   - docker
 language: python
-python:
-  - '3.5'
-  - '3.4'
-  - '3.3'
-  - '3.2'
-#  - '2.7'
-env:
-  - TOX_ENV=app_tests
-  - TOX_ENV=app_flake8
-  #- TOX_ENV=app_todo
-  - TOX_ENV=tests_flake8
-  #- TOX_ENV=tests_todo
+
+matrix:
+  include:
+    - python: '3.5'
+      env: TOX_ENV=app_tests_cov
+    - python: '3.5'
+      env: TOX_ENV=app_flake8
+    - python: '3.5'
+      env: TOX_ENV=tests_flake8
+    - python: '3.4'
+      env: TOX_ENV=app_tests
+    - python: '3.3'
+      env: TOX_ENV=app_tests
+    - python: '3.2'
+      env: TOX_ENV=app_tests
+
 addons:
   apt:
     packages:
