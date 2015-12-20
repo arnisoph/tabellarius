@@ -179,7 +179,6 @@ class IMAP(object):
                                     uid=uid,
                                     mail=email.message_from_bytes(raw_mail[b'RFC822']))  # TODO doesn't work with PY27
                         mails[uid] = mail
-            print(mails)
             return mails
         except IMAPClient.Error as e:
             self.process_error(e)
@@ -300,4 +299,7 @@ def to_unicode(s, encoding='ascii'):
 
 def to_bytes(s, encoding='ascii'):
     if isinstance(s, text_type):
-        return s.encode(encoding)
+        if PY3:
+            return s.encode(encoding)
+        else:
+            return bytearray(s)
