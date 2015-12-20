@@ -195,23 +195,22 @@ class IMAP(object):
         return_raw = True
         if return_fields is None:
             return_raw = False
+            return_fields = [b'RFC822']
 
         mails = {}
         try:
-            if return_raw:
-                for uid in uids:
-                    result = self.conn.fetch(uid, return_fields)
+            for uid in uids:
+                result = self.conn.fetch(uid, return_fields)
 
-                    for fetch_uid, fetch_mail in result.items():
-                        mails[uid] = fetch_mail
-            else:
-                for uid in uids:
-                    result = self.conn.fetch(uid, [b'RFC822'])
-                    for fetch_uid, raw_mail in result.items():
-                        mail = Mail(logger=self.logger, uid=uid, mail=email.message_from_bytes(raw_mail[b'RFC822']))
-                        mails[uid] = mail
+                if not result:
+                    continue
 
+                if return_raw:
+                    mails[uid] = result[uid]
+                else:
+                    mails[uid] = Mail(logger=self.logger, uid=uid, mail=email.message_from_bytes(result[uid][b'RFC822']))
             return (True, mails)
+
         except IMAPClient.Error as e:
             return self.process_error(e)
 
