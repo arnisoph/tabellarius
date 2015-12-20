@@ -6,7 +6,7 @@ language: python
 matrix:
   include:
     - python: '3.5'
-      env: TOX_ENV=app_tests_cov
+      env: TOX_ENV=app_tests_cov_upload
     - python: '3.5'
       env: TOX_ENV=app_flake8
     - python: '3.5'
@@ -17,6 +17,10 @@ matrix:
       env: TOX_ENV=app_tests
     - python: '3.2'
       env: TOX_ENV=app_tests
+    - python: '3.5'
+      env: TOX_ENV=app_todo
+    - python: '3.5'
+      env: TOX_ENV=tests_todo
 
 addons:
   apt:
