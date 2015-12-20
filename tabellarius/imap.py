@@ -44,6 +44,34 @@ class IMAP(object):
 
         self.test = test
 
+    def do_select_mailbox(func):
+        """
+        Decorator to do a fresh mailbox SELECT
+        """
+
+        def wrapper(*args, **kwargs):
+            if len(args) != 1:
+                raise AttributeError(
+                    'Size of *args tuple "{0}" isn\'t 1. It looks like you haven\'t specified all '
+                    'method arguments as named arguments!'.format(
+                        args))
+
+            mailbox = None
+            for key in ['mailbox', 'source']:
+                if key in kwargs.keys():
+                    mailbox = kwargs[key]
+                    break
+
+            if mailbox is None:
+                raise KeyError('Unable to SELECT a mailbox, kwargs "{0}" doesn\'t contain a mailbox name'.format(kwargs))
+
+            result = args[0].select_mailbox(mailbox)
+            if not result[0]:
+                raise RuntimeError(result[1])
+            return func(*args, **kwargs)
+
+        return wrapper
+
     def process_error(self, exception, simple_return=False):
         """
         Process Python exception by logging a message and optionally showing traceback
@@ -146,20 +174,18 @@ class IMAP(object):
         except IMAPClient.Error as e:
             return self.process_error(e)
 
+    @do_select_mailbox
     def search_mails(self, mailbox, criteria='ALL'):
         """
         Search for mails in a mailbox
         """
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:
-            result = self.select_mailbox(mailbox)
-            if not result[0]:
-                return result
-
             return (True, list(self.conn.search(criteria=criteria)))
         except IMAPClient.Error as e:
             return self.process_error(e)
 
+    @do_select_mailbox
     def fetch_mails(self, uids, mailbox, return_fields=None):
         """
         Retrieve mails from a mailbox
@@ -172,10 +198,6 @@ class IMAP(object):
 
         mails = {}
         try:
-            result = self.select_mailbox(mailbox)
-            if not result[0]:
-                return result
-
             if return_raw:
                 for uid in uids:
                     result = self.conn.fetch(uid, return_fields)
@@ -193,16 +215,15 @@ class IMAP(object):
         except IMAPClient.Error as e:
             return self.process_error(e)
 
+    @do_select_mailbox
     def set_mailflags(self, uids, mailbox, flags=[]):
         if self.test:
             self.logger.info('Would have set mail flags on message uids "%s"', str(uids))
             return True
         else:
-            result = self.select_mailbox(mailbox)
-            if not result[0]:
-                return result
             return self._set_mailflags(uids, flags)
 
+    @do_select_mailbox
     def move_mail(self, message_id, source, destination, delete_old=True, expunge=True, set_flags=None):  # TODO error handling is missing
         """
         Move a mail from a mailbox to another
@@ -213,14 +234,11 @@ class IMAP(object):
             return (True, None)
         else:
             try:
-                result = self.select_mailbox(source)
-                if not result[0]:
-                    return result
                 self.logger.debug('Moving mail message-id="%s" from "%s" to "%s"', message_id, source, destination)
-                result = self.search_mails(source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
+                result = self.search_mails(mailbox=source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
                 uid = result[1][0]
 
-                result = self.copy_mails([uid], source, destination)
+                result = self.copy_mails(uids=[uid], source=source, destination=destination)
                 if not result[0]:
                     self.logger.error('Failed to move mail with message-id="%s": %s', message_id, result[1])
                     return result
@@ -242,6 +260,7 @@ class IMAP(object):
             except IMAPClient.Error as e:
                 return self.process_error(e)
 
+    @do_select_mailbox
     def copy_mails(self, uids, source, destination):
         """
         Copies one or more mails from a mailbox into another
@@ -257,9 +276,6 @@ class IMAP(object):
                     self.logger.info('Destination mailbox %s to copy mails doesn\'t exist, creating it for you', destination)
                     self._create_mailbox(destination)  # TODO error handling
 
-                result = self.select_mailbox(source)
-                if not result[0]:
-                    return result
                 return (True, self.conn.copy(uids, destination))
             except IMAPClient.Error as e:
                 return self.process_error(e)

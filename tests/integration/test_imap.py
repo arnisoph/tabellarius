@@ -144,8 +144,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='UNSEEN')[1], [1, 3])
         self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SEEN')[1], [2])
         self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='SINCE 13-Apr-2015')[1], [1, 2])
-        self.assertEqual(imapconn.search_mails(mailbox='DoesNotExist',
-                                               criteria='ALL')[1], 'select failed: Mailbox doesn\'t exist: DoesNotExist')
+        self.assertRaises(RuntimeError, imapconn.search_mails, mailbox='DoesNotExist', criteria='ALL')
         self.assertEqual(imapconn.search_mails(mailbox='INBOX',
                                                criteria='DoesNotExist')[1],
                          'SEARCH command error: BAD [b\'Error in IMAP command UID SEARCH: Unknown argument DOESNOTEXIST\']')
