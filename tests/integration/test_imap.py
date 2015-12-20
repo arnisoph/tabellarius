@@ -268,6 +268,34 @@ class IMAPTest(TabellariusTest):
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
+    def test_copy_mails_nonexisting_destination(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+
+        # Adding some mails to search for
+        example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX',
+                                          message=self.create_email(headers={'Subject': 'Copied Mäil'}),
+                                          flags=['FLAG', 'WAVE'])[0])
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
+        self.assertEqual(imapconn.add_mail(mailbox='INBOX',
+                                           message=self.create_email(),
+                                           flags=['FLAG', 'WAVE'],
+                                           msg_time=example_date), (True, 3))
+
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id')
+        self.assertTrue(message_id.startswith('<very_unique_id_'))
+
+        # Copy
+        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='CustomMailbox')[0])
+
+        # Check old and copied
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get('message-id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='CustomMailbox')[1][1].get('message-id'), message_id)
+
+        self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
+
     def test_copy_mails_testmode(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password, test=True)

@@ -303,7 +303,7 @@ class IMAP(object):
                 #        return result
                 #    message_ids.append(result[1].keys())
 
-                if not self.mailbox_exists(destination):
+                if not self.mailbox_exists(destination)[1]:
                     self.logger.info('Destination mailbox %s doesn\'t exist, creating it for you', destination)
 
                     result = self.create_mailbox(destination)
