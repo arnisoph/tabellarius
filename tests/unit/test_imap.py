@@ -391,6 +391,9 @@ class IMAPTest(TabellariusTest):
 
         self.assertEqual(imapconn.mailbox_exists(mailbox='Ördnerß'), (True, False))
 
+        # Test create_mailbox() exception
+        self.assertEqual(imapconn.create_mailbox(mailbox=''), (False, 'create failed: [CANNOT] Invalid mailbox name: Name is empty'))
+
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
     def test_delete_mails_and_expunge(self):
