@@ -17,6 +17,7 @@ from misc import ConfigParser, Helper
 def main():
     version = '0.2.0'
     program_name = 'tabellarius'
+    allowed_log_levels = ['DEBUG', 'ERROR', 'INFO']
 
     if python_version[0] < 3:
         print('Your need to use Python 3 to run {0}! Your version: {1}'.format(program_name, python_version))
@@ -33,7 +34,7 @@ def main():
     parser.add_argument('-l', '--log-level',
                         action='store',
                         dest='log_level',
-                        help='Override log level setting (DEBUG|ERROR|CRITICAL|INFO)',
+                        help='Override log level setting ({0})'.format(', '.join(allowed_log_levels)),
                         default='')
     parser.add_argument('--gpg-homedir',
                         action='store',
@@ -58,8 +59,8 @@ def main():
     test = parser_results.test
 
     log_level = parser_results.log_level.upper()
-    if log_level and log_level not in ['DEBUG', 'ERROR', 'CRITICAL', 'INFO']:
-        print('LOG_LEVEL {0} is not supported, supported log levels are DEBUG, ERROR, CRITICAL, INFO'.format(log_level))
+    if log_level and log_level not in allowed_log_levels:
+        print('LOG_LEVEL {0} is not supported, supported log levels are: {1}'.format(log_level, ', '.join(allowed_log_levels)))
         exit(127)
 
     gpg_homedir = parser_results.gpg_homedir

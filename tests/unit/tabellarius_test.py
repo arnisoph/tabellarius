@@ -23,7 +23,6 @@ class TabellariusTest(unittest.TestCase):
             print(*arg)
 
         info = debug
-        critical = debug
         error = debug
 
     def create_imap_user(self, username=None, password=None):
