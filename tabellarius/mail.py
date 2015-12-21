@@ -66,6 +66,8 @@ class Mail(dict):
         super(Mail, self).__init__()
         self.logger = logger
         self.mail_native = mail
+        self.headers = {}
+
         self.parse_email_object()
 
     def clean_value(self, value, encoding):
@@ -97,7 +99,7 @@ class Mail(dict):
         """
         if not self.mail_native.is_multipart():
             #if PY3:
-            self['body'] = self.mail_native.get_payload(decode=True).decode('utf-8')
+            self.headers['body'] = self.mail_native.get_payload(decode=True).decode('utf-8')
             #else:
             #    self['body'] = self.mail_native.get_payload(decode=True)
 
@@ -108,71 +110,23 @@ class Mail(dict):
                 field_value = decode_header(field_value)
                 field_value = self.clean_value(field_value[0][0], field_value[0][1])
 
-            self[field_name] = field_value
+            if field_name in self.headers.keys():
+                self.headers[field_name].append(field_value)
+            else:
+                if field_name in ['received']:
+                    self.headers[field_name] = [field_value]
+                else:
+                    self.headers[field_name] = field_value
 
-#        # from
-#        # cleanup header
-#        from_header_cleaned = re.sub('[\n\r\t]+', ' ', self.email_obj['from'])
-#        msg_from = decode_header(from_header_cleaned)
-#        msg_txt = ''
-#        for part in msg_from:
-#            msg_txt += self.clean_value(part[0], part[1])
-#        if '<' in msg_txt and '>' in msg_txt:
-#            result = re.match('(?P<from>.*)?(?P<email>\<.*\>)', msg_txt, re.U)
-#            self['from_whom'] = result.group('from').strip()
-#            self['from_email'] = result.group('email').strip('<>')
-#            self['from'] = msg_txt
-#        else:
-#            self['from_whom'] = ''
-#            self['from_email'] = self['from'] = msg_txt.strip()
-#
-#        # to
-#        if 'to' in self.email_obj:
-#            msg_to = decode_header(self.email_obj['to'])
-#            self['to'] = self.clean_value(
-#                msg_to[0][0], msg_to[0][1]).strip('<>')
-#
-#        # cc
-#        msg_cc = decode_header(str(self.email_obj['cc']))
-#        cc_clean = self.clean_value(msg_cc[0][0], msg_cc[0][1])
-#        if cc_clean and cc_clean.lower() != 'none':
-#            # split recepients
-#            recepients = cc_clean.split(',')
-#            for recepient in recepients:
-#                if '<' in recepient and '>' in recepient:
-#                    # (name)? + email
-#                    matches = re.findall('((?P<to>.*)?(?P<to_email>\<.*\>))',
-#                                         recepient, re.U)
-#                    if matches:
-#                        for match in matches:
-#                            self['cc'].append(
-#                                {
-#                                    'cc': match[0],
-#                                    'cc_to': match[1].strip(" \n\r\t"),
-#                                    'cc_email': match[2].strip("<>"),
-#                                }
-#                            )
-#                    else:
-#                        raise EmailParsingError(
-#                            "Error parsing CC message header. "
-#                            "Header value: {header}".format(header=cc_clean)
-#                        )
-#                else:
-#                    # email only
-#                    self['cc'].append(
-#                        {
-#                            'cc': recepient,
-#                            'cc_to': '',
-#                            'cc_email': recepient,
-#                        }
-#                    )
-#
-#        # Date
-#        self['date'] = self.email_obj['Date']
-#
-#        # message headers
-#        for header, val in self.email_obj.items():
-#            if header in self['headers']:
-#                self['headers'][header].append(val)
-#            else:
-#                self['headers'][header] = [val]
+    def get_header(self, name):
+        """
+        Return mail header by name
+        """
+        return self.headers.get(name, None)
+
+    def set_header(self, name, value):
+        """
+        Set mail header
+        """
+        self.headers[name] = value
+        return self.headers

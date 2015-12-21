@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
-"""tabellarius
-
-TODO:
-* support IDLE connections
-* filtering fields like deliverd-to/ received/ body are not supported yet
-* manage different namespaces
-"""
 
 from argparse import ArgumentParser
 from getpass import getpass
@@ -19,7 +12,7 @@ from misc import ConfigParser, Helper
 
 
 def main():
-    version = '0.1.3'
+    version = '0.2.0'
     program_name = 'tabellarius'
     parser = ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 
@@ -138,6 +131,7 @@ def main():
             logger.error('%s: Failed to login, abort..', acc_settings.get('username'))
             exit(127)
 
+    logger.info('%s: Entering mail sorting routine', acc_settings.get('username'))
     while True:
         for acc, acc_settings in sorted(config.get('accounts').items()):
             if not acc_settings.get('enabled', False):
