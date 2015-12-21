@@ -64,9 +64,9 @@ class Mail():
         self._body = body
         return self._body
 
-    def get_body(self, name):
+    def get_body(self):
         """
-        Return mail body by name
+        Return mail body
         """
         return self._body
 
@@ -98,9 +98,9 @@ class Mail():
         self._body = ''
 
         if not self.mail_native.is_multipart():
-            self.set_body = self.mail_native.get_payload(decode=True).decode(self.charset)
+            self.set_body(self.mail_native.get_payload(decode=True).decode(self.charset))
         else:
-            self.set_body = self.mail_native.get_payload()
+            self.set_body(self.mail_native.get_payload())
 
         for field_name in self.mail_native.keys():
             field_value = self.mail_native.get(field_name)
