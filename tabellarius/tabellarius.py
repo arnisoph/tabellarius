@@ -5,6 +5,7 @@
 from argparse import ArgumentParser
 from getpass import getpass
 from time import sleep
+from sys import version_info as python_version
 
 from imap import IMAP
 from ruleset import RuleSet
@@ -14,6 +15,10 @@ from misc import ConfigParser, Helper
 def main():
     version = '0.2.0'
     program_name = 'tabellarius'
+
+    if python_version[0] < 3:
+        print('Your need to use Python 3 to run {0}! Your version: {1}'.format(program_name, python_version))
+
     parser = ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 
     # General args

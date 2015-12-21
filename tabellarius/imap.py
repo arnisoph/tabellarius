@@ -4,7 +4,7 @@
 from imapclient import IMAPClient
 from imapclient.fixed_offset import FixedOffset
 from logging import DEBUG as loglevel_DEBUG
-from six import moves, iteritems, text_type, integer_types, PY3, binary_type, string_types  # noqa
+from six import text_type
 from sys import exc_info
 from time import sleep
 from traceback import print_exception

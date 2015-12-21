@@ -2,9 +2,10 @@
 # vim: ts=4 sw=4 et
 
 import email.charset
-import email.message
 import email.header
+import email.message
 import email.utils
+from sys import version_info as python_version
 
 
 class Mail():
@@ -98,22 +99,19 @@ class Mail():
         self._body = ''
 
         if not self.mail_native.is_multipart():
-            self.set_body(self.mail_native.get_payload(decode=True).decode(self.charset))
-        else:
-            self.set_body(self.mail_native.get_payload())
+            if python_version[1] == 2:
+                self.set_body(self.mail_native.get_payload())
+            else:
+                self.set_body(self.mail_native.get_payload(decode=True).decode(self.charset))
 
         for field_name in self.mail_native.keys():
             field_value = self.mail_native.get(field_name)
 
             if field_name in ['Subject', 'From', 'To']:
-                if field_name in self._headers.keys():
-                    continue
                 field_value = email.header.decode_header(self.mail_native.get(field_name))
                 field_value = self.clean_value(field_value[0][0], field_value[0][1])
                 self._headers[field_name] = field_value
             elif field_name in self._headers.keys():
                 self._headers[field_name].append(field_value)
-            elif field_name in ['Received']:
-                self._headers[field_name] = [field_value]
             else:
                 self._headers[field_name] = field_value
