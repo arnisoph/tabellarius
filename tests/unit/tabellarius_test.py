@@ -55,12 +55,12 @@ class TabellariusTest(unittest.TestCase):
                              timeout=5)
         return imapconn
 
-    def create_email(self, headers=None, body='This is a test mäil.'):
+    def create_email(self, headers=None, body='This is a test mäil.', reset_message_id=False):
         _headers = {'From': '<test@example.com>', 'To': '<test@example.com>', 'Subject': 'Testmäil'}
 
         if headers is not None:
             _headers.update(headers)
-        if 'Message-Id' not in _headers.keys():
+        if reset_message_id:
             _headers['Message-Id'] = '<very_unique_id_{0}@example.com>'.format(int(round(time.time() * 1000)))
 
         return mail.Mail(logger=self.logger, headers=_headers, body=body)
