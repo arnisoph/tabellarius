@@ -31,7 +31,7 @@ def main():
                         dest='test',
                         help='Run in test mode, run read-only IMAP commands only (WARNING: Bare Implementation!)',
                         default=None)
-    parser.add_argument('-l', '--log-level',
+    parser.add_argument('-l', '--loglevel',
                         action='store',
                         dest='log_level',
                         help='Override log level setting ({0})'.format(', '.join(allowed_log_levels)),
@@ -212,7 +212,7 @@ def main():
 
 if __name__ == '__main__':
     try:
-        exit(main())
+        main()
     except KeyboardInterrupt:
         print('\nBye!', file=stderr)
         exit(1)
