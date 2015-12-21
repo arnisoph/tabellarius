@@ -170,10 +170,18 @@ class IMAP(object):
         """
         self.logger.debug('Adding a mail into mailbox %s', mailbox)
         try:
+            if isinstance(message, Mail):
+                message_native = message.get_native()
+            else:
+                message_native = message
+                message = Mail(logger=self.logger, mail_native=message)
+
             #self.conn.append(mailbox, message, flags, msg_time)
-            self._append(mailbox, str(message), flags, msg_time)
+            self._append(mailbox, str(message_native), flags, msg_time)
+
             # According to rfc4315 we must not return the UID from the response, so we are fetching it ourselves
-            return (True, self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{0}"'.format(message.get('message-id')))[1][0])
+            uids = self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{0}"'.format(message.get_header('Message-Id')))[1]
+            return (True, uids[0])
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -211,7 +219,8 @@ class IMAP(object):
                 if return_raw:
                     mails[uid] = result[uid]
                 else:
-                    mails[uid] = Mail(logger=self.logger, uid=uid, mail=email.message_from_bytes(result[uid][b'RFC822']))
+                    #mails[uid] = Mail(logger=self.logger, uid=uid, mail_native=email.message_from_bytes(result[uid][b'RFC822']))
+                    mails[uid] = Mail(logger=self.logger, mail_native=email.message_from_bytes(result[uid][b'RFC822']))
             return (True, mails)
 
         except IMAPClient.Error as e:
@@ -282,24 +291,24 @@ class IMAP(object):
         """
         if self.test:
             if delete_old:
-                self.logger.info('Would have moved mail message-ids="%s" from "%s" to "%s", skipping because of beeing in testmode',
+                self.logger.info('Would have moved mail Message-Ids="%s" from "%s" to "%s", skipping because of beeing in testmode',
                                  message_ids, source, destination)
             else:
-                self.logger.info('Would have copied mails with message-ids="%s" from "%s" to "%s", skipping because of beeing in testmode',
+                self.logger.info('Would have copied mails with Message-Ids="%s" from "%s" to "%s", skipping because of beeing in testmode',
                                  message_ids, source, destination)
             return (True, None)
         else:
             try:
                 if delete_old:
-                    self.logger.debug('Moving mail message-ids="%s" from "%s" to "%s"', message_ids, source, destination)
+                    self.logger.debug('Moving mail Message-Ids="%s" from "%s" to "%s"', message_ids, source, destination)
                 else:
-                    self.logger.debug('Copying mail message-ids="%s" from "%s" to "%s"', message_ids, source, destination)
+                    self.logger.debug('Copying mail Message-Ids="%s" from "%s" to "%s"', message_ids, source, destination)
 
                 #if message_ids is None:
                 #    message_ids = []
                 #    result = self.fetch_mails(uids=uids, mailbox=source)
                 #    if not result[0]:
-                #        self.logger.error('Failed to determine message-id by uids for mail with uids "%s"', uids)
+                #        self.logger.error('Failed to determine Message-Id by uids for mail with uids "%s"', uids)
                 #        return result
                 #    message_ids.append(result[1].keys())
 
@@ -313,10 +322,10 @@ class IMAP(object):
 
                 uids = []
                 for message_id in message_ids:
-                    result = self.search_mails(mailbox=source, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
+                    result = self.search_mails(mailbox=source, criteria='HEADER Message-Id "{0}"'.format(message_id))
 
                     if not result[0] or len(result[1]) == 0:
-                        self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"', message_id)
+                        self.logger.error('Failed to determine uid by Message-Id for mail with Message-Id "%s"', message_id)
                         return (False, result[1])
                     uids.append(result[1][0])
 
@@ -329,7 +338,7 @@ class IMAP(object):
                 if delete_old:
                     result = self.delete_mails(uids=uids, mailbox=source)
                     if not result[0]:
-                        self.logger.error('Failed to remove old mail with message-id="%s"/uids="%s": %s', message_ids, uids,
+                        self.logger.error('Failed to remove old mail with Message-Id="%s"/uids="%s": %s', message_ids, uids,
                                           result[1])  # pragma: no cover
                         return result  # pragma: no cover
 
@@ -341,9 +350,9 @@ class IMAP(object):
 
                 dest_uids = []
                 for message_id in message_ids:
-                    result = self.search_mails(mailbox=destination, criteria='HEADER MESSAGE-ID "{0}"'.format(message_id))
+                    result = self.search_mails(mailbox=destination, criteria='HEADER Message-Id "{0}"'.format(message_id))
                     if not result[0]:
-                        self.logger.error('Failed to determine uid by message-id for mail with message-id "%s"',
+                        self.logger.error('Failed to determine uid by Message-Id for mail with Message-Id "%s"',
                                           message_id)  # pragma: no cover
                         return result  # pragma: no cover
                     dest_uids.append(result[1][0])

@@ -3,8 +3,6 @@
 
 from __future__ import print_function
 
-import email.charset
-import email.message
 import redis
 import sys
 import time
@@ -13,6 +11,7 @@ import unittest
 sys.path.insert(0, './tabellarius')
 
 import imap
+import mail
 
 
 class TabellariusTest(unittest.TestCase):
@@ -61,19 +60,10 @@ class TabellariusTest(unittest.TestCase):
 
         if headers is not None:
             _headers.update(headers)
-
         if 'Message-Id' not in _headers.keys():
             _headers['Message-Id'] = '<very_unique_id_{0}@example.com>'.format(int(round(time.time() * 1000)))
 
-        message = email.message.Message()
-        email.charset.add_charset('utf-8', email.charset.QP, email.charset.QP)
-        c = email.charset.Charset('utf-8')
-        message.set_charset(c)
-        for field_name, field_value in _headers.items():
-            message[field_name] = field_value
-        message.set_payload(body)
-
-        return message
+        return mail.Mail(logger=self.logger, headers=_headers, body=body)
 
     logger = LoggerDummy()
     rconn = redis.StrictRedis(host='127.0.0.1', port=6379)

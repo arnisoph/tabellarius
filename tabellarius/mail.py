@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-from email.header import decode_header
+import email.charset
+import email.message
+import email.header
+import email.utils
 
 #class Mail(dict):
 #    mail_native = email.message.Message()
@@ -57,76 +60,112 @@ from email.header import decode_header
 #                    self[field] = field_value
 
 
-class Mail(dict):
+class Mail():
     """
     A dict representing a mail
     """
 
-    def __init__(self, logger, mail=None, **kwargs):
-        super(Mail, self).__init__()
+    #def __init__(self, logger, charset='utf-8', mail_native=None, **kwargs):
+    def __init__(self, logger, charset='utf-8', headers={}, body={}, mail_native=None):
         self.logger = logger
-        self.mail_native = mail
-        self.headers = {}
+        self.charset = charset
+        self.mail_native = mail_native
 
-        self.parse_email_object()
+        self._headers = headers
+        self._body = body
+
+        if mail_native:
+            self.__parse_native_mail()
 
     def clean_value(self, value, encoding):
         """
         Converts value to utf-8 encoding
         """
-        #if PY3:
         if isinstance(value, bytes):
             return value.decode(encoding)
-        #elif encoding not in ['utf-8', None]:
-        #    return value.decode(encoding).encode('utf-8')
         return value
-
-#    def _normalize_string(self, text):
-#        '''Removes excessive spaces, tabs, newlines, etc.'''
-#        conversion = {
-#            # newlines
-#            '\r\n\t': ' ',
-#            # replace excessive empty spaces
-#            '\s+': ' '
-#        }
-#        for find, replace in six.iteritems(conversion):
-#            text = re.sub(find, replace, text, re.UNICODE)
-#        return text
-
-    def parse_email_object(self):
-        """
-        Parses the native (email.message.Message()) object
-        """
-        if not self.mail_native.is_multipart():
-            #if PY3:
-            self.headers['body'] = self.mail_native.get_payload(decode=True).decode('utf-8')
-            #else:
-            #    self['body'] = self.mail_native.get_payload(decode=True)
-
-        for field_name in self.mail_native.keys():
-            field_name = field_name.lower()
-            field_value = self.mail_native.get(field_name)
-            if field_name in ['subject', 'from', 'to']:
-                field_value = decode_header(field_value)
-                field_value = self.clean_value(field_value[0][0], field_value[0][1])
-
-            if field_name in self.headers.keys():
-                self.headers[field_name].append(field_value)
-            else:
-                if field_name in ['received']:
-                    self.headers[field_name] = [field_value]
-                else:
-                    self.headers[field_name] = field_value
-
-    def get_header(self, name):
-        """
-        Return mail header by name
-        """
-        return self.headers.get(name, None)
 
     def set_header(self, name, value):
         """
         Set mail header
         """
-        self.headers[name] = value
-        return self.headers
+        self._headers[name] = value
+        return self._headers
+
+    def get_header(self, name):
+        """
+        Return mail header by name
+        """
+        return self._headers.get(name)
+
+    def update_headers(self, headers):
+        """
+        Update mail headers
+        """
+        self._headers.update(headers)
+        return self._headers
+
+    def get_headers(self):
+        """
+        Get all mail headers
+        """
+        return self._headers
+
+    def set_body(self, body):
+        """
+        Set mail body
+        """
+        self._body = body
+        return self._body
+
+    def get_body(self, name):
+        """
+        Return mail body by name
+        """
+        return self._body
+
+    def get_native(self):
+        """
+        Returns a native (email.message.Message()) object
+        """
+        if not self.mail_native:
+            self.mail_native = email.message.Message()
+
+            email.charset.add_charset(self.charset, email.charset.QP, email.charset.QP)
+            c = email.charset.Charset(self.charset)
+            self.mail_native.set_charset(c)
+
+            if self.get_header('Message-Id') is None:
+                self.set_header('Message-Id', email.utils.make_msgid())
+
+            for field_name, field_value in self.get_headers().items():
+                self.mail_native.add_header(field_name, field_value)
+        return self.mail_native
+
+    def __parse_native_mail(self):
+        """
+        Parses a native (email.message.Message()) object
+        """
+        self._headers = {}
+        self._body = None
+
+        if not self.mail_native.is_multipart():
+            self.set_body = self.mail_native.get_payload(decode=True).decode('utf-8')
+        else:
+            self.set_body = self.mail_native.get_payload()
+
+        for field_name in self.mail_native.keys():
+            field_value = self.mail_native.get(field_name)
+
+            if field_name in ['Subject', 'From', 'To']:
+                if field_name in self._headers.keys():
+                    continue
+                field_value = email.header.decode_header(self.mail_native.get(field_name))
+                field_value = self.clean_value(field_value[0][0], field_value[0][1])
+                self._headers[field_name] = field_value
+            elif field_name in self._headers.keys():
+                self._headers[field_name].append(field_value)
+            elif field_name in ['Received']:
+                self._headers[field_name] = [field_value]
+            else:
+                self._headers[field_name] = field_value
