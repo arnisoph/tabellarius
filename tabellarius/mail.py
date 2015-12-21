@@ -100,18 +100,20 @@ class Mail():
 
         if not self.mail_native.is_multipart():
             if python_version[1] == 2:
-                self.set_body(self.mail_native.get_payload())
+                self.set_body(self.mail_native.get_payload())  # pragma: no cover
             else:
                 self.set_body(self.mail_native.get_payload(decode=True).decode(self.charset))
 
         for field_name in self.mail_native.keys():
-            field_value = self.mail_native.get(field_name)
+            if field_name in self._headers.keys():
+                continue
+            field_value = self.mail_native.get_all(field_name)
 
             if field_name in ['Subject', 'From', 'To']:
                 field_value = email.header.decode_header(self.mail_native.get(field_name))
                 field_value = self.clean_value(field_value[0][0], field_value[0][1])
                 self._headers[field_name] = field_value
-            elif field_name in self._headers.keys():
-                self._headers[field_name].append(field_value)
-            else:
+            elif len(field_value) > 1:
                 self._headers[field_name] = field_value
+            else:
+                self._headers[field_name] = field_value[0]
