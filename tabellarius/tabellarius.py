@@ -127,8 +127,8 @@ def main():
                                  test=test)
         connect = imap_pool[acc_id].connect()
 
-        if not connect:
-            logger.error('%s: Failed to login, abort..', acc_settings.get('username'))
+        if not connect[0]:
+            logger.error('%s: Failed to login, please check your account credentials..', acc_settings.get('username'))
             exit(127)
         else:
             logger.info('%s: Sucessfully logged in!', acc_settings.get('username'))

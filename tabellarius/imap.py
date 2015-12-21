@@ -94,10 +94,10 @@ class IMAP():
         Connect to IMAP server and login
         """
         if self.starttls:
-            self.logger.debug('Establishing IMAP connection using STARTTLS/143 to %s and logging in with user %s', self.server,
+            self.logger.debug('Establishing IMAP connection using STARTTLS/%s to %s and logging in with user %s', self.port, self.server,
                               self.username)
         elif self.imaps:
-            self.logger.debug('Establishing IMAP connection using SSL/993 (imaps) to %s and logging in with user %s', self.server,
+            self.logger.debug('Establishing IMAP connection using SSL/%s (imaps) to %s and logging in with user %s', self.port, self.server,
                               self.username)
 
         login = ''
