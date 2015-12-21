@@ -135,8 +135,15 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
 
         example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'])[0])
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen'])[0])
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX',
+                                          message=self.create_email(headers={'Subject': 'Testmäil'}),
+                                          flags=['FLAG', 'WAVE'])[0])
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX',
+                                          message=self.create_email(headers={'Subject': 'Testmäil'}).get_native(),
+                                          flags=['\\Seen'])[0])
+
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Subject'), 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
 
         self.assertEqual(
             imapconn.add_mail(mailbox='DoesNotExist',

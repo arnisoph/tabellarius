@@ -66,7 +66,7 @@ class Mail():
     """
 
     #def __init__(self, logger, charset='utf-8', mail_native=None, **kwargs):
-    def __init__(self, logger, charset='utf-8', headers={}, body={}, mail_native=None):
+    def __init__(self, logger, charset='utf-8', headers={}, body='', mail_native=None):
         self.logger = logger
         self.charset = charset
         self.mail_native = mail_native
@@ -140,6 +140,8 @@ class Mail():
 
             for field_name, field_value in self.get_headers().items():
                 self.mail_native.add_header(field_name, field_value)
+
+            self.mail_native.set_payload(self._body, charset=self.charset)
         return self.mail_native
 
     def __parse_native_mail(self):
@@ -147,10 +149,10 @@ class Mail():
         Parses a native (email.message.Message()) object
         """
         self._headers = {}
-        self._body = None
+        self._body = ''
 
         if not self.mail_native.is_multipart():
-            self.set_body = self.mail_native.get_payload(decode=True).decode('utf-8')
+            self.set_body = self.mail_native.get_payload(decode=True).decode(self.charset)
         else:
             self.set_body = self.mail_native.get_payload()
 
