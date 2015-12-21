@@ -4,7 +4,7 @@
 from misc import Helper
 
 
-class RuleSet(object):
+class RuleSet():
     def __init__(self, logger, name, mailbox, mail, ruleset=[], commands=[], imap=None):
         self.logger = logger
         self.name = name

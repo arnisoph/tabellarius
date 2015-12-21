@@ -8,7 +8,7 @@ import logging.config
 import yaml
 
 
-class ConfigParser(object):
+class ConfigParser():
     """
     Recursive YAML file parsing for Tabellarius configuration
     """
@@ -23,6 +23,9 @@ class ConfigParser(object):
         self.parse_directory()
 
     def parse_directory(self):
+        """
+        Recursively parse a directory of YAML files and generate runtime configuration
+        """
         for dirname, subdirectories, files in os.walk(self.confdir):
             for file_name in files:
                 file_path = '{0}/{1}'.format(dirname, file_name)
@@ -35,6 +38,10 @@ class ConfigParser(object):
                                 self.config[root] = value
                             elif root == 'accounts':
                                 for account, settings in value.items():
+                                    # Ignore disabled accounts
+                                    if 'enabled' in settings.keys() and not settings.get('enabled'):
+                                        continue
+
                                     if account not in self.config[root].keys():
                                         self.config[root][account] = {}
                                     self.config[root][account].update(settings)
@@ -44,12 +51,16 @@ class ConfigParser(object):
                                         if account not in self.config[root].keys():
                                             self.config[root][account] = {}
                                         self.config[root][account].update({filterset_name: filterset_data})
+        return self.config
 
     def dump(self):
+        """
+        Return config
+        """
         return self.config
 
 
-class Helper(object):
+class Helper():
     """
     Contains helper functions
     """

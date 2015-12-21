@@ -39,8 +39,8 @@ class ConfigParserTest(TabellariusTest):
         config = cfg_parser.dump()
 
         # Check accounts
-        self.assertTrue(config.get('accounts', {}).get('gmail', {}).get('enabled'))
-        self.assertTrue(config.get('accounts', {}).get('gmail', {}).get('username'))
+        self.assertTrue(config.get('accounts', {}).get('local_imap_server', {}).get('starttls'))
+        self.assertEqual(config.get('accounts', {}).get('local_imap_server', {}).get('username'), 'test')
 
         # Check settings
         self.assertIn('settings', config)

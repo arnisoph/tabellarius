@@ -15,7 +15,7 @@ import imapclient  # TODO required for _append
 from mail import Mail
 
 
-class IMAP(object):
+class IMAP():
     """
     Central class for IMAP server communication
     """
@@ -186,7 +186,7 @@ class IMAP(object):
             return self.process_error(e)
 
     @do_select_mailbox
-    def search_mails(self, mailbox, criteria='ALL'):
+    def search_mails(self, mailbox, criteria='ALL', autocreate_mailbox=False):
         """
         Search for mails in a mailbox
         """
@@ -315,7 +315,7 @@ class IMAP(object):
                 if not self.mailbox_exists(destination)[1]:
                     self.logger.info('Destination mailbox %s doesn\'t exist, creating it for you', destination)
 
-                    result = self.create_mailbox(destination)
+                    result = self.create_mailbox(mailbox=destination)
                     if not result[0]:
                         self.logger.error('Failed to create the mailbox %s: %s', source, result[1])  # pragma: no cover
                         return result  # pragma: no cover

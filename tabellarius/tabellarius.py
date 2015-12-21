@@ -4,8 +4,10 @@
 
 from argparse import ArgumentParser
 from getpass import getpass
+from logging import DEBUG as loglevel_DEBUG
+from sys import stderr, exc_info, version_info as python_version
 from time import sleep
-from sys import version_info as python_version
+from traceback import print_exception
 
 from imap import IMAP
 from ruleset import RuleSet
@@ -55,9 +57,9 @@ def main():
     confdir = parser_results.confdir
     test = parser_results.test
 
-    log_level = parser_results.log_level
+    log_level = parser_results.log_level.upper()
     if log_level and log_level not in ['DEBUG', 'ERROR', 'CRITICAL', 'INFO']:
-        print('LOG_LEVEL %s is not supported, supported log levels are DEBUG, ERROR, CRITICAL, INFO', log_level)
+        print('LOG_LEVEL {0} is not supported, supported log levels are DEBUG, ERROR, CRITICAL, INFO'.format(log_level))
         exit(127)
 
     gpg_homedir = parser_results.gpg_homedir
@@ -79,29 +81,21 @@ def main():
     logger.debug('Starting new instance of %s', program_name)
     logger.debug('Raw configuration: %s', config)
 
-    # Import gnupg if necessary
-    use_gpg = False
-    # There is a better solution for the following for sure
+    # Setup gnupg if necessary
     for acc, acc_settings in config.get('accounts').items():
-        if acc_settings.get('enabled', False) and 'password_enc' in acc_settings:
-            use_gpg = True
-            break
-    if use_gpg:
-        import gnupg
-        if config.get('settings').get('gpg_homedir', None):
-            gpg_homedir = config.get('settings').get('gpg_homedir')
+        if 'password_enc' in acc_settings:
+            import gnupg
 
-        gpg = gnupg.GPG(homedir=gpg_homedir,
-                        use_agent=config.get('settings').get('gpg_use_agent', False),
-                        binary=config.get('settings').get('gpg_binary', 'gpg2'))
-        gpg.encoding = 'utf-8'
+            gpg_homedir = config.get('settings').get('gpg_homedir', gpg_homedir)
+
+            gpg = gnupg.GPG(homedir=gpg_homedir,
+                            use_agent=config.get('settings').get('gpg_use_agent', False),
+                            binary=config.get('settings').get('gpg_binary', 'gpg2'))
+            gpg.encoding = 'utf-8'
 
     # Initialize connection pools
     imap_pool = {}
-    for acc, acc_settings in sorted(config.get('accounts').items()):
-        if not acc_settings.get('enabled', False):
-            continue
-
+    for acc_id, acc_settings in sorted(config.get('accounts').items()):
         # Check whether we got a plaintext password
         acc_password = acc_settings.get('password')
         if not acc_password:
@@ -118,77 +112,106 @@ def main():
                     exit(1)
                 acc_password = str(enc_password)
             else:
-                acc_password = getpass('Please enter the IMAP password for {0} ({1}): '.format(acc, acc_settings.get('username')))
+                acc_password = getpass('Please enter the IMAP password for {0} ({1}): '.format(acc_id, acc_settings.get('username')))
 
         logger.info('%s: Setting up IMAP connection', acc_settings.get('username'))
-        imap_pool[acc] = IMAP(logger=logger,
-                              server=acc_settings.get('server'),
-                              port=acc_settings.get('port', 143),
-                              starttls=acc_settings.get('starttls', False),
-                              imaps=acc_settings.get('imaps', False),
-                              tlsverify=acc_settings.get('tlsverify', True),
-                              username=acc_settings.get('username'),
-                              password=acc_password,
-                              test=test)
-        connect = imap_pool[acc].connect()
+        imap_pool[acc_id] = IMAP(logger=logger,
+                                 server=acc_settings.get('server'),
+                                 port=acc_settings.get('port', 143),
+                                 starttls=acc_settings.get('starttls', True),
+                                 imaps=acc_settings.get('imaps', False),
+                                 tlsverify=acc_settings.get('tlsverify', True),
+                                 username=acc_settings.get('username'),
+                                 password=acc_password,
+                                 test=test)
+        connect = imap_pool[acc_id].connect()
 
         if not connect:
             logger.error('%s: Failed to login, abort..', acc_settings.get('username'))
             exit(127)
+        else:
+            logger.info('%s: Sucessfully logged in!', acc_settings.get('username'))
 
-    logger.info('%s: Entering mail sorting routine', acc_settings.get('username'))
+    logger.info('%s: Entering mail-sorting loop', acc_settings.get('username'))
     while True:
-        for acc, acc_settings in sorted(config.get('accounts').items()):
-            if not acc_settings.get('enabled', False):
-                continue
+        for acc_id, acc_settings in sorted(config.get('accounts').items()):
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
             pre_inbox_search = acc_settings.get('pre_inbox_search', 'ALL')
             sort_mailbox = acc_settings.get('sort_mailbox', None)
 
             try:
-                mail_uids = imap_pool[acc].search_mails(pre_inbox, pre_inbox_search)
+                if not imap_pool[acc_id].mailbox_exists(pre_inbox)[1]:
+                    imap_pool[acc_id].logger.info('%s: Destination mailbox %s doesn\'t exist, creating it for you',
+                                                  acc_settings.get('username'), pre_inbox)
+
+                    result = imap_pool[acc_id].create_mailbox(mailbox=pre_inbox)
+                    if not result[0]:
+                        imap_pool[acc_id].logger.error('%s: Failed to create the mailbox %s: %s', acc_settings.get('username'), pre_inbox,
+                                                       result[1])
+                        return result
+
+                mail_uids = imap_pool[acc_id].search_mails(mailbox=pre_inbox, criteria=pre_inbox_search, autocreate_mailbox=True)[1]
                 if not mail_uids:
-                    logger.debug('%s: No mails found, continue with next mail account..', acc_settings.get('username'))
+                    logger.info('%s: No mails found, continue with next mail account..', acc_settings.get('username'))
                     continue
 
-                mails = imap_pool[acc].fetch_mails(uids=mail_uids, mailbox=pre_inbox)
+                mails = imap_pool[acc_id].fetch_mails(uids=mail_uids, mailbox=pre_inbox)[1]
+                mails_without_match = []
                 for uid, mail in mails.items():
                     match = False
-                    for filter_name, filter_rulesets in sorted(config.get('filters').get(acc).items()):
+                    for filter_name, filter_rulesets in sorted(config.get('filters').get(acc_id).items()):  # TODO
                         ruleset = RuleSet(logger=logger,
                                           name=filter_name,
                                           ruleset=filter_rulesets.get('rules', None),
                                           commands=filter_rulesets.get('commands', None),
-                                          imap=imap_pool[acc],
+                                          imap=imap_pool[acc_id],
                                           mail=(uid, mail),
                                           mailbox=pre_inbox)
                         match = ruleset.process()
                         if match:
                             break
-                    if not match and not sort_mailbox:
-                        imap_pool[acc].set_mailflags([uid], pre_inbox, acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
+
+                    if match:
+                        continue
+
+                    if sort_mailbox:
+                        mails_without_match.append(uid)
+                    else:
+                        imap_pool[acc_id].set_mailflags(uids=[uid],
+                                                        mailbox=pre_inbox,
+                                                        flags=acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
 
                 if sort_mailbox:
-                    logger.debug('%s: Searching for mails that did not match any filter and moving them to %s',
-                                 acc_settings.get('username'), sort_mailbox)
-                    uids = imap_pool[acc].search_mails(pre_inbox)
-                    mails = imap_pool[acc].fetch_mails(uids=uids, mailbox=pre_inbox)
-                    for mail in mails:
-                        imap_pool[acc].move_mail(message_id=mails[mail].get('message-id'),
-                                                 source=pre_inbox,
-                                                 destination=sort_mailbox,
-                                                 set_flags=[])
+                    logger.debug('%s: Moving mails that did not match any filter to %s', acc_settings.get('username'), sort_mailbox)
+
+                    for uid in mails_without_match:
+                        mail = mails[uid]
+                        imap_pool[acc_id].move_mail(message_id=mails[mail].get('message-id'),
+                                                    source=pre_inbox,
+                                                    destination=sort_mailbox,
+                                                    set_flags=[])
+
             #except IMAPClient.Error as e:
             #    logger.error('%s: Catching exception: %s. This is bad and I am sad. Going to sleep for a few seconds and trying again..',
             #                 acc_settings.get('username'), e)
             #    sleep(10)
 
             except Exception as e:
-                logger.error('%s: Catching unknown exception: %s. Going to die hard now..', acc_settings.get('username'), e)
+                trace_info = exc_info()
+                logger.error('%s: Catching unknown exception: %s. Showing stack trace and going to die..', acc_settings.get('username'), e)
+
+                if logger.isEnabledFor(loglevel_DEBUG):
+                    print_exception(*trace_info)
+                del trace_info
+
                 exit(1)
 
         sleep(imap_sleep_time)
 
 
 if __name__ == '__main__':
-    exit(main())
+    try:
+        exit(main())
+    except KeyboardInterrupt:
+        print('\nBye!', file=stderr)
+        exit(1)

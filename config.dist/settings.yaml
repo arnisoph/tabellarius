@@ -27,6 +27,6 @@ settings:
             handlers: [console]
             propagate: no
     root:
-        level: DEBUG
+        level: ERROR
         #handlers: [console, info_file_handler, error_file_handler]
         handlers: [console, standard_file_handler]
