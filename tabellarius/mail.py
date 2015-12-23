@@ -103,9 +103,9 @@ class Mail():
         self._headers = CaseInsensitiveDict()
         self._body = ''
 
-        if not self.mail_native.is_multipart():  # TODO
+        if not self.mail_native.is_multipart():  # TODO handle multipart mails
             charset = self.mail_native.get_content_charset()
-            if python_version[1] == 2 or charset is None:  # or charset in ['windows-1252', 'iso-8859-1!']:
+            if python_version[1] == 2 or charset is None:
                 self.set_body(self.mail_native.get_payload())  # pragma: no cover
             else:
                 self.set_body(self.mail_native.get_payload(decode=True).decode(charset))
