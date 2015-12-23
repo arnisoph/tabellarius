@@ -45,6 +45,8 @@ class MailFilter():
                 break
 
         if match:
+            self.logger.info('Found rule match for mail with message-id={0}, going to apply desired commands now'.format(
+                self.mail.get_header('message-id')))
             self.apply_commands(commands)
         return match
 
@@ -54,7 +56,11 @@ class MailFilter():
         """
         field_name = next(iter(rule))
         field_pattern = rule[next(iter(rule))]
-        field_value = self.mail.get_header(field_name)
+        field_value = self.mail.get_header(field_name, None)
+
+        # Skip if that header doesn't exist in the mail
+        if field_value is None:
+            return False
 
         if isinstance(field_pattern, list):
             for pattern in field_pattern:
@@ -88,10 +94,11 @@ class MailFilter():
         """
         Apply commands to mails
         """
-        self.logger.debug('Applying commands (%s) to mail message-id="%s"', commands, self.mail.get_header('message-id'))
+        self.logger.info('Applying commands (%s) to mail message-id="%s"', commands, self.mail.get_header('message-id'))
         for command in commands:
             cmd_type = command.get('type')
-            cmd_flags_add = command.get('add_flags', [])
+            cmd_flags_set = command.get('set_flags', [])
+            cmd_flags_add = command.get('add_flags', None)
             #cmd_flags_remove = command.get('remove_flags', [])
 
             uid = None
@@ -100,7 +107,8 @@ class MailFilter():
                 uid = self.imap.move_mail(message_ids=[self.mail.get_header('message-id')],
                                           source=self.mailbox,
                                           destination=cmd_target,
-                                          add_flags=cmd_flags_add)[0]
+                                          add_flags=cmd_flags_add,
+                                          set_flags=cmd_flags_set)[0]
             else:
                 raise NotImplementedError('Sorry, command \'{0}\' isn\'t supported yet!'.format(command))
 

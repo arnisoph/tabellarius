@@ -26,12 +26,15 @@ class Mail():
         if mail_native:
             self.__parse_native_mail()
 
-    def clean_value(self, value, encoding):
+    def clean_value(self, value, encoding=None):
         """
-        Converts value to utf-8 encoding
+        Converts value to a given encoding
         """
-        if isinstance(value, bytes):
+        if isinstance(value, bytes) and encoding:
             return value.decode(encoding)
+        elif isinstance(value, bytes):
+            return value.decode('unicode_escape')
+
         return value
 
     def set_header(self, name, value):
@@ -41,11 +44,11 @@ class Mail():
         self._headers[name] = value
         return self._headers
 
-    def get_header(self, name):
+    def get_header(self, name, default=None):
         """
         Return mail header by name
         """
-        return self._headers.get(name.lower())
+        return self._headers.get(name.lower(), default)
 
     def update_headers(self, headers):
         """
@@ -100,11 +103,12 @@ class Mail():
         self._headers = CaseInsensitiveDict()
         self._body = ''
 
-        if not self.mail_native.is_multipart():
-            if python_version[1] == 2:
+        if not self.mail_native.is_multipart():  # TODO
+            charset = self.mail_native.get_content_charset()
+            if python_version[1] == 2 or charset is None:  # or charset in ['windows-1252', 'iso-8859-1!']:
                 self.set_body(self.mail_native.get_payload())  # pragma: no cover
             else:
-                self.set_body(self.mail_native.get_payload(decode=True).decode(self.charset))
+                self.set_body(self.mail_native.get_payload(decode=True).decode(charset))
 
         for field_name in self.mail_native.keys():
             if field_name in self._headers.keys():
@@ -113,7 +117,18 @@ class Mail():
 
             if field_name in ['Subject', 'From', 'To']:
                 field_value = email.header.decode_header(self.mail_native.get(field_name))
-                field_value = self.clean_value(field_value[0][0], field_value[0][1])
+                if isinstance(field_value, list):
+                    field_value_list = field_value.copy()
+                    field_value = ''
+                    for val in field_value_list:
+                        if val[1]:
+                            field_value += self.clean_value(val[0], val[1])
+                        elif isinstance(val[0], bytes):
+                            field_value += self.clean_value(val[0])
+                        else:
+                            field_value += val[0]
+                else:
+                    field_value = self.clean_value(field_value[0][0], field_value[0][1])
                 self._headers[field_name] = field_value
             elif len(field_value) > 1:
                 self._headers[field_name] = field_value

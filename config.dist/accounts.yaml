@@ -15,6 +15,8 @@ accounts:
     enabled: false
     server: imap.gmail.com
     port: 993
+    imaps: true
+    starttls: false
     username: user@gmail.com
     password: secure_password
   local_imap_server: {}

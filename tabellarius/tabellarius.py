@@ -160,6 +160,12 @@ def main():
                 mails_without_match = []
                 for uid, mail in mails.items():
                     match = False
+
+                    if mail.get_header('message-id') is None:
+                        logger.info('Mail with uid={} and subject=\'{}\' doesn\'t have a message-id! Abort..'.format(
+                            uid, mail.get_header('subject')))
+                        exit(1)
+
                     for filter_name, filter_settings in Helper().sort_dict(config.get('filters').get(acc_id)).items():
                         mail_filter = MailFilter(logger=logger,
                                                  imap=imap_pool[acc_id],
@@ -185,7 +191,7 @@ def main():
 
                     for uid in mails_without_match:
                         mail = mails[uid]
-                        imap_pool[acc_id].move_mail(message_id=mails[mail].get('message-id'),
+                        imap_pool[acc_id].move_mail(message_ids=[mail.get_header('message-id')],
                                                     source=pre_inbox,
                                                     destination=sort_mailbox,
                                                     set_flags=[])

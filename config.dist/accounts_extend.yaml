@@ -2,6 +2,7 @@
 
 accounts:
   local_imap_server:
+    enabled: true
     server: 127.0.0.1
     port: 10143
     starttls: true

@@ -383,7 +383,7 @@ class IMAP():
                         return result  # pragma: no cover
                     dest_uids.append(result[1][0])
 
-                if set_flags:
+                if isinstance(set_flags, list):
                     self.set_mailflags(uids=dest_uids, mailbox=destination, flags=set_flags)
                 if add_flags:
                     self.add_mailflags(uids=dest_uids, mailbox=destination, flags=add_flags)
