@@ -1,0 +1,30 @@
+# vim: ts=2 sw=2 et
+
+filters:
+  local_imap_server:
+    Shops:
+      commands:
+        - type: move
+          target: Shops
+          add_flags:
+            - '\Flagged'
+      rules:
+        - OR:
+          - from:
+            - ebay
+            - paypal
+            - google
+            - amazon
+          - from: '.*@amazon.com'
+        - OR:
+          - from: example.
+        - AND:
+          - from: amazon
+          - to: example.com
+        - AND:
+          - from: google
+          - subject: Your order
+    #B: {}
+    #C: {}
+    #10_foo: {}
+    #1_foo: {}

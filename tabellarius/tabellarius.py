@@ -10,7 +10,7 @@ from time import sleep
 from traceback import print_exception
 
 from imap import IMAP
-from ruleset import RuleSet
+from mail_filter import MailFilter
 from misc import ConfigParser, Helper
 
 
@@ -153,22 +153,20 @@ def main():
 
                 mail_uids = imap_pool[acc_id].search_mails(mailbox=pre_inbox, criteria=pre_inbox_search, autocreate_mailbox=True)[1]
                 if not mail_uids:
-                    logger.info('%s: No mails found, continue with next mail account..', acc_settings.get('username'))
+                    logger.debug('%s: No mails found to sort', acc_settings.get('username'))
                     continue
 
                 mails = imap_pool[acc_id].fetch_mails(uids=mail_uids, mailbox=pre_inbox)[1]
                 mails_without_match = []
                 for uid, mail in mails.items():
                     match = False
-                    for filter_name, filter_rulesets in sorted(config.get('filters').get(acc_id).items()):  # TODO
-                        ruleset = RuleSet(logger=logger,
-                                          name=filter_name,
-                                          ruleset=filter_rulesets.get('rules', None),
-                                          commands=filter_rulesets.get('commands', None),
-                                          imap=imap_pool[acc_id],
-                                          mail=(uid, mail),
-                                          mailbox=pre_inbox)
-                        match = ruleset.process()
+                    for filter_name, filter_settings in Helper().sort_dict(config.get('filters').get(acc_id)).items():
+                        mail_filter = MailFilter(logger=logger,
+                                                 imap=imap_pool[acc_id],
+                                                 mail=mail,
+                                                 config=filter_settings,
+                                                 mailbox=pre_inbox)
+                        match = mail_filter.check_rules_match()
                         if match:
                             break
 
@@ -207,6 +205,7 @@ def main():
 
                 exit(1)
 
+        logger.debug('All accounts checked, going to sleep for %s seconds before checking again..', imap_sleep_time)
         sleep(imap_sleep_time)
 
 

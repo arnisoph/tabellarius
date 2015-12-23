@@ -2,7 +2,7 @@
 # vim: ts=4 sw=4 et
 
 import os
-import re
+import collections
 import logging
 import logging.config
 import yaml
@@ -66,25 +66,6 @@ class Helper():
     """
 
     @staticmethod
-    def check_match(string, pattern):
-        """
-        Test whether a string matches a pattern
-        """
-        if string is None or len(string) == 0:
-            return False
-
-        # Basic match
-        if pattern in string:
-            return True
-
-        # RegEx match
-        pattern_re = re.compile(pattern)
-        if pattern_re.match(string):
-            return True
-        else:
-            return False
-
-    @staticmethod
     def clean_field_name(field):
         """
         Parse a rule field name and return a tuple
@@ -108,3 +89,44 @@ class Helper():
         logger = logging.getLogger(program_name)
         logging.config.dictConfig(config)
         return logger
+
+    @staticmethod
+    def sort_dict(old_dict):
+        retval = collections.OrderedDict()
+        for key in sorted(old_dict.keys()):
+            retval[key] = old_dict[key]
+        return retval
+
+
+class CaseInsensitiveDict(dict):
+    """
+    Basic case insensitive dict with strings only keys.
+
+    From requests / http://stackoverflow.com/questions/3296499/case-insensitive-dictionary-search-with-python
+    """
+
+    proxy = {}
+
+    def __init__(self, data={}):
+        self.proxy = dict((k.lower(), k) for k in data)
+        for k in data:
+            self[k] = data[k]
+
+    def __contains__(self, k):
+        return k.lower() in self.proxy
+
+    def __delitem__(self, k):
+        key = self.proxy[k.lower()]
+        super(CaseInsensitiveDict, self).__delitem__(key)
+        del self.proxy[k.lower()]
+
+    def __getitem__(self, k):
+        key = self.proxy[k.lower()]
+        return super(CaseInsensitiveDict, self).__getitem__(key)
+
+    def get(self, k, default=None):
+        return self[k] if k in self else default
+
+    def __setitem__(self, k, v):
+        super(CaseInsensitiveDict, self).__setitem__(k, v)
+        self.proxy[k.lower()] = k

@@ -7,6 +7,8 @@ import email.message
 import email.utils
 from sys import version_info as python_version
 
+from misc import CaseInsensitiveDict
+
 
 class Mail():
     """
@@ -18,7 +20,7 @@ class Mail():
         self.charset = charset
         self.mail_native = mail_native
 
-        self._headers = headers
+        self._headers = CaseInsensitiveDict(headers)
         self._body = body
 
         if mail_native:
@@ -43,7 +45,7 @@ class Mail():
         """
         Return mail header by name
         """
-        return self._headers.get(name)
+        return self._headers.get(name.lower())
 
     def update_headers(self, headers):
         """
@@ -95,7 +97,7 @@ class Mail():
         """
         Parses a native (email.message.Message()) object
         """
-        self._headers = {}
+        self._headers = CaseInsensitiveDict()
         self._body = ''
 
         if not self.mail_native.is_multipart():

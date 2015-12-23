@@ -6,46 +6,46 @@ filters:
       commands:
         - type: move
           target: w00t
-          all_flags:
+          add_flags:
             - '\Flagged'
       rules:
-        - and:
+        - AND:
           - from: '.*arnoldbechtoldt.com'
     Twitter:
       commands:
         - type: move
           target: w00t
       rules:
-        - and:
+        - AND:
           - subject: Twitter
     w00tfilter:
       commands:
         - type: move
           target: w00t
       rules:
-        - or:
+        - OR:
           - subject: w00t
     Test:
       commands:
         - type: move
           target: test
       rules:
-        - or:
+        - OR:
           - subject: test
     Template:
       commands:
         - type: move
           target: w00t
       rules:
-        - or:
+        - OR:
           - subject: template
     Spam:
       commands:
         - type: move
           target: Test
-          #all_flags:
+          #add_flags:
             #- '\SEEN'
             #- '\Flagged'
       rules:
-        - or:
+        - OR:
           - subject: filterme

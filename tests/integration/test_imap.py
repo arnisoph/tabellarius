@@ -308,7 +308,8 @@ class IMAPTest(TabellariusTest):
         # Adding some mails to search for
         example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
-                                          message=self.create_email(headers={'Subject': 'Copied Mäil'}, reset_message_id=True),
+                                          message=self.create_email(headers={'Subject': 'Copied Mäil'},
+                                                                    reset_message_id=True),
                                           flags=['FLAG', 'WAVE'])[0])
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
         self.assertEqual(imapconn.get_mailflags(uids=[2], mailbox='INBOX'), (True, {2: ['\\Seen']}))

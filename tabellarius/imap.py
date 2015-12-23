@@ -273,7 +273,32 @@ class IMAP():
                 return self.process_error(e)
 
     @do_select_mailbox
-    def move_mail(self, message_ids, source, destination, delete_old=True, expunge=True, set_flags=None):
+    def add_mailflags(self, uids, mailbox, flags=[]):
+        """
+        Add and retrieve flags from mails
+        """
+        if self.test:
+            self.logger.info('Would have added mail flags on message uids "%s"', str(uids))
+            return (True, None)
+        else:
+            self.logger.debug('Adding flags=%s on mails uid=%s', flags, uids)
+            try:
+                result = self.conn.add_flags(uids, flags)
+
+                _flags = {}
+                for uid in uids:
+                    _flags[uid] = []
+                    if uid not in result.keys():
+                        self.logger.error('Failed to add and get flags for mail with uid=%s: %s', uid, result)
+                        return (False, None)
+                    for flag in result[uid]:
+                        _flags[uid].append(flag.decode('utf-8'))
+                return (True, _flags)
+            except IMAPClient.Error as e:
+                return self.process_error(e)
+
+    @do_select_mailbox
+    def move_mail(self, message_ids, source, destination, delete_old=True, expunge=True, add_flags=None, set_flags=None):
         """
         Move a mail from a mailbox to another
         """
@@ -282,10 +307,11 @@ class IMAP():
                                destination=destination,
                                delete_old=delete_old,
                                expunge=expunge,
+                               add_flags=add_flags,
                                set_flags=set_flags)
 
     @do_select_mailbox
-    def copy_mails(self, source, destination, message_ids=None, delete_old=False, expunge=False, set_flags=None):
+    def copy_mails(self, source, destination, message_ids=None, delete_old=False, expunge=False, add_flags=None, set_flags=None):
         """
         Copies one or more mails from a mailbox into another
         """
@@ -358,7 +384,9 @@ class IMAP():
                     dest_uids.append(result[1][0])
 
                 if set_flags:
-                    self.set_mailflags(uids=uids, mailbox=destination, flags=set_flags)
+                    self.set_mailflags(uids=dest_uids, mailbox=destination, flags=set_flags)
+                if add_flags:
+                    self.add_mailflags(uids=dest_uids, mailbox=destination, flags=add_flags)
 
                 return (True, dest_uids)
 
