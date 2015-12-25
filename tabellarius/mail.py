@@ -115,7 +115,7 @@ class Mail():
                 continue
             field_value = self.mail_native.get_all(field_name)
 
-            if field_name in ['Subject', 'From', 'To']:
+            if field_name in ['Subject', 'From', 'To', 'Cc', 'Bcc']:
                 field_value = email.header.decode_header(self.mail_native.get(field_name))
                 if isinstance(field_value, list):
                     field_value_list = field_value

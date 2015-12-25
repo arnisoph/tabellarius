@@ -186,7 +186,7 @@ def main():
                                                         mailbox=pre_inbox,
                                                         flags=acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
 
-                if sort_mailbox:
+                if sort_mailbox and mails_without_match:
                     logger.debug('%s: Moving mails that did not match any filter to %s', acc_settings.get('username'), sort_mailbox)
 
                     for uid in mails_without_match:
