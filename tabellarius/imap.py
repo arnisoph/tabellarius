@@ -125,7 +125,7 @@ class IMAP():
             elif login_success:
                 return (True, login)
             else:
-                return (False, login)
+                return (False, login)  # pragma: no cover
         except Exception as e:
             err_return = self.process_error(e)
 
