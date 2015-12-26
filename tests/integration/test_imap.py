@@ -230,6 +230,10 @@ class IMAPTest(TabellariusTest):
         self.assertIn('\\Draft', result[1][1])
         self.assertIn('CUSTOM', result[1][1])
 
+        result = imapconn.add_mailflags(uids=[1], mailbox='INBOX', flags=['CUSTOM2', 'CUSTOM42'])
+        self.assertIn('CUSTOM2', result[1][1])
+        self.assertIn('CUSTOM42', result[1][1])
+
     def test_get_and_set_mailflags_testmode(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password, test=True)
