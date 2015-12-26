@@ -133,7 +133,7 @@ def main():
         else:
             logger.info('%s: Sucessfully logged in!', acc_settings.get('username'))
 
-    logger.info('%s: Entering mail-sorting loop', acc_settings.get('username'))
+    logger.info('Entering mail-sorting loop')
     while True:
         for acc_id, acc_settings in sorted(config.get('accounts').items()):
             pre_inbox = acc_settings.get('pre_inbox', 'PreInbox')
