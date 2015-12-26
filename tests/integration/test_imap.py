@@ -240,6 +240,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.connect(), (True, b'Logged in'))
 
         self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen']), (True, None))
+        self.assertEqual(imapconn.add_mailflags(uids=[1], mailbox='INBOX', flags=['CUSTOM23']), (True, None))
 
         self.assertEqual(imapconn.disconnect(), (True, b'Logging out'))
 
@@ -255,6 +256,12 @@ class IMAPTest(TabellariusTest):
                          (False, 'UID command error: BAD [b\'Error in IMAP command UID STORE: Invalid system flag \\\\S!EEN\']'))
 
         self.assertEqual(imapconn.set_mailflags(uids=[1337], mailbox='INBOX'), (False, None))
+        self.assertEqual(imapconn.get_mailflags(uids=[1337], mailbox='INBOX'), (False, None))
+        self.assertEqual(imapconn.get_mailflags(uids=['INVALID'],
+                                                mailbox='INBOX'),
+                         (False, 'FETCH command error: BAD [b\'Error in IMAP command UID FETCH: Invalid uidset\']'))
+
+        self.assertEqual(imapconn.add_mailflags(uids=[1337], mailbox='INBOX', flags='FOO'), (False, None))
         self.assertEqual(imapconn.get_mailflags(uids=[1337], mailbox='INBOX'), (False, None))
         self.assertEqual(imapconn.get_mailflags(uids=['INVALID'],
                                                 mailbox='INBOX'),
