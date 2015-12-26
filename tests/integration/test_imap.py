@@ -284,7 +284,10 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Move
-        self.assertEqual(imapconn.move_mail(message_ids=[message_id], source='INBOX', destination='Trash'), (True, [1]))
+        self.assertEqual(imapconn.move_mail(message_ids=[message_id],
+                                            source='INBOX',
+                                            destination='Trash',
+                                            add_flags='\FLAGGED'), (True, [1]))
 
         # Check old and copied
         self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX'), (True, {}))
