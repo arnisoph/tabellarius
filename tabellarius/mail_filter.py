@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-import re
+from re import compile as regex_compile
 
 
 class MailFilter():
@@ -84,7 +84,7 @@ class MailFilter():
             return True
 
         # RegEx match
-        pattern_re = re.compile(pattern)
+        pattern_re = regex_compile(pattern)
         if pattern_re.match(string):
             return True
         else:

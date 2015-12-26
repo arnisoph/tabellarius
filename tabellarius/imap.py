@@ -4,6 +4,7 @@
 from imapclient import IMAPClient
 from imapclient.fixed_offset import FixedOffset
 from logging import DEBUG as loglevel_DEBUG
+from re import compile as regex_compile
 from six import text_type
 from sys import exc_info
 from time import sleep
@@ -113,10 +114,18 @@ class IMAP():
                 self.conn.starttls(ssl_context=self.sslcontext)
             login = self.conn.login(self.username, self.password)
 
+            # Test login/auth status
+            noop = self.conn.noop()
+            noop_response = noop[0].decode('utf-8')
+            noop_resp_pattern_re = regex_compile('(Success|NOOP completed\.)')
+            login_success = noop_resp_pattern_re.match(noop_response)
+
             if logout:
                 return self.disconnect()
+            elif login_success:
+                return (True, login)
             else:
-                return (login == b'Logged in', login)
+                return (False, login)
         except Exception as e:
             err_return = self.process_error(e)
 
