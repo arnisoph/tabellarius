@@ -162,7 +162,7 @@ def main():
                     match = False
 
                     if mail.get_header('message-id') is None:
-                        logger.info('Mail with uid={} and subject=\'{}\' doesn\'t have a message-id! Abort..'.format(
+                        logger.error('Mail with uid={} and subject=\'{}\' doesn\'t have a message-id! Abort..'.format(
                             uid, mail.get_header('subject')))
                         exit(1)
 
@@ -187,7 +187,7 @@ def main():
                                                         flags=acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
 
                 if sort_mailbox and mails_without_match:
-                    logger.debug('%s: Moving mails that did not match any filter to %s', acc_settings.get('username'), sort_mailbox)
+                    logger.info('%s: Moving mails that did not match any filter to %s', acc_settings.get('username'), sort_mailbox)
 
                     for uid in mails_without_match:
                         mail = mails[uid]
