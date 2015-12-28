@@ -215,17 +215,16 @@ class IMAP():
         """
         self.logger.debug('Adding a mail into mailbox %s', mailbox)
         try:
-            if isinstance(message, Mail):
-                message_native = message.get_native()
-            else:
-                message_native = message
+            if not isinstance(message, Mail):
                 message = Mail(logger=self.logger, mail_native=message)
+            message_native = message.get_native()
 
             #self.conn.append(mailbox, message, flags, msg_time)
             self._append(mailbox, str(message_native), flags, msg_time)
 
             # According to rfc4315 we must not return the UID from the response, so we are fetching it ourselves
             uids = self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{0}"'.format(message.get_header('Message-Id')))[1]
+
             return (True, uids[0])
         except IMAPClient.Error as e:
             return self.process_error(e)

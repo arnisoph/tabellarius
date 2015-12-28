@@ -1,0 +1,45 @@
+Return-Path: <rachit.jain@youth4work.com>
+Delivered-To: <shubham@cyberzonec.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id 5vOlHoCSh1WAYwAA7jq/7w
+	for <shubham@cyberzonec.in>; Mon, 22 Jun 2015 04:44:08 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id C50C72096060
+	for <shubham@cyberzonec.in>; Mon, 22 Jun 2015 04:44:08 +0000 (UTC)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=72.52.206.246; helo=mail.jagbros.in; envelope-from=rachit.jain@youth4work.com; receiver=shubham@cyberzonec.in 
+Received: from mail.jagbros.in (unknown [72.52.206.246])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTP id 662372BDCA2
+	for <shubham@cyberzonec.in>; Mon, 22 Jun 2015 04:44:07 +0000 (UTC)
+Received: from youth4work ([72.52.206.246]) by jagbros.in with MailEnable ESMTP; Mon, 22 Jun 2015 10:14:05 +0530
+MIME-Version: 1.0
+From: "Rachit" <rachit.jain@youth4work.com>
+To: shubham@cyberzonec.in
+Date: 22 Jun 2015 10:14:05 +0530
+Subject: Cyberzonec
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <70EF2C85159644EDAAD401268CDAE1DD.MAI@jagbros.in>
+
+<div style=3D'font-family: Arial; font-size: 12px;color: #666666;=
+ line-height: 16px;'>Hi Shubham Sharma,<br /><br />You are regist=
+ered as an employer and profile here<br /><a href=3D'http://www.c=
+os.youth4work.com/Cyberzonec' target=3D'_blank' style=3D'font-fam=
+ily: Arial; font-size: 12px;'>http://www.cos.youth4work.com/Cyber=
+zonec</a><br /><br />Suggest, that you can start using our free e=
+mployer services by posting your jobs free<br /><a href=3D'http:/=
+/www.cos.youth4work.com/postjobs' target=3D'_blank' style=3D'font=
+-family: Arial; font-size: 12px;'>Post Jobs Now</a><br />- The jo=
+bs you post automatically gets spread to people with matching ski=
+lls and multiple job boards too.<br />- You will get matching pro=
+file based on your jobs within minutes of posting your job.<br />=
+<br />Shubham Sharma, I will be happy to help you with understand=
+ing your emplyeer <a href=3D'http://www.youth4work.com/Employer-f=
+eatures' target=3D'_blank' style=3D'font-family: Arial; font-size=
+: 12px;'>features</a>. Feel free to  call or revert for any assis=
+tance in finding Youth 4 work.<br /><br />Regards<br />Rachit Jai=
+n<br />Team - Youth4work | M: 91 9910004312 | <a href=3D'http://w=
+ww.youth4work.com/y/rachit' target=3D'_blank' style=3D'font-famil=
+y: Arial; font-size: 12px;'>http://www.youth4work.com/y/rachit</a=
+></div>
+
+

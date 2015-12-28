@@ -1,0 +1,283 @@
+Return-Path: <0000014e2ed21bf8-035d1578-a0ac-4afe-a3cb-ea4e65b92143-000000@amazonses.com>
+Delivered-To: <shubham@cyberzonec.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id Dab9NZICjVWyQAAA7jq/7w
+	for <shubham@cyberzonec.in>; Fri, 26 Jun 2015 07:43:20 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id 984D62096064
+	for <shubham@cyberzonec.in>; Fri, 26 Jun 2015 07:43:20 +0000 (UTC)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=54.240.10.20; helo=a10-20.smtp-out.amazonses.com; envelope-from=0000014e2ed21bf8-035d1578-a0ac-4afe-a3cb-ea4e65b92143-000000@amazonses.com; receiver=shubham@cyberzonec.in 
+Authentication-Results: mx2.main-hosting.eu;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=RMIZrl6+
+Received: from a10-20.smtp-out.amazonses.com (a10-20.smtp-out.amazonses.com [54.240.10.20])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTPS id 4AF912D695A
+	for <shubham@cyberzonec.in>; Fri, 26 Jun 2015 07:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=ug7nbtf4gccmlpwj322ax3p6ow6yfsug; d=amazonses.com; t=1435304598;
+	h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:List-Unsubscribe:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+	bh=TKIYKACwn6n+mvnGR2HYwlYHDKIVKIWUJaEx2Xl/lhA=;
+	b=RMIZrl6+0ytRBt7kRZTTVarBR+zonAoLWZjRwrzh40DTJisfaR3WPQH1UaKh4OjC
+	SpLqAGE+wjrsduDBStoNW6qcLMegMk9IxWEaQlOwfMpWs6HBo2F+NL0K7OUgv0tzrSp
+	92EwHlWpz1rcVRSbsMN59VQNupyTc9987JDqci1s=
+To: shubham@cyberzonec.in
+Subject: Hey! Here's a great coupon to welcome you onboard!
+Message-ID: <0000014e2ed21bf8-035d1578-a0ac-4afe-a3cb-ea4e65b92143-000000@email.amazonses.com>
+Date: Fri, 26 Jun 2015 07:43:18 +0000
+From: "BigRock" <promo@bigrock.com>
+Reply-To: promo@bigrock.com
+MIME-Version: 1.0
+X-Mailer-LID: 19
+List-Unsubscribe: <http://emailsparrow.com/unsubscribe.php?M=2392014&C=6508a8072980153786bbab4969679c2a&L=19&N=57154>
+X-Mailer-RecptId: 2392014
+X-Mailer-SID: 57154
+X-Mailer-Sent-By: 1
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2015.06.26-54.240.10.20
+Feedback-ID: 1.us-east-1.Kv6owfoXSKn6EaPMBYs0B7SK3hhrQq+1/dkBKtRvadw=:AmazonSES
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body style="margin: 0px; padding: 0px; background: #fff">
+<table cellspacing="0" cellpadding="0" border="0" style="font-family:
+arial, helvetica, sans-serif; width: 100%; background: #ffffff;">
+<tbody>
+<tr>
+<td></td>
+<td style="width: 700px;">
+<div style="margin: 0px auto 0px auto; width: 700px; background: #fff;">
+<table cellspacing="0" cellpadding="0" border="0" style="margin: 0px auto;
+font-family: arial, helvetica, sans-serif; width: 700px; background:
+#ffffff;">
+<tbody>
+<tr>
+<td>
+<table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+<tbody>
+<tr>
+<td width="50%" style="padding: 10px 0 0 20px;"><a
+href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=504&F=H"
+target="_blank"> <img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/bigrock-logo.png"
+alt="Bigrock Logo" style="display: block; border: 0;" /> </a></td>
+<td width="50%" style="padding: 30px 20px 0 0; text-align: right;"></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td style="height: 40px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="text-align: center; font-size: 48px; color: #3a4953;
+font-weight: bold; text-transform: uppercase;">Thank you for <br /> Signing
+up!</td>
+</tr>
+<tr>
+<td style="text-align: center; font-size: 72px; line-height: 70px; color:
+#231f20; font-weight: bold; text-transform: uppercase;"></td>
+</tr>
+<tr>
+<td style="height: 20px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="text-align: center;">
+<table cellpadding="0" cellspacing="0" border="0">
+<tbody>
+<tr>
+<td width="55"></td>
+<td width="590" style="border-top: 1px dashed #c2c2c2;">
+<table cellpadding="0" cellspacing="0" border="0">
+<tbody>
+<tr>
+<td style="height: 30px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="color: #505665; font-size: 16px; text-align: left; line-height:
+30px; padding: 0px 8px;"><span><strong>Hi,</strong></span><br /> Thank you
+for signing up with us! In case you've had any trouble using the website,
+you can get in touch with us at <strong>1-800-200-7625</strong> or <a
+href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=497&F=H"
+target="_blank" style="color: #226eaf; font-family: arial, helvetica,
+sans-serif;">Chat with our Experts</a></td>
+</tr>
+<tr>
+<td style="height: 30px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="font-weight: bold; color: #505665; font-size: 18px; text-align:
+center;">Here's an exclusive coupon to welcome you onboard!</td>
+</tr>
+<tr>
+<td style="height: 15px; padding: 0px; margin: 0px;"></td>
+</tr>
+<tr>
+<td style="background: #fedb16; text-align: center; height: 70px; overflow:
+hidden;"><span style="font-weight: bold; font-family: arial, helvetica,
+sans-serif; color: #404040; font-size: 48px;">BIGEXC2014ONBXYZ</span></td>
+</tr>
+<tr>
+<td style="height: 20px; padding: 0px; margin: 0px;"></td>
+</tr>
+<tr>
+<td style="text-align: center; color: #3a4953; font-size: 22px; border-top:
+1px dashed #c2c2c2; border-bottom: 1px dashed #c2c2c2; height: 50px;
+font-family: arial, helvetica, sans-serif;"><strong>12% Off</strong> on
+Domains &nbsp;&nbsp;|&nbsp;&nbsp; <strong>22% Off</strong> on Hosting</td>
+</tr>
+<tr>
+<td style="height: 30px; padding: 0px; margin: 0px;"></td>
+</tr>
+<tr>
+<td style="color: #3a4953; font-size: 12px; text-align: center;"><a
+href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=503&F=H"
+target="_blank"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/redeem-this-now.png"
+alt="Redeem This Now" /></a></td>
+</tr>
+<tr>
+<td style="height: 5px; padding: 0px; margin: 0px;"></td>
+</tr>
+<tr>
+<td style="color: #929292; font-size: 12px; text-align: center;
+font-weight: bold;">Valid upto 30 days</td>
+</tr>
+<tr>
+<td style="height: 10px; padding: 0px; margin: 0px;"></td>
+</tr>
+</tbody>
+</table>
+</td>
+<td width="55"></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td style="height: 20px; padding: 0px; margin: 0px;"></td>
+</tr>
+</tbody>
+</table>
+<table cellspacing="0" cellpadding="0" border="0" style="margin: 0px auto;
+font-family: arial, helvetica, sans-serif; border: 1px solid #e1e1e1;
+width: 698px; background: #ffffff;">
+<tbody>
+<tr>
+<td colspan="2" style="border-bottom: 1px solid #e1e1e1; font-size: 26px;
+color: #888888; text-align: center; height: 50px;">Contact Us</td>
+<td colspan="2" style="border-bottom: 1px solid #e1e1e1; border-left: 1px
+solid #e1e1e1; font-size: 26px; color: #888888; text-align: center; height:
+50px;">We Are Social</td>
+</tr>
+<tr>
+<td width="60"></td>
+<td valign="top" style="padding: 10px 0 5px; width: 291px;">
+<p style="height: 10px; padding: 0; margin: 0;">&nbsp;</p>
+<table cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/call.png"
+alt="Call Us" /></td>
+<td><span style="color: #5a5a5a; text-decoration: none; font-size: 13px;
+font-family: arial, helvetica, sans-serif;">1-800-200-7625</span></td>
+</tr>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/envelope.png"
+alt="Mail" align="absmiddle" /></td>
+<td><a href="mailto:sales@bigrock.com" target="_blank" style="color:
+#5a5a5a; text-decoration: none; font-size: 13px; font-family: arial,
+helvetica, sans-serif;">sales@bigrock.com</a></td>
+</tr>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/globe.png"
+alt="Website" align="absmiddle" /></td>
+<td><a href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=6&F=H"
+target="_blank" style="color: #5a5a5a; text-decoration: none; font-size:
+13px; font-family: arial, helvetica, sans-serif;">www.bigrock.in</a></td>
+</tr>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/book.png"
+alt="Support" align="absmiddle" /></td>
+<td><a href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=373&F=H"
+target="_blank" style="color: #5a5a5a; text-decoration: none; font-size:
+13px; font-family: arial, helvetica,
+sans-serif;">support.bigrock.com</a></td>
+</tr>
+</tbody>
+</table>
+<p style="height: 10px; padding: 0; margin: 0;">&nbsp;</p>
+</td>
+<td valign="top" style="border-left: 1px solid #e1e1e1; padding: 10px 0 5px
+60px;">
+<p style="height: 10px; padding: 0; margin: 0;">&nbsp;</p>
+<table cellpadding="0" cellspacing="0">
+<tbody>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/tweet.png"
+alt="Twitter" align="absmiddle" /></td>
+<td><a href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=123&F=H"
+target="_blank" style="color: #5a5a5a; text-decoration: none; font-size:
+13px; font-family: arial, helvetica,
+sans-serif;">twitter.com/bigrock</a></td>
+</tr>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/fb.png"
+alt="Facebook" align="absmiddle" /></td>
+<td><a href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=122&F=H"
+target="_blank" style="color: #5a5a5a; text-decoration: none; font-size:
+13px; font-family: arial, helvetica,
+sans-serif;">facebook.com/bigrockissocial</a></td>
+</tr>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/youtube.png"
+alt="Youtube" align="absmiddle" /></td>
+<td><a href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=1&F=H"
+target="_blank" style="color: #5a5a5a; text-decoration: none; font-size:
+13px; font-family: arial, helvetica,
+sans-serif;">youtube.com/bigrocktv</a></td>
+</tr>
+<tr>
+<td style="margin: 0px; padding: 0px; height: 40px; width: 40px;"><img
+src="http://resources.bigrock.in/mailer/abandoned-cart-oct-mailer/images/gplus.png"
+alt="Google Plus" align="absmiddle" /></td>
+<td><a href="http://emailsparrow.com/link.php?M=2392014&N=57154&L=124&F=H"
+target="_blank" style="color: #5a5a5a; text-decoration: none; font-size:
+13px; font-family: arial, helvetica,
+sans-serif;">plus.google.com/+bigrock</a></td>
+</tr>
+</tbody>
+</table>
+<p style="height: 10px; padding: 0; margin: 0;">&nbsp;</p>
+</td>
+<td width="20"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p style="text-align: center; font-size: 8px;"><a style="text-decoration:
+none;"
+href="http://emailsparrow.com/unsubscribe.php?M=2392014&C=6508a8072980153786bbab4969679c2a&L=19&N=57154"><font
+style="text-decoration: none;">Unsubscribe from this list</font></a></p>
+<p style="padding: 0px; margin: 0px;">&nbsp;</p>
+</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<img
+src="http://emailsparrow.com/open.php?M=2392014&L=19&N=57154&F=H&image=.jpg"
+height="1" width="10"></body>
+</html>
+

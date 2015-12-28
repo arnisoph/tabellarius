@@ -1,0 +1,194 @@
+Return-Path: <bounce-11045_HTML-44842668-18161-7218422-50801@bounce.s7.exacttarget.com>
+Delivered-To: <shubham@cyberzonec.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id lFp5FIl/mVWhNQAA7jq/7w
+	for <shubham@cyberzonec.in>; Sun, 05 Jul 2015 19:03:37 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id 52F182132074
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:03:37 +0000 (UTC)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=136.147.176.80; helo=cr80.mta.exacttarget.com; envelope-from=bounce-11045_html-44842668-18161-7218422-50801@bounce.s7.exacttarget.com; receiver=shubham@cyberzonec.in 
+Authentication-Results: mx2.main-hosting.eu;
+	dkim=pass (1024-bit key) header.d=websummit.net header.i=p@websummit.net header.b=LvtRd7ys
+Received: from cr80.mta.exacttarget.com (cr80.mta.exacttarget.com [136.147.176.80])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTPS id 102A532BD58
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=200608; d=websummit.net;
+ h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type:List-Unsubscribe; i=p@websummit.net;
+ bh=NpFfRWj6oRpQwI1OWt4PFKuflTU=;
+ b=LvtRd7yshRwhXL0hu5Xoa4UwRqpzP8tWRWY1Xwxar0owBmJWuYFAIOenN2NE7l1iQboIjoh/YA9I
+   GC90OFKy/LujrI2klTyeXNtSeCc7rT/LNbflgJ+G6YSG1hnDJzyrBnbsHvMOSNoc7R1J9i/Feaj9
+   bVwjQThYcsftQcBDg2A=
+Received: by cr80.mta.exacttarget.com id hj5voi163hsr for <shubham@cyberzonec.in>; Sun, 5 Jul 2015 19:03:34 +0000 (envelope-from <bounce-11045_HTML-44842668-18161-7218422-50801@bounce.s7.exacttarget.com>)
+x-sender: undelivered+65682+82324166@pd25.com
+x-receiver: shubham@cyberzonec.in
+Received: from orionsmtp-123.s7.exacttarget.com (172.28.29.19) by QANV1IMS01.qa.local id hj5vh81l1h05 for <shubham@cyberzonec.in>; Sun, 5 Jul 2015 13:01:40 -0600 (envelope-from <undelivered+65682+82324166@pd25.com>)
+Received: from localhost (localhost [127.0.0.1])
+	by orionsmtp-123.s7.exacttarget.com (Postfix) with ESMTP id 88D931024B9
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:01:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at orionsmtp-123.s7.exacttarget.com
+Received: from orionsmtp-123.s7.exacttarget.com ([127.0.0.1])
+	by localhost (orionsmtp-123.s7.exacttarget.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id XsDvr_APlfBW for <shubham@cyberzonec.in>;
+	Sun,  5 Jul 2015 19:01:40 +0000 (UTC)
+Received: from [127.0.0.1] (unknown [50.97.84.235])
+	(Authenticated sender: pardot@s7)
+	by orionsmtp-123.s7.exacttarget.com (Postfix) with ESMTPSA id 5D1A5102296
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:01:40 +0000 (UTC)
+Message-ID: <e897cbeb-f529-4cd7-a031-54aa544cb723@xtgap4s7mta1153.xt.local>
+Date: Sun, 05 Jul 2015 13:03:35 -0600
+Subject: Shubham <> Jenny
+From: Paddy Cosgrave <p@websummit.net>
+To: shubham@cyberzonec.in
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift_v4_1436122900_837f0528a44b0b3d987077655e52542a_=_"
+List-Unsubscribe: <http://go.pardot.com/unsubscribe/u/65682/2ab11f71a6d393d674e730f06792bfa0/82324166>
+X-Report-Abuse-To: abuse@pd25.com
+x-job: 7218422_18161
+
+--_=_swift_v4_1436122900_837f0528a44b0b3d987077655e52542a_=_
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi Shubham,
+
+Connecting you to Jenny=2E Shubham if you haven=E2=80=99t already found a t=
+ime to
+speak with Jenny you can do so here
+
+jennyod
+
+=2E Jenny will spend some time learning more about Cyberzonec Solutions=2E
+=
+
+
+ 
+
+Expect questions on your product, team, mission, market and more=2E
+
+ 
+
+I'll let Jenny expand=2E
+
+ 
+
+Best,
+
+Paddy
+
+ 
+
+@paddycosgrave
+
+P=2ES=2E Did you receive this email in error? Click here
+
+http://go=2Epardot=2Ecom/unsubscribe/u/65682/2ab11f71a6d393d674e730f06792bf=
+a0/82324166
+
+ to update your subscription settings=2E
+
+
+
+
+--_=_swift_v4_1436122900_837f0528a44b0b3d987077655e52542a_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1=2E0 Transitional//EN" "http://ww=
+w=2Ew3=2Eorg/TR/xhtml1/DTD/xhtml1-transitional=2Edtd"><html xmlns=3D"http:/=
+/www=2Ew3=2Eorg/1999/xhtml" xml:lang=3D"en" lang=3D"en"><head><meta http-eq=
+uiv=3D"Content-Type" content=3D"text/html;" /><title>Email Newsletter</titl=
+e></head><body style=3D"font-family: Helvetica, Arial, sans-serif; font-siz=
+e: 12px">
+<p dir=3D"ltr" style=3D"line-height:1=2E38;margin-top:0pt;margin-bottom:0pt=
+;"><span style=3D"font-size:12px;"><span style=3D"font-family:arial,helveti=
+ca,sans-serif;"><span id=3D"docs-internal-guid-c663ca4b-67d2-7c7e-2fae-e6a3=
+75b927a1"><span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; =
+white-space: pre-wrap;">Hi </span></span><span style=3D"line-height: 16=2E5=
+599994659424px; white-space: pre-wrap;">Shubham,</span></span></span></p>
+
+<p dir=3D"ltr" style=3D"line-height:1=2E38;margin-top:0pt;margin-bottom:0pt=
+;"><br>
+<span style=3D"font-size:12px;"><span style=3D"font-family:arial,helvetica,=
+sans-serif;"><span id=3D"docs-internal-guid-c663ca4b-67fd-40d1-6035-fdd761f=
+6d9dd"><span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; whi=
+te-space: pre-wrap;">Connecting you to </span></span><span style=3D"line-he=
+ight: 22=2E0799999237061px;">Jenny</span><span style=3D"color: rgb(34, 34, =
+34); vertical-align: baseline; white-space: pre-wrap;">=2E </span><span sty=
+le=3D"line-height: 16=2E5599994659424px; white-space: pre-wrap;">Shubham</s=
+pan><span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; white-=
+space: pre-wrap;"> if you haven=E2=80=99t already found a time to speak wit=
+h </span><span style=3D"line-height: 22=2E0799999237061px;">Jenny</span><sp=
+an style=3D"color: rgb(34, 34, 34); vertical-align: baseline; white-space: =
+pre-wrap;"> you can do so <a
+href=3D"http://go=2Epardot=2Ecom/e/65682/0owner-urlurl/3xccbr/82324166/jenn=
+yod">here</a></span><span style=3D"color: rgb(34, 34, 34); vertical-align: =
+baseline; white-space: pre-wrap;">=2E </span><span style=3D"line-height: 22=
+=2E0799999237061px;">Jenny</span><span style=3D"color: rgb(34, 34, 34); ver=
+tical-align: baseline; white-space: pre-wrap;"> will spend some time learni=
+ng more about </span>Cyberzonec Solutions<span style=3D"color: rgb(34, 34, =
+34); vertical-align: baseline; white-space: pre-wrap;">=2E</span></span></s=
+pan></p>
+&nbsp;
+
+<p dir=3D"ltr" style=3D"line-height:1=2E38;margin-top:0pt;margin-bottom:0pt=
+;"><span style=3D"font-size:12px;"><span style=3D"font-family:arial,helveti=
+ca,sans-serif;"><span id=3D"docs-internal-guid-c663ca4b-67fd-40d1-6035-fdd7=
+61f6d9dd"><span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; =
+white-space: pre-wrap;">Expect questions on your product, team, mission, ma=
+rket and more=2E</span></span></span></span></p>
+<span style=3D"font-size:12px;"><span style=3D"font-family:arial,helvetica,=
+sans-serif;">&nbsp;</span></span>
+
+<p dir=3D"ltr" style=3D"line-height:1=2E38;margin-top:0pt;margin-bottom:0pt=
+;"><span style=3D"font-size:12px;"><span style=3D"font-family:arial,helveti=
+ca,sans-serif;"><span id=3D"docs-internal-guid-c663ca4b-67fd-40d1-6035-fdd7=
+61f6d9dd"><span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; =
+white-space: pre-wrap;">I'll let </span></span><span style=3D"line-height: =
+22=2E0799999237061px;">Jenny</span><span style=3D"color: rgb(34, 34, 34); v=
+ertical-align: baseline; white-space: pre-wrap;"> expand=2E</span></span></=
+span></p>
+
+<p dir=3D"ltr" style=3D"line-height:1=2E38;margin-top:0pt;margin-bottom:0pt=
+;">&nbsp;</p>
+
+<p dir=3D"ltr" style=3D"line-height:1=2E38;margin-top:0pt;margin-bottom:0pt=
+;"><span style=3D"font-size:12px;"><span style=3D"font-family:arial,helveti=
+ca,sans-serif;"><span id=3D"docs-internal-guid-c663ca4b-67fd-40d1-6035-fdd7=
+61f6d9dd"><span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; =
+white-space: pre-wrap;">Best,</span></span></span></span></p>
+
+<p dir=3D"ltr" style=3D"font-family: Helvetica, Arial, sans-serif; font-siz=
+e: 12px; line-height: 1=2E38; margin-top: 0pt; margin-bottom: 0pt;"><span s=
+tyle=3D"font-size:12px;"><span style=3D"font-family:arial,helvetica,sans-se=
+rif;"><span id=3D"docs-internal-guid-c663ca4b-67d2-7c7e-2fae-e6a375b927a1">=
+<span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; white-spac=
+e: pre-wrap;">Paddy</span></span></span></span></p>
+
+<p dir=3D"ltr" style=3D"font-family: Helvetica, Arial, sans-serif; font-siz=
+e: 12px; line-height: 1=2E38; margin-top: 0pt; margin-bottom: 0pt;">&nbsp;<=
+/p>
+
+<p dir=3D"ltr" style=3D"font-family: Helvetica, Arial, sans-serif; font-siz=
+e: 12px; line-height: 1=2E38; margin-top: 0pt; margin-bottom: 0pt;"><span s=
+tyle=3D"font-size:12px;"><span style=3D"font-family:arial,helvetica,sans-se=
+rif;">@paddycosgrave</span></span></p>
+
+<p><br>
+<span style=3D"font-size:12px;"><span style=3D"font-family:arial,helvetica,=
+sans-serif;"><span id=3D"docs-internal-guid-c663ca4b-67d2-7c7e-2fae-e6a375b=
+927a1"><span style=3D"vertical-align: baseline; white-space: pre-wrap; back=
+ground-color: transparent;">P=2ES=2E Did you receive this email in error? C=
+lick </span><span style=3D"text-decoration: underline; color: rgb(17, 85, 2=
+04); vertical-align: baseline; white-space: pre-wrap; background-color: tra=
+nsparent;"><a href=3D"http://go=2Epardot=2Ecom/unsubscribe/u/65682/2ab11f71=
+a6d393d674e730f06792bfa0/82324166">here</a></span><span style=3D"vertical-a=
+lign: baseline; white-space: pre-wrap; background-color: transparent;"> to =
+update your subscription settings=2E</span></span></span></span></p>
+<img alt=3D"" src=3D"http://go=2Epardot=2Ecom/r/65682/1/82324166/open/1" />=
+</body></html>
+
+--_=_swift_v4_1436122900_837f0528a44b0b3d987077655e52542a_=_--
+
+

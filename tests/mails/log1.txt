@@ -1,0 +1,98 @@
+Return-Path: <admin@youth4work.com>
+Delivered-To: <shubham@cyberzonec.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id 8AxNJf6ChlWkSAAA7jq/7w
+	for <shubham@cyberzonec.in>; Sun, 21 Jun 2015 09:25:35 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id DE3242096060
+	for <shubham@cyberzonec.in>; Sun, 21 Jun 2015 09:25:35 +0000 (UTC)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=72.52.206.246; helo=mail.jagbros.in; envelope-from=admin@youth4work.com; receiver=shubham@cyberzonec.in 
+Received: from mail.jagbros.in (unknown [72.52.206.246])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTP id 754B12B42AA
+	for <shubham@cyberzonec.in>; Sun, 21 Jun 2015 09:25:34 +0000 (UTC)
+Received: from youth4work ([72.52.206.246]) by jagbros.in with MailEnable ESMTP; Sun, 21 Jun 2015 14:55:27 +0530
+MIME-Version: 1.0
+From: "Youth4work" <admin@youth4work.com>
+To: shubham@cyberzonec.in
+X-Priority: 1
+Priority: urgent
+Importance: high
+Date: 21 Jun 2015 14:55:27 +0530
+Subject: Your Registration at www.youth4work.com
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <72EA803C0B6343E6860E74E31AF8437F.MAI@jagbros.in>
+
+<html><head><title>Mail</title></head><body><table align=3D'cente=
+r' border=3D'0' cellspacing=3D'0'> <tr><td><table align=3D'center=
+' cellspacing=3D'0' cellpadding=3D'5' width=3D'600' style=3D'bord=
+er: 1px solid #DDDDDD;'> <tr><td><table border=3D'0' cellspacing=3D=
+'0' cellpadding=3D'0' align=3D'center' style=3D'font-family: Verd=
+ana; font-size: 11px; color: #000; width: 100%;'><tr><td width=3D=
+'600' align=3D'center'> <table width=3D'100%' align=3D'center' st=
+yle=3D'background-color: #087ccd; color: White;' cellspacing=3D'0=
+' cellpadding=3D'5'><tr><td align=3D'left' width=3D'500'> <span s=
+tyle=3D'font-family: Arial; font-size: 16px; color: White; font-w=
+eight: bold; width: 100%'>Registration Details</span><span style=3D=
+'font-family: Arial; font-size: 11px; color: White; padding-left:=
+ 10px; width: 100%'> </span> </td><td align=3D'right' width=3D'10=
+0px' valign=3D'top'><span style=3D'text-align: right; width: 100p=
+x;'> <img border=3D'0' src=3D'http://www.youth4work.com/icon/y4w_=
+icon_30x30.png' width=3D'30px' height=3D'30px' /></span> </td></t=
+r></table></td></tr></table></td></tr><tr><td align=3D'left' styl=
+e=3D'font-family: Verdana; font-size: 11px;color: #666666; '>Hi S=
+hubham, </td></tr><tr><td align=3D'left' style=3D'font-family: Ve=
+rdana; font-size: 11px; color: #666666;'> Welcome to Youth4Work C=
+ommunity.</td></tr><tr><td><table width=3D'100%' height=3D'100%' =
+align=3D'left' cellpadding=3D'0' cellspacing=3D'5'> <tr><td align=
+=3D'left' valign=3D'top' width=3D'50px' height=3D'50px'><img bord=
+er=3D'0' src=3D'http://www.youth4work.com/Images/blank_img.gif' h=
+eight=3D'50' width=3D'50' /></td><td align=3D'left' width=3D'450p=
+x' height=3D'100%' valign=3D'top' style=3D'padding-left: 5px; bor=
+der-right: 1px solid #DDDDDD'><table cellpadding=3D'0' cellspacin=
+g=3D'4' width=3D'100%' align=3D'left' style=3D'font-family: Verda=
+na; font-size: 11px; color: #666666;'><tr><td align=3D'left' styl=
+e=3D'width: 80px;'><span>User Name: </span></td><td align=3D'left=
+'> <span>54shubham15</span></td></tr><tr><td align=3D'left'><span=
+>Password: </span></td><td align=3D'left'><span>audit@1234</span>=
+</td></tr><tr><td align=3D'left'><span>Company Name: </span></td>=
+<td align=3D'left'><span>Cyberzonec</span></td></tr><tr><td align=
+=3D'left'><span>Contact No.: </span> </td><td align=3D'left'><spa=
+n>9997442471</span></td></tr></table></td><td width=3D'250px' ali=
+gn=3D'center'> <table cellpadding=3D'0' cellspacing=3D'5' style=3D=
+'font-family: Verdana; font-size: 11px;color: #666666; text-decor=
+ation: none; height: 100%; width: 250px;'> <tr><td align=3D'cente=
+r'><table cellspacing=3D'0' cellpadding=3D'5' width=3D'120' style=
+=3D'background-color: #087CCD;'> <tr><td height=3D'20px' style=3D=
+'font-size: 11px; font-family: verdana; padding: 7px 10px 7px 10p=
+x; border: 1px solid #2F619A; text-decoration: none'> <a href=3D'=
+http://www.youth4work.com/Users/VerifyUser?Key=3D3ada7991-19a0-4e=
+4c-af8f-c59d924efc0f ' style=3D'color: #ffffff; text-decoration: =
+none' target=3D'_blank'> <span style=3D'color: #fff; font-size: 1=
+1px; text-decoration: none'>Activate Account</span> </a></td></tr=
+></table></td></tr><tr><td align=3D'center' style=3D'font-family:=
+ Verdana; font-size: 11px; color: #666666;'> Or</td></tr><tr><td =
+align=3D'center' style=3D'font-family: Verdana; font-size: 11px; =
+color: #333;'> Enter <b>3ada7991-19a0-4e4c-af8f-c59d924efc0f</b> =
+code <a style=3D'color: #087CCD;' href=3D'http://www.youth4work.c=
+om/Users/VerifyUser'> here</a></td></tr></table></td></tr></table=
+></td></tr><tr><td align=3D'left' style=3D'font-family: Verdana; =
+font-size: 11px; color: #666666;'>If you are unable to view links=
+ on this email, please copy and paste the following link in your =
+browser. It would activate your account.</td></tr><tr><td align=3D=
+'left' style=3D'font-family: Verdana; font-size: 11px; color: #66=
+6666;'>http://www.youth4work.com/Users/VerifyUser?Key=3D3ada7991-=
+19a0-4e4c-af8f-c59d924efc0f</td><br/></tr></table></td></tr><tr><=
+td style=3D'font-family: Verdana; width: 600; font-size: 9px; col=
+or: #666666; padding-top: 5px'  align=3D'left' valign=3D'middle'>=
+This message was sent to <span style=3D'font-family: Verdana; fon=
+t-size: 9px; color: #087ccd;  text-decoration: none;'><a style=3D=
+'font-family: Verdana; font-size: 9px; color: #087ccd;  text-deco=
+ration: none;'><a style=3D'font-family: Verdana; font-size: 9px; =
+color: #087ccd; text-decoration: none;'>shubham@cyberzonec.in</a>=
+</span> because you have registered on youth4work. Communicate wi=
+th  us at <a href=3D'http://www.youth4work.com/Forum/' style=3D'c=
+olor: #087ccd; text-decoration: none;'>  Youth4work forum</a></td=
+></tr></table></body></html>
+
+

@@ -3,6 +3,8 @@
 
 from __future__ import print_function
 
+import email
+import os
 import redis
 import sys
 import time
@@ -63,6 +65,25 @@ class TabellariusTest(unittest.TestCase):
             _headers['Message-Id'] = '<very_unique_id_{0}@example.com>'.format(int(round(time.time() * 1000)))
 
         return mail.Mail(logger=self.logger, headers=_headers, body=body)
+
+    def parse_message_files(self, directory='tests/mails/'):
+        """
+        Parse message files that were found on public Github repositories
+
+        Search URL: https://github.com/search?utf8=✓&q=path%3Atxt+Return-Path&type=Code&ref=searchresults
+        """
+
+        file_names = os.listdir(directory)
+
+        emails = []
+        for file_name in file_names:
+            if '.msg' in file_name or '.txt' in file_name:
+                fh = open(directory + os.sep + file_name, 'rb')
+                raw_mail = fh.read()
+                mail_native = email.message_from_bytes(raw_mail)
+                emails.append(mail_native)
+
+        return emails
 
     logger = LoggerDummy()
     rconn = redis.StrictRedis(host='127.0.0.1', port=6379)

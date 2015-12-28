@@ -99,7 +99,6 @@ class MailFilter():
             cmd_type = command.get('type')
             cmd_flags_set = command.get('set_flags', [])
             cmd_flags_add = command.get('add_flags', None)
-            #cmd_flags_remove = command.get('remove_flags', [])
 
             uid = None
             if cmd_type == 'move':

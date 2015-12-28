@@ -1,0 +1,43 @@
+Return-Path: <rachit.jain@youth4work.com>
+Delivered-To: <shubham@cyberzonec.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id IKXRNPaqiVV6AwAA7jq/7w
+	for <shubham@cyberzonec.in>; Tue, 23 Jun 2015 18:53:05 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id 222A3209606C
+	for <shubham@cyberzonec.in>; Tue, 23 Jun 2015 18:53:05 +0000 (UTC)
+X-Greylist: delayed 593 seconds by postgrey-1.34 at mx-mailgw; Tue, 23 Jun 2015 18:53:04 UTC
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=72.52.206.246; helo=mail.jagbros.in; envelope-from=rachit.jain@youth4work.com; receiver=shubham@cyberzonec.in 
+Received: from mail.jagbros.in (unknown [72.52.206.246])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTP id B6E6025EC70
+	for <shubham@cyberzonec.in>; Tue, 23 Jun 2015 18:53:04 +0000 (UTC)
+Received: from youth4work ([72.52.206.246]) by jagbros.in with MailEnable ESMTP; Wed, 24 Jun 2015 00:13:02 +0530
+MIME-Version: 1.0
+From: "Rachit" <rachit.jain@youth4work.com>
+To: shubham@cyberzonec.in
+Date: 24 Jun 2015 00:13:02 +0530
+Subject: Contact Ranked talent for hire
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <58F30A36A7C341788B512ACD5B1428FD.MAI@jagbros.in>
+
+<div style=3D'font-family: Arial; font-size: 12px;color: #666666;=
+ line-height: 16px;'>Hi Shubham Sharma,<br /><br />From your Empl=
+oyer account for <a style=3D'font-family: Arial; font-size: 12px;=
+' href=3D'http://www.cos.youth4work.com/Cyberzonec'>Cyberzonec</a=
+><br /><br />You can contact more skilled people for your work di=
+rectly<br /><br /><a style=3D'font-family: Arial; font-size: 12px=
+;' href=3D'http://www.youth4work.com/talent/'>Talent Boards here<=
+/a><br /><br />Will be happy to help you using this work mail fea=
+ture. Feel free to call<br /><br />Regards<br />Rachit Jain<br />=
+Team - Youth4work | M: 91 9910004312 | <a href=3D'http://www.yout=
+h4work.com/y/rachit' target=3D'_blank' style=3D'font-family: Aria=
+l; font-size: 12px;'>http://www.youth4work.com/y/rachit</a><br />=
+<br />Our Client Speaks:<br />&#8220;lined up interviews within 3=
+ days. I saved time in going through thousands of resumes, filter=
+ing and then assessing them for the job. All we do now is contact=
+ tested job seekers from youth4work. MUST Recommend it to all fel=
+low recruiters&#8221; says, Sandeep Sinha, Sr. Recruiter, GE.</di=
+v>
+
+

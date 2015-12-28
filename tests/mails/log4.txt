@@ -1,0 +1,221 @@
+Return-Path: <postman@livemailservice.com>
+Delivered-To: <shubham@cyberzonec.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id hoJtB4PzjFW9AgAA7jq/7w
+	for <shubham@cyberzonec.in>; Fri, 26 Jun 2015 06:39:24 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id 54A532096064
+	for <shubham@cyberzonec.in>; Fri, 26 Jun 2015 06:39:24 +0000 (UTC)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=5.100.152.32; helo=t-smtp2.livemailservice.com; envelope-from=postman@livemailservice.com; receiver=shubham@cyberzonec.in
+Received: from t-smtp2.livemailservice.com (t-smtp2.livemailservice.com [5.100.152.32])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTP id 473E82CF9DE
+	for <shubham@cyberzonec.in>; Fri, 26 Jun 2015 06:39:24 +0000 (UTC)
+Date: Fri, 26 Jun 2015 06:39:22 +0000 (GMT)
+From: "BigRock.com Sales Team" <automail@bigrock.com>
+To: shubham@cyberzonec.in
+Subject: Customer Sign Up
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.=
+w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns=3D"http://www.w3.org/1999/xhtml">
+<head>
+<title>Customer Signup</title>
+
+</head>
+<body>
+
+<table width=3D"600" cellpadding=3D"0" cellspacing=3D"0" border=3D"0">
+<tr>
+<td style=3D"width:15px;"></td>
+
+<td valign=3D"top">
+
+    <p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; =
+line-height:18px; padding-bottom:5px;">Hi,</p>
+
+    <p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; =
+line-height:18px; padding-bottom:5px;">Thank you for registering with BigRo=
+ck.</p>
+   =20
+   =20
+        <p  style=3D"font-family:Arial, sans-serif; font-size:12px; color:#=
+222; line-height:18px; padding-bottom:5px;">
+        Click on the following link to verify your email address<br />
+        <a href=3D"http://manage.bigrock.in/linkhandler/servlet/ValidateRAA=
+Servlet?id=3D2598780&token=3D710b69a01d944a15bd28d484c44794f7">http://manag=
+e.bigrock.in/linkhandler/servlet/ValidateRAASer
+        vlet?id=3D2598780&token=3D710b69a01d944a15bd28d484c44794f7</a>
+        </p>
+
+
+   =20
+
+   =20
+
+   =20
+
+<h3  style=3D"font-family:Arial, sans-serif; font-size:18px; color:#222; li=
+ne-height:22px; font-weight:bold; border-bottom:1px solid #222;">Your Profi=
+le & Control Panel Login</h3>
+
+   =20
+   =20
+    <p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; =
+line-height:18px; padding-bottom:5px;">
+        You can start exploring our feature-rich Control Panel, which will =
+allow you to manage all your   Products, buy new Products, check all=20
+        your transactions and more.
+        </p>
+   =20
+
+
+<h4 style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; lin=
+e-height:22px; font-weight:bold;"><u>Login Details:</u></h4>
+
+<p  style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; lin=
+e-height:18px; padding-bottom:5px;"><em>URL:</em><a href=3D"http://manage.b=
+igrock.in/customer">http://manage.bigrock.in/customer</a></p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;"><em>Username:</em>shubham@cyberzonec.in<=
+/p>
+
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;"><em>Password:</em> If you can not recall=
+ your current password, <a href=3D"http://manage.bigrock.in/servlet/ForgotP
+asswordServlet?role=3Dcustomer&pid=3D247133&username=3Dshubham@cyberzonec.i=
+n">click here</a>to request a temporary password to login.</p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;"><em>Your Customer ID:</em>13123821</p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;"><em>Personal Identification Number(PIN):=
+</em>2913</p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;">Your Customer ID is  unique to your Acco=
+unt. For future  reference, you can always find this at <br /><strong>Setti=
+ngs  &rarr; Primary Profile,</strong> in your Control Panel.</p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;">BigRock may request you to authenticate =
+yourself through this Personal Identification Number (PIN), when you reques=
+t support.</p>
+
+<h3 style=3D"font-family:Arial, sans-serif; font-size:18px; color:#222; lin=
+e-height:22px; border-bottom:1px solid #222;">Detailed Instructions</h3>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px;">Please <a href=3D"http://manage.bigrock.in/kb/" target=3D"_b=
+lank">click here</a>   for detailed information on our Control   Panel as w=
+ell as all our Products &amp; Services.</p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;"><b>Support</b><br>For any support with r=
+espect to your relationship with us you can always contact us directly usin=
+g the following Information.<br><br><i>Technical Support</i>:<br>Tech Suppo=
+rt URL: <a href=3D"http://support.bigrock.com">http://support.bigrock.com</=
+a><br><br><i>Sales Contact</i>:<br>Email Address: <a href=3D"mailto:automai=
+l@bigrock.com">automail@bigrock.com</a><br>Tel No.: +91.2230797900<br>Fax N=
+o.: +91.2230797901<br><br><i>Billing Contact</i>:<br>Email Address: <a href=
+=3D"mailto:billing@bigrock.com">billing@bigrock.com</a><br>Tel No.: +91.223=
+0797900<br>Fax No.: +91.2230797901<br></p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;"><font
+ face=3D"Verdana, Arial, Helvetica, sans-serif" size=3D"2">Regards,</font><=
+br>
+<br>
+<b><font
+ face=3D"Verdana" size=3D"2">BigRock Team</font></b><br>
+<font color=3D"#333333" face=3D"Verdana"
+ size=3D"2"><a
+ href=3D"http://bigrock.in">http://bigrock.com</a></font><br>
+<span style=3D"font-size: 2pt;"><br>
+<span
+ style=3D"font-size: 8pt; font-family: Verdana;">--------------------------=
+--------------</span><br>
+<font face=3D"Verdana"><b>
+<span
+ style=3D"font-size: 9pt; font-family: Verdana;">India
+Toll Free: 1-800-200-7625</span></b></font><b><br>
+<font face=3D"Verdana" size=3D"1">
+<span
+ style=3D"font-size: 9pt; font-family: Verdana;">Tel
+(India): +91-22-30797900</span></font></b><br>
+</span>---------------------------------<br><br>
+
+<span
+ style=3D"font-family: Arial; font-weight: bold;"><small>Follow
+BigRock
+on</small> <br>
+</span>
+<table
+ style=3D"text-align: left; width: 148px; height: 33px;" border=3D"0"
+ cellpadding=3D"2" cellspacing=3D"2">
+  <tbody>
+    <tr>
+      <td align=3D"left" valign=3D"center">
+      <a
+ href=3D"http://www.facebook.com/BigRockIsSocial"><img
+ style=3D"border: 0px solid ; width: 25px; height: 25px;" alt=3D""
+ src=3D"http://resources.bigrock.in/images/icon_facebook.png"></a>
+      <a href=3D"http://twitter.com/bigrock"><img
+ src=3D"http://resources.bigrock.in/images/icon_twitter.png" alt=3D""
+ style=3D"border: 0px solid ; width: 25px; height: 25px;"></a><a
+ href=3D"http://bigrock.com/blog/"><img
+ style=3D"border: 0px solid ; width: 77px; height: 26px;" alt=3D""
+ src=3D"http://resources.bigrock.in/images/BRblog.png"></a></td>
+    </tr>
+  </tbody>
+</table></p>
+
+</td>
+
+<td style=3D"width:15px;"></td>
+</tr>
+
+<tr>
+<td bgcolor=3D"#e1e1e1" style=3D"width:15px;"></td>
+<td bgcolor=3D"#e1e1e1" style=3D"padding-top:10px; padding-bottom:10px;">
+<h4 style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; lin=
+e-height:18px; font-weight:bold;">Note:</h4>
+    <p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; =
+line-height:18px; padding-bottom:5px;">
+    In case you are receiving our e-mail in your Junk-mail/Spam, mark this =
+e-mail as Not Junk/Spam or add it to your Safe Sender=C6=92=C3=8Fs list.
+    </p>
+    <h4 style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222;=
+ line-height:18px; font-weight:bold;">Unsubscribe Instructions:</h4>
+   =20
+<p  style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; lin=
+e-height:18px; padding-bottom:5px;">You are subscribed to this email announ=
+cement because you are a Customer. If you do not wish to receive any furthe=
+r announcements from us you can unsubscribe using the instructions below:</=
+p> =20
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;">1. Login into your Control Panel from <a=
+ href=3D"http://manage.bigrock.in/customer">http://manage.bigrock.in/custom=
+er</a></p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;">2. Click on Settings &rarr; Mail Prefere=
+nces</p>
+
+<p style=3D"font-family:Arial, sans-serif; font-size:12px; color:#222; line=
+-height:18px; padding-bottom:5px;">3. Select the 'NO' radio button from Mai=
+l Notifications Received from the Control Panel under General Mail</p>
+</td>
+<td bgcolor=3D"#e1e1e1" style=3D"width:15px;"></td>
+</tr>
+
+</table>
+
+</body>
+</html>

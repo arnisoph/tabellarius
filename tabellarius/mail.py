@@ -87,14 +87,25 @@ class Mail():
             c = email.charset.Charset(self.charset)
             self.mail_native.set_charset(c)
 
-            if self.get_header('Message-Id') is None:
-                self.set_header('Message-Id', email.utils.make_msgid())
+            if 'message-id' not in [header.lower() for header in self.get_headers()]:
+                self.reset_message_id()
 
             for field_name, field_value in self.get_headers().items():
                 self.mail_native.add_header(field_name, field_value)
 
             self.mail_native.set_payload(self._body, charset=self.charset)
         return self.mail_native
+
+    def reset_message_id(self, target='self'):
+        """
+        Reset the Message-Id or add it if missing
+        """
+        message_id = email.utils.make_msgid()
+
+        if target == 'native':
+            self.mail_native['Message-Id'] = message_id
+
+        return self.set_header('Message-Id', message_id)
 
     def __parse_native_mail(self):
         """
@@ -134,3 +145,6 @@ class Mail():
                 self._headers[field_name] = field_value
             else:
                 self._headers[field_name] = field_value[0]
+
+        if 'message-id' not in [header.lower() for header in self.mail_native.keys()]:
+            self.reset_message_id(target='native')

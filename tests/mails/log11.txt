@@ -1,0 +1,159 @@
+Return-Path: <bounce-11045_HTML-44842668-18161-7218422-50817@bounce.s7.exacttarget.com>
+Delivered-To: <shubham@cyberzonec.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id ZuuPHraFmVWlGAAA7jq/7w
+	for <shubham@cyberzonec.in>; Sun, 05 Jul 2015 19:30:45 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id 6BC362132074
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:30:45 +0000 (UTC)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=136.147.176.80; helo=cr80.mta.exacttarget.com; envelope-from=bounce-11045_html-44842668-18161-7218422-50817@bounce.s7.exacttarget.com; receiver=shubham@cyberzonec.in 
+Authentication-Results: mx2.main-hosting.eu;
+	dkim=pass (1024-bit key) header.d=websummit.net header.i=p@websummit.net header.b=dPglh4ZC
+Received: from cr80.mta.exacttarget.com (cr80.mta.exacttarget.com [136.147.176.80])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTPS id 2A32E2A3FB8
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=200608; d=websummit.net;
+ h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type:List-Unsubscribe; i=p@websummit.net;
+ bh=EYUP82GB7g9iT183SvJ47+1D5FM=;
+ b=dPglh4ZCJhW+KCZmyVIGKDsN0CPyEmSi5m2yPFK8crcj5DZT5eU0KudVAN9EwSkrSkvQq69VyB8/
+   l3WBLJySQTyTqpXeJg7GpfKXulJTZt9YHvD0QI2HGFw4Xzv6kKnTsQpmsUGSddyvtMf3fdIwA6W9
+   liQMfeKeKYg2NeES3xQ=
+Received: by cr80.mta.exacttarget.com id hj62ua163hsr for <shubham@cyberzonec.in>; Sun, 5 Jul 2015 19:30:44 +0000 (envelope-from <bounce-11045_HTML-44842668-18161-7218422-50817@bounce.s7.exacttarget.com>)
+x-sender: undelivered+65682+82324248@pd25.com
+x-receiver: shubham@cyberzonec.in
+Received: from orionsmtp-124.s7.exacttarget.com (172.28.29.24) by QANV1IMS01.qa.local id hj62to1l1h07 for <shubham@cyberzonec.in>; Sun, 5 Jul 2015 13:30:36 -0600 (envelope-from <undelivered+65682+82324248@pd25.com>)
+Received: from localhost (localhost [127.0.0.1])
+	by orionsmtp-124.s7.exacttarget.com (Postfix) with ESMTP id 50A5362B3F
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:30:36 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at orionsmtp-124.s7.exacttarget.com
+Received: from orionsmtp-124.s7.exacttarget.com ([127.0.0.1])
+	by localhost (orionsmtp-124.s7.exacttarget.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id PwxZ8QZW3b9H for <shubham@cyberzonec.in>;
+	Sun,  5 Jul 2015 19:30:36 +0000 (UTC)
+Received: from go.pardot.com (unknown [173.192.148.66])
+	(Authenticated sender: pardot@s7)
+	by orionsmtp-124.s7.exacttarget.com (Postfix) with ESMTPSA id 0B12C61875
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:30:35 +0000 (UTC)
+Message-ID: <627aad8a-5cbc-45e6-b9f0-57f11ff08f80@xtgap4s7mta1153.xt.local>
+Date: Sun, 05 Jul 2015 13:30:44 -0600
+Subject: Thanks For Your Application
+From: Paddy Cosgrave <p@websummit.net>
+To: shubham@cyberzonec.in
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="_=_swift_v4_1436124635_ac2cc1dcfe111d3f7ebc28dab82badb2_=_"
+List-Unsubscribe: <http://go.pardot.com/unsubscribe/u/65682/2ab11f71a6d393d674e730f06792bfa0/82324248>
+X-Report-Abuse-To: abuse@pd25.com
+x-job: 7218422_18161
+
+--_=_swift_v4_1436124635_ac2cc1dcfe111d3f7ebc28dab82badb2_=_
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi Shubham,
+
+ 
+
+Thanks for applying for ALPHA at RISE=2E We=E2=80=99ll be in touch shortly =
+to
+arrange a call and learn more about your company and team=2E
+
+Before we do you could read about the 31 startups
+
+http://go=2Epardot=2Ecom/e/65682/6-months-506m-/3cv44c/82324248
+ who=E2=80=99ve raised $506,225,000 in 6 months since our sister event in
+Dublin=2E
+
+You should also be clear on the following:
+
+	All attendees at RISE pay to attend=2E 
+
+	Normal exhibitors (companies like Google, Dropbox and Facebook) pay
+additional amount depending on the space they take=2E
+
+	If you are selected for ALPHA, you get a one day exhibition stand at no
+extra cost, along with other benefits including investor office hours and
+ALPHA startup workshops=2E
+
+Best,
+
+Paddy
+
+@paddycosgrave
+
+P=2ES=2E Did you receive this email in error? Click here
+
+http://go=2Epardot=2Ecom/unsubscribe/u/65682/2ab11f71a6d393d674e730f06792bf=
+a0/82324248
+
+ to update your subscription settings=2E
+
+
+
+
+--_=_swift_v4_1436124635_ac2cc1dcfe111d3f7ebc28dab82badb2_=_
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1=2E0 Transitional//EN" "http://ww=
+w=2Ew3=2Eorg/TR/xhtml1/DTD/xhtml1-transitional=2Edtd"><html xmlns=3D"http:/=
+/www=2Ew3=2Eorg/1999/xhtml" xml:lang=3D"en" lang=3D"en"><head><meta http-eq=
+uiv=3D"Content-Type" content=3D"text/html;" /><title>Email Newsletter</titl=
+e></head><body style=3D"font-family: Helvetica, Arial, sans-serif; font-siz=
+e: 12px">
+<div dir=3D"ltr"><span style=3D"font-family:arial,helvetica,sans-serif;"><s=
+pan style=3D"font-size:12px;">Hi Shubham,</span></span><br>
+&nbsp;</div>
+
+<div dir=3D"ltr"><span style=3D"font-family:arial,helvetica,sans-serif;"><s=
+pan style=3D"font-size:12px;">Thanks for applying for ALPHA at Web Summit=
+=2E We=E2=80=99ll be in touch shortly to arrange a call and learn more abou=
+t your company and team=2E</span><br>
+<br>
+<span style=3D"font-size: 12px;">Before we do you could read about the </sp=
+an><a href=3D"http://go=2Epardot=2Ecom/e/65682/6-months-506m-/3cv44c/823242=
+48" style=3D"font-family: arial, helvetica, sans-serif; font-size: 12px;">3=
+1 startups</a><span style=3D"font-size: 12px;"> who=E2=80=99ve raised $506,=
+225,000 in 6 months since our sister event in Dublin=2E</span><br>
+<br>
+<span style=3D"font-size: 12px;">You should also be clear on the following:=
+</span></span></div>
+
+<ul dir=3D"ltr">
+	<li><span style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D=
+"font-size:12px;"><span style=3D"font-family:arial,helvetica,sans-serif;"><=
+span style=3D"font-size:12px;"><span style=3D"font-family:arial,helvetica,s=
+ans-serif;"><span style=3D"font-size:12px;">All attendees at Web Summit pay=
+ to attend=2E </span></span></span></span></span></span></li>
+	<li><span style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D=
+"font-size:12px;">Normal exhibitors (companies like Google, Dropbox and Fac=
+ebook) pay additional amount depending on the space they take=2E</span></sp=
+an></li>
+	<li><span style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D=
+"font-size:12px;">If you are selected for ALPHA, you get a one day exhibiti=
+on stand at no extra cost, along with other benefits including investor off=
+ice hours and ALPHA startup workshops=2E</span></span></li>
+</ul>
+
+<div dir=3D"ltr"><br>
+<span style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D"font=
+-size:12px;">Best,</span></span></div>
+
+<div dir=3D"ltr"><span style=3D"font-family:arial,helvetica,sans-serif;"><s=
+pan style=3D"font-size:12px;">Paddy</span></span></div>
+
+<div dir=3D"ltr"><span style=3D"font-family:arial,helvetica,sans-serif;"><s=
+pan style=3D"font-size:12px;">@paddycosgrave</span></span></div>
+<br>
+<span style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D"font=
+-size:12px;">P=2ES=2E Did you receive this email in error? Click <a href=3D=
+"http://go=2Epardot=2Ecom/unsubscribe/u/65682/2ab11f71a6d393d674e730f06792b=
+fa0/82324248">here</a> to update your subscription settings=2E</span></span=
+>
+<img alt=3D"" src=3D"http://go=2Epardot=2Ecom/r/65682/1/82324248/open/1" />=
+</body></html>
+
+--_=_swift_v4_1436124635_ac2cc1dcfe111d3f7ebc28dab82badb2_=_--
+
+
