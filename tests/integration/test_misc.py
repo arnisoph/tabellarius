@@ -16,7 +16,7 @@ class HelperTest(TabellariusTest):
 
 class ConfigParserTest(TabellariusTest):
     def test_configparser(self):
-        cfg_parser = misc.ConfigParser('config.dist')
+        cfg_parser = misc.ConfigParser('tests/configs/integration')
         config = cfg_parser.dump()
 
         # Check accounts
