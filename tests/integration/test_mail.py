@@ -111,7 +111,7 @@ class MailTest(TabellariusTest):
                 self.assertEqual(mail.get_header('Subject'), 'Fwd: Resume for Internship')
                 self.assertEqual(mail.get_header('from'), 'Shubham Sharma <shubham.ks494@gmail.com>')
             elif uid_no == 15:
-                self.assertEqual(mail.get_header('Subject'), 'w00t läuft im Debugmodus')
+                self.assertEqual(mail.get_header('Subject'), 'AW: Account öfters mal reaktivieren')
                 self.assertEqual(mail.get_header('from'), 'Shubham Sharma <shhubhamsharma@gmail.com>')
                 self.assertEqual(
                     mail.get_header('Received-SPF'),
