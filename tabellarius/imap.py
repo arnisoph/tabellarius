@@ -123,10 +123,10 @@ class IMAP():
             login_response = Helper().byte_to_str(login)
 
             # Test login/auth status
-            noop = self.conn.noop()
-            noop_response = noop[0].decode('utf-8')
-            noop_resp_pattern_re = regex_compile('(Success|NOOP completed\.)')
-            login_success = noop_resp_pattern_re.match(noop_response)
+            login_success = False
+            noop = self.noop()
+            if noop[0] and noop[1]:
+                login_success = True
 
             if logout:
                 return self.disconnect()
@@ -147,11 +147,24 @@ class IMAP():
                 return self.connect(retry=False, logout=logout)
             return err_return
 
+    def noop(self):
+        """
+        Do a noop to test login status
+        """
+        try:
+            noop = self.conn.noop()
+            noop_response = Helper().byte_to_str(noop[0])
+            noop_resp_pattern_re = regex_compile('(Success|NOOP completed\.)')
+            login_success = noop_resp_pattern_re.match(noop_response)
+            return (True, login_success)
+        except IMAPClient.Error as e:
+            return self.process_error(e)
+
     def disconnect(self):
         """
         Disconnect from IMAP server
         """
-        result = self.conn.logout()  # TODO do more?  #TODO check if logged in or do a silent fail
+        result = self.conn.logout()
         response = Helper().byte_to_str(result)
         return (response == 'Logging out', response)
 
