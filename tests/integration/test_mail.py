@@ -89,7 +89,7 @@ class MailTest(TabellariusTest):
                 self.assertEqual(mail.get_header('Content-Type'), 'text/html; charset=us-ascii')
                 self.assertEqual(mail.get_header('Message-Id'), '<72EA803C0B6343E6860E74E31AF8437F.MAI@jagbros.in>')
                 self.assertEqual(mail.get_header('Delivered-to'), '<shubham@cyberzonec.in>')
-            elif uid_no == 2:
+            elif uid_no == 10:
                 self.assertEqual(mail.get_header('Received'), [
                     'from mail-storage-2.main-hosting.eu\r\n\tby mail-storage-2 (Dovecot) with LMTP id lFp5FIl/mVWhNQAA7jq/7w\r\n\tfor <shubham@cyberzonec.in>; Sun, 05 Jul 2015 19:03:37 +0000',  # noqa
                     'from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])\r\n\tby mail-storage-2.main-hosting.eu (Postfix) with ESMTP id 52F182132074\r\n\tfor <shubham@cyberzonec.in>; Sun,  5 Jul 2015 19:03:37 +0000 (UTC)',  # noqa
@@ -104,13 +104,13 @@ class MailTest(TabellariusTest):
                     mail.get_header('Authentication-Results'),
                     'mx2.main-hosting.eu;\r\n\tdkim=pass (1024-bit key) header.d=websummit.net header.i=p@websummit.net header.b=LvtRd7ys')
                 self.assertEqual(mail.get_header('x-recEIVER'), 'shubham@cyberzonec.in')
-            elif uid_no == 5:
+            elif uid_no == 13:
                 self.assertEqual(mail.get_header('Subject'), 'Shubham <> Jenny')
                 self.assertEqual(mail.get_header('from'), 'John Doe (über Google Docs) <drive-shares-noreply@google.com>')
-            elif uid_no == 6:
+            elif uid_no == 14:
                 self.assertEqual(mail.get_header('Subject'), 'Fwd: Resume for Internship')
                 self.assertEqual(mail.get_header('from'), 'Shubham Sharma <shubham.ks494@gmail.com>')
-            elif uid_no == 7:
+            elif uid_no == 15:
                 self.assertEqual(mail.get_header('Subject'), 'w00t läuft im Debugmodus')
                 self.assertEqual(mail.get_header('from'), 'Shubham Sharma <shhubhamsharma@gmail.com>')
                 self.assertEqual(
