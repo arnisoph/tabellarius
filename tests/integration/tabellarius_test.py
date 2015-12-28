@@ -41,12 +41,12 @@ class TabellariusTest(unittest.TestCase):
         for authdb in ['userdb', 'passdb']:
             self.rconn.delete('dovecot/{0}/{1}'.format(authdb, username))  # TODO
 
-    def create_basic_imap_object(self, username, password, test=None):
+    def create_basic_imap_object(self, username, password, starttls=False, imaps=True, test=None):
         imapconn = imap.IMAP(logger=self.logger,
                              server='127.0.0.1',
                              port=10993,
-                             starttls=False,
-                             imaps=True,
+                             starttls=starttls,
+                             imaps=imaps,
                              tlsverify=False,  # TODO
                              username=username,
                              password=password,

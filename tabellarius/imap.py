@@ -46,6 +46,8 @@ class IMAP():
 
         self.test = test
 
+        self.conn = None
+
     def do_select_mailbox(func):
         """
         Decorator to do a fresh mailbox SELECT

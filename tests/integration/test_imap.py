@@ -18,6 +18,12 @@ class IMAPTest(TabellariusTest):
     #def tearDown(self):
     #    for username, password in sorted(self.imap_users.items()):  # TODO
     #        self.remove_imap_user(username)
+    def test_noop(self):
+        username, password = self.create_imap_user()
+        imapconn = self.create_basic_imap_object(username, password)
+        self.assertEqual(imapconn.connect(logout=False), (True, 'Logged in'))
+        self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
+        self.assertFalse(imapconn.noop()[0])
 
     def test_connect_simple_plaintext(self):
         username, password = self.create_imap_user()
