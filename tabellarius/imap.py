@@ -5,7 +5,6 @@ from imapclient import IMAPClient
 from imapclient.fixed_offset import FixedOffset
 from logging import DEBUG as loglevel_DEBUG
 from re import compile as regex_compile
-from six import text_type
 from sys import exc_info
 from time import sleep
 from traceback import print_exception
@@ -14,6 +13,7 @@ import email
 import imapclient  # TODO required for _append
 
 from mail import Mail
+from misc import Helper
 
 
 class IMAP():
@@ -79,16 +79,21 @@ class IMAP():
         Process Python exception by logging a message and optionally showing traceback
         """
         trace_info = exc_info()
-        self.logger.error('Catching IMAP exception %s: %s', type(exception), exception)
+        err_msg = str(exception)
+
+        if isinstance(exception, IMAPClient.Error):
+            err_msg = Helper().byte_to_str(exception.args[0])
+
+        self.logger.error('Catching IMAP exception %s: %s', type(exception), err_msg)
 
         if self.logger.isEnabledFor(loglevel_DEBUG):
             print_exception(*trace_info)
         del trace_info
 
-        if not simple_return:
-            return (False, str(exception))
-        else:
+        if simple_return:
             return exception
+        else:
+            return (False, err_msg)
 
     def connect(self, retry=True, logout=False):
         """
@@ -102,6 +107,7 @@ class IMAP():
                               self.username)
 
         login = ''
+        err_return = None
         try:
             self.conn = IMAPClient(host=self.server,
                                    port=self.port,
@@ -112,7 +118,9 @@ class IMAP():
 
             if self.starttls:
                 self.conn.starttls(ssl_context=self.sslcontext)
+
             login = self.conn.login(self.username, self.password)
+            login_response = Helper().byte_to_str(login)
 
             # Test login/auth status
             noop = self.conn.noop()
@@ -123,14 +131,15 @@ class IMAP():
             if logout:
                 return self.disconnect()
             elif login_success:
-                return (True, login)
+                return (True, login_response)
             else:
-                return (False, login)  # pragma: no cover
+                return (False, login_response)  # pragma: no cover
+
         except Exception as e:
             err_return = self.process_error(e)
 
-            if str(e) == "b'[AUTHENTICATIONFAILED] Authentication failed.'":  # TODO
-                return (False, str(e))
+            if err_return[1] == '[AUTHENTICATIONFAILED] Authentication failed.':
+                return err_return
 
             if retry:
                 self.logger.error('Trying one more time to login')
@@ -143,7 +152,8 @@ class IMAP():
         Disconnect from IMAP server
         """
         result = self.conn.logout()  # TODO do more?  #TODO check if logged in or do a silent fail
-        return (result == b'Logging out', result)
+        response = Helper().byte_to_str(result)
+        return (response == 'Logging out', response)
 
     def list_mailboxes(self, directory='', pattern='*'):
         """
@@ -169,7 +179,18 @@ class IMAP():
         """
         self.logger.debug('Switching to mailbox %s', mailbox)
         try:
-            return (True, self.conn.select_folder(mailbox))  # TODO convert byte strings
+            result = self.conn.select_folder(mailbox)
+            response = {}
+            for key, value in result.items():
+                unicode_key = Helper().byte_to_str(key)
+                if unicode_key == 'FLAGS':
+                    flags = []
+                    for flag in value:
+                        flags.append(Helper().byte_to_str(flag))
+                    response[unicode_key] = tuple(flags)
+                else:
+                    response[unicode_key] = value
+            return (True, response)
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -416,8 +437,7 @@ class IMAP():
             time_val = None
 
         return self.conn._command_and_check('append', self.conn._normalise_folder(folder), imapclient.imapclient.seq_to_parenstr(flags),
-                                            time_val, to_bytes(s=msg,
-                                                               encoding='utf-8'),
+                                            time_val, Helper.str_to_bytes(msg),
                                             unpack=True)
 
     @do_select_mailbox
@@ -470,17 +490,3 @@ class IMAP():
             return (True, flags)
         except IMAPClient.Error as e:
             return self.process_error(e)
-
-#def to_unicode(s, encoding='ascii'):
-#    if isinstance(s, binary_type):
-#        return s.decode(encoding)
-#    return s
-
-
-def to_bytes(s, encoding='ascii'):
-    if isinstance(s, text_type):
-        return s.encode(encoding)
-#        if PY3:
-#        else:
-#        return bytearray(s)
-    return s  # pragma: no cover

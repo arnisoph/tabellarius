@@ -78,10 +78,29 @@ class Helper():
 
     @staticmethod
     def sort_dict(old_dict):
+        """
+        Return a sorted and ordered dictionary
+        """
         retval = collections.OrderedDict()
         for key in sorted(old_dict.keys()):
             retval[key] = old_dict[key]
         return retval
+
+    @staticmethod
+    def byte_to_str(text, encoding='utf-8'):
+        """
+        Convert to string
+        """
+        if not isinstance(text, str):
+            return text.decode(encoding, 'ignore')
+        return text
+
+    @staticmethod
+    def str_to_bytes(text, encoding='utf-8'):
+        """
+        Convert string to bytes
+        """
+        return text.encode(encoding)
 
 
 class CaseInsensitiveDict(dict):

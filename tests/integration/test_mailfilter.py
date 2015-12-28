@@ -11,7 +11,7 @@
 #        username, password = self.create_imap_user()
 #        username, password = ('test', 'test')
 #        imapconn = self.create_basic_imap_object(username, password)
-#        self.assertEqual(imapconn.connect(), (True, b'Logged in'))
+#        self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 #
 #        #self.assertEqual(imapconn.create_mailbox(mailbox='PreInbox'), (True, True))
 #
