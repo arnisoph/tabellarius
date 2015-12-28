@@ -105,8 +105,8 @@ class MailTest(TabellariusTest):
                     'mx2.main-hosting.eu;\r\n\tdkim=pass (1024-bit key) header.d=websummit.net header.i=p@websummit.net header.b=LvtRd7ys')
                 self.assertEqual(mail.get_header('x-recEIVER'), 'shubham@cyberzonec.in')
             elif uid_no == 13:
-                self.assertEqual(mail.get_header('Subject'), 'Shubham <> Jenny')
-                self.assertEqual(mail.get_header('from'), 'John Doe (über Google Docs) <drive-shares-noreply@google.com>')
+                self.assertEqual(mail.get_header('Subject'), '[salt-users] Does Tornado not support the wheel client requests?')
+                self.assertEqual(mail.get_header('from'), '梦龙周 <tuifeideyaozi@gmail.com>')
             elif uid_no == 14:
                 self.assertEqual(mail.get_header('Subject'), 'Fwd: Resume for Internship')
                 self.assertEqual(mail.get_header('from'), 'Shubham Sharma <shubham.ks494@gmail.com>')

@@ -34,109 +34,68 @@ Received: from [127.0.0.1] (unknown [75.126.66.62])
 	(Authenticated sender: pardot@s7)
 	by orionsmtp-120.s7.exacttarget.com (Postfix) with ESMTPSA id 8BF3D122F3D
 	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 20:00:34 +0000 (UTC)
-Message-ID: <110a5f97-7c4c-452d-952b-4bebdafc507c@xtgap4s7mta1153.xt.local>
-Date: Sun, 05 Jul 2015 14:01:37 -0600
-Subject: Shubham <> Jenny
-From: =?ISO-8859-1?Q?John_Doe_=28=FCber_Google_Docs=29?= <drive-shares-noreply@google.com>
-To: shubham@cyberzonec.in
+X-BeenThere: salt-users@googlegroups.com
+Date: Thu, 8 Oct 2015 02:32:45 -0700 (PDT)
+From: =?UTF-8?B?5qKm6b6Z5ZGo?= <tuifeideyaozi@gmail.com>
+To: Salt-users <salt-users@googlegroups.com>
+Message-Id: <c87099e3-2e46-4861-83cf-cf76558ba60a@googlegroups.com>
+Subject: [salt-users] Does Tornado not support the wheel client requests?
 MIME-Version: 1.0
+Content-Type: multipart/mixed;
+    boundary="----=_Part_947_707548232.1444296765139"
+X-Original-Sender: tuifeideyaozi@gmail.com
+Reply-To: salt-users@googlegroups.com
+Precedence: list
+Mailing-list: list salt-users@googlegroups.com; contact salt-users+owners@googlegroups.com
+List-ID: <salt-users.googlegroups.com>
+X-Spam-Checked-In-Group: salt-users@googlegroups.com
+X-Google-Group-Id: 473711971974
+List-Post: <http://groups.google.com/group/salt-users/post>, <mailto:salt-users@googlegroups.com>
+List-Help: <http://groups.google.com/support/>, <mailto:salt-users+help@googlegroups.com>
+List-Archive: <http://groups.google.com/group/salt-users
+Sender: salt-users@googlegroups.com
+List-Subscribe: <http://groups.google.com/group/salt-users/subscribe>, <mailto:salt-users+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+473711971974+unsubscribe@googlegroups.com>,
+ <http://groups.google.com/group/salt-users/subscribe>
+
+------=_Part_947_707548232.1444296765139
 Content-Type: multipart/alternative;
- boundary="_=_swift_v4_1436126434_4e52939d7ddf4beff95a1178c0105400_=_"
-List-Unsubscribe: <http://go.pardot.com/unsubscribe/u/65682/2ab11f71a6d393d674e730f06792bfa0/82324388>
-X-Report-Abuse-To: abuse@pd25.com
-x-job: 7218422_18161
+    boundary="----=_Part_948_457812281.1444296765139"
 
---_=_swift_v4_1436126434_4e52939d7ddf4beff95a1178c0105400_=_
-Content-Type: text/plain; charset=utf-8
+------=_Part_948_457812281.1444296765139
+Content-Type: text/plain; charset=UTF-8
+
+
+
+Works fine under Cherry but I get a 400 when using Tornado. Does Tornado not support the wheel client requests?
+
+thanks
+
+--
+You received this message because you are subscribed to the Google Groups "Salt-users" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to salt-users+unsubscribe@googlegroups.com.
+For more options, visit https://groups.google.com/d/optout.
+
+------=_Part_948_457812281.1444296765139
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><pre style=3D"line-height: 24px; text-align: justify;">Wor=
+ks fine under Cherry but I get a 400 when using Tornado. Does Tornado not s=
+upport the wheel client requests? </pre><pre style=3D"line-height: 24px; te=
+xt-align: justify;">thanks</pre></div>
 
-Hi =E2=80=8BShubham,
+<p></p>
 
-I=E2=80=99m available at these times
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;Salt-users&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:salt-users+unsubscribe@googlegroups.com">salt-use=
+rs+unsubscribe@googlegroups.com</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
 
-www=2Emeetme=2Eso/jennyod
-
-=2E I look forward to speaking=2E
-
-
-
-Best,
-
-Jenny
-
-Startup Judging Team
-
-P=2ES=2E Did you receive this email in error? Click here
-
-http://go=2Epardot=2Ecom/unsubscribe/u/65682/2ab11f71a6d393d674e730f06792bf=
-a0/82324388
-
- to update your subscription settings=2E
-
-
-
-
---_=_swift_v4_1436126434_4e52939d7ddf4beff95a1178c0105400_=_
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1=2E0 Transitional//EN" "http://ww=
-w=2Ew3=2Eorg/TR/xhtml1/DTD/xhtml1-transitional=2Edtd"><html xmlns=3D"http:/=
-/www=2Ew3=2Eorg/1999/xhtml" xml:lang=3D"en" lang=3D"en"><head><meta http-eq=
-uiv=3D"Content-Type" content=3D"text/html;" /><title>Email Newsletter</titl=
-e></head><body style=3D"font-family: Helvetica, Arial, sans-serif; font-siz=
-e: 12px">
-<div dir=3D"ltr" style=3D"font-family: Helvetica, Arial, sans-serif; font-s=
-ize: 12px; line-height: 1=2E38; margin-top: 0pt; margin-bottom: 0pt;"><span=
- style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D"font-size=
-:12px;"><span id=3D"docs-internal-guid-c663ca4b-680d-c31d-ad14-d4130181c7ab=
-"><span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; white-sp=
-ace: pre-wrap;">Hi </span></span><span id=3D"docs-internal-guid-c663ca4b-68=
-0d-c31d-ad14-d4130181c7ab" style=3D"line-height: 22=2E0799999237061px;"><sp=
-an style=3D"color: rgb(34, 34, 34); vertical-align: baseline; white-space: =
-pre-wrap;">=E2=80=8B</span></span><span style=3D"line-height: 16=2E55999946=
-59424px; white-space: pre-wrap;">Shubham,</span><br>
-<br>
-<span style=3D"color: rgb(34, 34, 34); vertical-align: baseline; white-spac=
-e: pre-wrap;">I=E2=80=99m available <a href=3D"http://go=2Epardot=2Ecom/e/6=
-5682/0owner-urlurl/3xccwt/82324388/jennyod">at these times</a>=2E I look fo=
-rward to speaking=2E </span></span></span></div>
-<span style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D"font=
--size:12px;">&nbsp;</span></span>
-
-<div dir=3D"ltr" style=3D"font-family: Helvetica, Arial, sans-serif; font-s=
-ize: 12px; line-height: 1=2E38; margin-top: 0pt; margin-bottom: 0pt;"><span=
- style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D"font-size=
-:12px;"><span id=3D"docs-internal-guid-c663ca4b-680d-c31d-ad14-d4130181c7ab=
-"><span style=3D"vertical-align: baseline; white-space: pre-wrap; backgroun=
-d-color: transparent;">Best, </span></span></span></span></div>
-
-<div dir=3D"ltr" style=3D"font-family: Helvetica, Arial, sans-serif; font-s=
-ize: 12px; line-height: 1=2E38; margin-top: 0pt; margin-bottom: 0pt;"><span=
- style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D"font-size=
-:12px;">Jenny</span></span></div>
-
-<div dir=3D"ltr" style=3D"font-family: Helvetica, Arial, sans-serif; font-s=
-ize: 12px; line-height: 1=2E38; margin-top: 0pt; margin-bottom: 0pt;"><span=
- style=3D"white-space: pre-wrap; background-color: transparent; font-family=
-: arial, helvetica, sans-serif; line-height: 1=2E38;">Startup Judging Team<=
-/span></div>
-
-<p><br>
-<span style=3D"font-family:arial,helvetica,sans-serif;"><span style=3D"font=
--size:12px;"><span id=3D"docs-internal-guid-c663ca4b-67d2-7c7e-2fae-e6a375b=
-927a1"><span style=3D"vertical-align: baseline; white-space: pre-wrap; back=
-ground-color: transparent;">P=2ES=2E Did you receive this email in error? C=
-lick </span><span style=3D"text-decoration: underline; color: rgb(17, 85, 2=
-04); vertical-align: baseline; white-space: pre-wrap; background-color: tra=
-nsparent;"><a href=3D"http://go=2Epardot=2Ecom/unsubscribe/u/65682/2ab11f71=
-a6d393d674e730f06792bfa0/82324388">here</a></span><span style=3D"vertical-a=
-lign: baseline; white-space: pre-wrap; background-color: transparent;"> to =
-update your subscription settings=2E</span></span></span></span></p>
-<img alt=3D"" src=3D"http://go=2Epardot=2Ecom/r/65682/1/82324388/open/1" />=
-</body></html>
-
---_=_swift_v4_1436126434_4e52939d7ddf4beff95a1178c0105400_=_--
-
+------=_Part_948_457812281.1444296765139--
+------=_Part_947_707548232.1444296765139--
 
