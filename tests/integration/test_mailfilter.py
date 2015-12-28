@@ -1,12 +1,32 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-#import datetime
-#import imapclient
-#
-#from .tabellarius_test import TabellariusTest
+import mail_filter
 
-#class MailFilterTest(TabellariusTest):
+from .tabellarius_test import TabellariusTest
+
+
+class MailFilterTest(TabellariusTest):
+    def test_check_match_basic(self):
+        mailfilter = mail_filter.MailFilter(logger=None, imap=None, mail=None, config=None, mailbox=None)
+
+        self.assertTrue(mailfilter.check_match('foo@example.com', '@example.com'))
+        self.assertTrue(mailfilter.check_match('foo@example.com', 'foo@example.com'))
+        self.assertFalse(mailfilter.check_match('', 'foo'))
+        self.assertTrue(mailfilter.check_match('foo', 'foo'))
+        self.assertTrue(mailfilter.check_match('Sönderzäichen', 'nderz'))
+        self.assertTrue(mailfilter.check_match('Sönderzäichen', 'Sönder'))
+
+    def test_check_match_regex(self):
+        mailfilter = mail_filter.MailFilter(logger=None, imap=None, mail=None, config=None, mailbox=None)
+
+        self.assertTrue(mailfilter.check_match('foo', '^.*$'))
+        self.assertTrue(mailfilter.check_match('foo', '^fo+$'))
+        self.assertTrue(mailfilter.check_match('foo@example.com', '^.*@example.com$'))
+        self.assertTrue(mailfilter.check_match('foo@example.com', '^.*@example.(com|net)$'))
+        self.assertTrue(mailfilter.check_match('Sönderzäichen', '^Sönder.*'))
+        self.assertFalse(mailfilter.check_match('foo', '^fo+!$'))
+
 #    def test_foo(self):
 #        username, password = self.create_imap_user()
 #        username, password = ('test', 'test')
@@ -33,23 +53,3 @@
 #        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='PreInbox')[1][1].get_header('Subject'), 'Testmäil')
 #        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='PreInbox')[1][2].get_header('Subject'), 'Testmäil')
 #
-#    def test_check_match_basic(self):
-#        self.assertTrue(misc.Helper().check_match('foo@example.com', '@example.com'))
-#        self.assertTrue(misc.Helper().check_match('foo@example.com', 'foo@example.com'))
-#        self.assertFalse(misc.Helper().check_match('', 'foo'))
-#        self.assertTrue(misc.Helper().check_match('foo', 'foo'))
-#        self.assertTrue(misc.Helper().check_match('Sönderzäichen', 'nderz'))
-#        self.assertTrue(misc.Helper().check_match('Sönderzäichen', 'Sönder'))
-#
-#    def test_check_match_regex(self):
-#        self.assertTrue(misc.Helper().check_match('foo', '^.*$'))
-#        self.assertTrue(misc.Helper().check_match('foo', '^fo+$'))
-#        self.assertTrue(misc.Helper().check_match('foo@example.com', '^.*@example.com$'))
-#        self.assertTrue(misc.Helper().check_match('foo@example.com', '^.*@example.(com|net)$'))
-#        self.assertTrue(misc.Helper().check_match('Sönderzäichen', '^Sönder.*'))
-#        self.assertFalse(misc.Helper().check_match('foo', '^fo+!$'))
-#
-#    def test_clean_field_name(self):
-#        self.assertEqual(misc.Helper().clean_field_name('from'), ('from', 'from', False))
-#        self.assertEqual(misc.Helper().clean_field_name('from!'), ('from!', 'from', True))
-#        self.assertNotEqual(misc.Helper().clean_field_name('from!'), ('from!', 'from', False))
