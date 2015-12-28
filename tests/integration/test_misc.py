@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
+import collections
+
 import misc
 
 from .tabellarius_test import TabellariusTest
-
-from misc import CaseInsensitiveDict
 
 
 class HelperTest(TabellariusTest):
@@ -29,18 +29,18 @@ class ConfigParserTest(TabellariusTest):
         # Check filters
         self.assertIn('Twitter', config.get('filters', {}).get('test', {}))
 
-#class CaseInsensitiveDictTest(TabellariusTest):
-#    def test_case_insensitive_dict():
-#        config = {}
-#        print(config)
-#        sorted_dcit Helper().sort_dict(config.get('filters').get(acc_id)).items():
+    def test_sorted_dict(self):
+        config = {'55': 0, '42': 0, '11': 0, '10': 0, '1': 0, '-1': 0}
+        sorted_dict = misc.Helper().sort_dict(config)
+
+        self.assertEqual(sorted_dict, collections.OrderedDict([('-1', 0), ('1', 0), ('10', 0), ('11', 0), ('42', 0), ('55', 0)]))
 
 
 class CaseInsensitiveDictTest(TabellariusTest):
     def test_case_insensitive_dict(self):
         headers = {'From': '<test@example.com>', 'To': '<test2@example.com>', }
 
-        header_insensitive = CaseInsensitiveDict(headers)
+        header_insensitive = misc.CaseInsensitiveDict(headers)
 
         self.assertEqual(header_insensitive['From'], '<test@example.com>')
         self.assertEqual(header_insensitive['FrOm'], '<test@example.com>')
