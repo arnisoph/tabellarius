@@ -14,6 +14,7 @@ sys.path.insert(0, './tabellarius')
 
 import imap
 import mail
+import misc
 
 
 class TabellariusTest(unittest.TestCase):
@@ -76,7 +77,7 @@ class TabellariusTest(unittest.TestCase):
         file_names = os.listdir(directory)
 
         emails = []
-        for file_name in file_names:
+        for file_name in misc.Helper().natural_sort(file_names):
             if '.msg' in file_name or '.txt' in file_name:
                 fh = open(directory + os.sep + file_name, 'rb')
                 raw_mail = fh.read()
