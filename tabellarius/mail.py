@@ -26,16 +26,16 @@ class Mail():
         if mail_native:
             self.__parse_native_mail()
 
-    def clean_value(self, value, encoding=None):
-        """
-        Converts value to a given encoding
-        """
-        if isinstance(value, bytes) and encoding:
-            return value.decode(encoding)
-        elif isinstance(value, bytes):
-            return value.decode('unicode_escape')
-
-        return value
+#    def clean_value(self, value, encoding=None):
+#        """
+#        Converts value to a given encoding
+#        """
+#        if isinstance(value, bytes) and encoding:
+#            return value.decode(encoding)
+#        elif isinstance(value, bytes):
+#            return value.decode('unicode_escape')
+#
+#        return value
 
     def set_header(self, name, value):
         """
@@ -126,20 +126,21 @@ class Mail():
                 continue
             field_value = self.mail_native.get_all(field_name)
 
+            # Change parsing behaviour for headers that could contain encoded strings
             if field_name in ['Subject', 'From', 'To', 'Cc', 'Bcc']:
-                field_value = email.header.decode_header(self.mail_native.get(field_name))
-                if isinstance(field_value, list):
-                    field_value_list = field_value
-                    field_value = ''
-                    for val in field_value_list:
-                        if val[1]:
-                            field_value += self.clean_value(val[0], val[1])
-                        elif isinstance(val[0], bytes):
-                            field_value += self.clean_value(val[0])
-                        else:
-                            field_value += val[0]
-                else:
-                    field_value = self.clean_value(field_value[0][0], field_value[0][1])
+                field_value = email.header.make_header(email.header.decode_header(self.mail_native.get(field_name)))
+                #if isinstance(field_value, list):
+                #    field_value_list = field_value
+                #    field_value = ''
+                #    for val in field_value_list:
+                #        if val[1]:
+                #            field_value += self.clean_value(val[0], val[1])
+                #        elif isinstance(val[0], bytes):
+                #            field_value += self.clean_value(val[0])
+                #        else:
+                #            field_value += val[0]
+                #else:
+                #    field_value = self.clean_value(field_value[0][0], field_value[0][1])
                 self._headers[field_name] = field_value
             elif len(field_value) > 1:
                 self._headers[field_name] = field_value

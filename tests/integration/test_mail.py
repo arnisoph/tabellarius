@@ -71,8 +71,13 @@ class MailTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 
-        self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email())[0])
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('subject'), 'Testmäil')
 
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email().get_native())[0])
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('subject'), 'Testmäil')
+
+        self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
         uid_no = 1
 
         for native_email in native_test_emails:
