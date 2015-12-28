@@ -30,10 +30,11 @@ class ConfigParserTest(TabellariusTest):
         self.assertIn('Twitter', config.get('filters', {}).get('test', {}))
 
     def test_sorted_dict(self):
-        config = {'55': 0, '42': 0, '11': 0, '10': 0, '1': 0, '-1': 0}
+        config = {'55': 0, '42': 0, '11': 0, '10': 0, '1': 0, '111': 0, '110': 0}
         sorted_dict = misc.Helper().sort_dict(config)
 
-        self.assertEqual(sorted_dict, collections.OrderedDict([('-1', 0), ('1', 0), ('10', 0), ('11', 0), ('42', 0), ('55', 0)]))
+        self.assertEqual(sorted_dict, collections.OrderedDict([('1', 0), ('10', 0), ('11', 0), ('42', 0), ('55', 0), ('110', 0),
+                                                               ('111', 0)]))
 
 
 class CaseInsensitiveDictTest(TabellariusTest):

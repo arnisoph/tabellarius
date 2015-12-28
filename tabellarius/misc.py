@@ -5,6 +5,7 @@ import os
 import collections
 import logging
 import logging.config
+import re
 import yaml
 
 
@@ -77,12 +78,18 @@ class Helper():
         return logger
 
     @staticmethod
+    def natural_sort(l):
+        convert = lambda text: int(text) if text.isdigit() else text.lower()
+        alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+        return sorted(l, key=alphanum_key)
+
+    @staticmethod
     def sort_dict(old_dict):
         """
         Return a sorted and ordered dictionary
         """
         retval = collections.OrderedDict()
-        for key in sorted(old_dict.keys()):
+        for key in Helper().natural_sort(old_dict.keys()):
             retval[key] = old_dict[key]
         return retval
 
