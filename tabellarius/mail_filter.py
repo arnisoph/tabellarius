@@ -113,16 +113,3 @@ class MailFilter():
                 raise NotImplementedError('Sorry, command \'{0}\' isn\'t supported yet!'.format(command))
 
         return uid
-
-    def clean_field_name(self, field):
-        """
-        Parse a rule field name and return a tuple
-
-        'from' results to ('from', 'from', false)
-        'from!' results to ('from!', 'from', true)
-        'to!' results to ('to!', 'to', true)
-        """
-        if field[-1:] == '!':
-            return (field, field[0:-1], True)
-        else:
-            return (field, field, False)
