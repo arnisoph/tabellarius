@@ -45,7 +45,7 @@ Tabellarius is written in Python 3 compatible source code that uses a YAML Pytho
 Supported Protocols
 '''''''''''''''''''
 
-IMAP over Plaintext Transport (don't use it!):
+IMAP over Plain Text Transport (don't use it!):
 
 ::
 
@@ -58,7 +58,7 @@ IMAP over Plaintext Transport (don't use it!):
         starttls: false
         imaps: false
 
-IMAP via STARTTLS (usally port 143):
+IMAP via STARTTLS (usually port 143):
 
 ::
 
@@ -71,7 +71,7 @@ IMAP via STARTTLS (usally port 143):
         starttls: true
         imaps: false
 
-IMAP via Force-TLS/SSL (usally port 993):
+IMAP via Force-TLS/SSL (usually port 993):
 
 ::
 
@@ -86,6 +86,8 @@ IMAP via Force-TLS/SSL (usally port 993):
 
 Authentication
 ''''''''''''''
+
+**HINT**: You don't need the Python module **gnupg** if you don't want to use the GPG authentication mechanism.
 
 Plain text in configuration file (don't use it!):
 
