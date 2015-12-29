@@ -31,3 +31,21 @@ tabellarius
     :alt: Number of Pypi package downloads
 
 A mail-sorting tool that is less annoying
+
+.. contents::
+    :backlinks: none
+    :local:
+
+
+Contributing
+------------
+
+Bug reports and pull requests are welcome! If you plan to work on the code, please assure that you have basic understanding of `RFC822 <http://www.rfcreader.com/#rfc822`_, `RFC3501 <http://www.rfcreader.com/#rfc3501>`_, `RFC4551 <http://www.rfcreader.com/#rfc4551>`_ and `RFC681 <http://www.rfcreader.com/#rfc6851>`_
+
+In general:
+
+1. Fork this repo on Github
+2. Add changes, test them, update docs (README.rst) if possible
+3. Submit your pull request (PR) on Github, wait for feedback
+
+But it’s better to `file an issue <https://github.com/bechtoldt/tabellarius/issues/new>`_ with your idea first.
