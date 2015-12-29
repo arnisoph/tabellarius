@@ -40,7 +40,52 @@ A mail-sorting tool that is less annoying
 General
 -------
 
-Tabellarius is written in Python 3 compatible source code that uses a YAML Python module to parse config files and an IMAP Python module to read and operate on e-mails via IMAP.
+Tabellarius is a mail-sorting IMAP client that depends on IMAP only. Unlike others it uses the `same IMAP connection accross multiple IMAP commands <https://github.com/lefcha/imapfilter>`_ and `simple markup language <http://www.rfcreader.com/#rfc5228>`_ instead of a complex scripting language though it isn't as feature-rich as the well-known Sieve standard.
+
+It is written in Python 3 compatible source code that uses the Python modules ``IMAPClient``, ``PyYAML``, ``backports.ssl`` and optionally ``gnupg`` to parse config files and operate on e-mails via IMAP.
+
+What it actually does is to parse a directory structure containing YAML config files, setup a IMAP connection pool to one ore more IMAP servers/accounts, check whether a subset of e-mails match to user-defined rule sets and apply IMAP commands like copy or move to them.
+
+
+Contributing
+------------
+
+Bug reports and pull requests are welcome! If you plan to work on the code, please assure that you have basic understanding of `RFC822 <http://www.rfcreader.com/#rfc822>`_, `RFC3501 <http://www.rfcreader.com/#rfc3501>`_, `RFC4551 <http://www.rfcreader.com/#rfc4551>`_ and `RFC681 <http://www.rfcreader.com/#rfc6851>`_.
+
+In general:
+
+1. Fork this repo on Github
+2. Add changes, test them, update docs (README.rst) if possible
+3. Submit your pull request (PR) on Github, wait for feedback
+
+But it’s better to `file an issue <https://github.com/bechtoldt/tabellarius/issues/new>`_ with your idea first.
+
+
+Testing
+-------
+
+Integration tests require a running Docker daemon with Internet connection. The `container image <https://hub.docker.com/r/bechtoldt/tabellarius_tests-docker/>`_ that is beeing downloaded contains Dovecot and Redis.
+
+Run integration tests:
+
+::
+
+    $ tox -e app_tests_min
+
+Check code style (pep8/flake8) of the main/test code:
+
+::
+
+    $ tox -e app_flake8
+    $ tox -e tests_flake8
+
+All important tests also run on `Travis CI <https://travis-ci.org/bechtoldt/tabellarius>`_.
+
+
+Configuring
+-----------
+
+All you need to know to configure Tabellarius is `YAML <http://www.yaml.org/>`_ and the configuration scheme that can also be found in files from the ``tests/configs/`` directory.
 
 Supported Protocols
 '''''''''''''''''''
@@ -87,7 +132,7 @@ IMAP via Force-TLS/SSL (usually port 993):
 Authentication
 ''''''''''''''
 
-**HINT**: You don't need the Python module **gnupg** if you don't want to use the GPG authentication mechanism.
+**HINT**: You don't need the Python module ``gnupg`` if you don't want to use the GPG authentication mechanism.
 
 Plain text in configuration file (don't use it!):
 
@@ -129,47 +174,6 @@ Prompt for password (native):
         port: 993
         starttls: false
         imaps: true
-
-
-Contributing
-------------
-
-Bug reports and pull requests are welcome! If you plan to work on the code, please assure that you have basic understanding of `RFC822 <http://www.rfcreader.com/#rfc822>`_, `RFC3501 <http://www.rfcreader.com/#rfc3501>`_, `RFC4551 <http://www.rfcreader.com/#rfc4551>`_ and `RFC681 <http://www.rfcreader.com/#rfc6851>`_.
-
-In general:
-
-1. Fork this repo on Github
-2. Add changes, test them, update docs (README.rst) if possible
-3. Submit your pull request (PR) on Github, wait for feedback
-
-But it’s better to `file an issue <https://github.com/bechtoldt/tabellarius/issues/new>`_ with your idea first.
-
-
-Testing
--------
-
-Integration tests require a running Docker daemon with Internet connection. The `container image <https://hub.docker.com/r/bechtoldt/tabellarius_tests-docker/>`_ that is beeing downloaded contains Dovecot and Redis.
-
-Run integration tests:
-
-::
-
-    $ tox -e app_tests_min
-
-Check code style (pep8/flake8) of the main/test code:
-
-::
-
-    $ tox -e app_flake8
-    $ tox -e tests_flake8
-
-All important tests also run on `Travis CI <https://travis-ci.org/bechtoldt/tabellarius>`_.
-
-
-Configuring
------------
-
-All you need to know to configure Tabellarius is `YAML <http://www.yaml.org/>`_ and the configuration scheme that can also be found in files from the ``tests/configs/`` directory.
 
 
 Operating
