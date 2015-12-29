@@ -44,7 +44,7 @@ Tabellarius is a mail-sorting IMAP client that depends on IMAP only. Unlike othe
 
 It is written in Python 3 compatible source code that uses the Python modules ``IMAPClient``, ``PyYAML``, ``backports.ssl`` and optionally ``gnupg`` to parse config files and operate on e-mails via IMAP.
 
-What it actually does is to parse a directory structure containing YAML config files, setup a IMAP connection pool to one ore more IMAP servers/accounts, check whether a subset of e-mails match to user-defined rule sets and apply IMAP commands like copy or move to them.
+What it actually does is to parse a directory structure containing YAML config files, setup a IMAP connection pool to one or more IMAP servers/accounts, check whether a subset of e-mails match to user-defined rule sets and apply IMAP commands like copy or move to them.
 
 
 Contributing
@@ -85,7 +85,6 @@ All important tests also run on `Travis CI <https://travis-ci.org/bechtoldt/tabe
 Configuring
 -----------
 
-All you need to know to configure Tabellarius is `YAML <http://www.yaml.org/>`_ and the configuration scheme that can also be found in files from the ``tests/configs/`` directory.
 
 Supported Protocols
 '''''''''''''''''''
@@ -174,6 +173,11 @@ Prompt for password (native):
         port: 993
         starttls: false
         imaps: true
+
+Filters/ Rule Sets
+''''''''''''''''''
+
+The configuration scheme can be found in files from the ``tests/configs/`` directory. Most of them are used within integration tests so most of them should be valid.
 
 
 Operating
