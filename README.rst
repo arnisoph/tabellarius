@@ -37,6 +37,98 @@ A mail-sorting tool that is less annoying
     :local:
 
 
+General
+-------
+
+Tabellarius is written in Python 3 compatible source code that uses a YAML Python module to parse config files and an IMAP Python module to read and operate on e-mails via IMAP.
+
+Supported Protocols
+'''''''''''''''''''
+
+IMAP over Plaintext Transport (don't use it!):
+
+::
+
+    accounts:
+      myaccount:
+        server: imap.server.de
+        username: imap@account.de
+        password: mypassword
+        port: 143
+        starttls: false
+        imaps: false
+
+IMAP via STARTTLS (usally port 143):
+
+::
+
+    accounts:
+      myaccount:
+        server: imap.server.de
+        username: imap@account.de
+        password: mypassword
+        port: 143
+        starttls: true
+        imaps: false
+
+IMAP via Force-TLS/SSL (usally port 993):
+
+::
+
+    accounts:
+      myaccount:
+        server: imap.server.de
+        username: imap@account.de
+        password: mypassword
+        port: 993
+        starttls: false
+        imaps: true
+
+Authentication
+''''''''''''''
+
+Plain text in configuration file (don't use it!):
+
+::
+
+    accounts:
+      myaccount:
+        server: imap.server.de
+        username: imap@account.de
+        password: mypassword
+        port: 993
+        starttls: false
+        imaps: true
+
+GPG-encrypted text with or without GPG agent in configuration file (experimental):
+
+::
+
+    accounts:
+      myaccount:
+        server: imap.server.de
+        username: imap@account.de
+        passsword_enc: | #echo pass | gpg2 --encrypt -r <ID> --armor
+          -----BEGIN PGP MESSAGE-----
+          ...
+          -----END PGP MESSAGE-----
+        port: 993
+        starttls: false
+        imaps: true
+
+Prompt for password (native):
+
+::
+
+    accounts:
+      myaccount:
+        server: imap.server.de
+        username: imap@account.de
+        port: 993
+        starttls: false
+        imaps: true
+
+
 Contributing
 ------------
 
@@ -50,6 +142,7 @@ In general:
 
 But it’s better to `file an issue <https://github.com/bechtoldt/tabellarius/issues/new>`_ with your idea first.
 
+
 Testing
 -------
 
@@ -57,18 +150,24 @@ Integration tests require a running Docker daemon with Internet connection. The 
 
 Run integration tests:
 
-.. code-block:: sh
+::
 
     $ tox -e app_tests_min
 
 Check code style (pep8/flake8) of the main/test code:
 
-.. code-block:: sh
+::
 
     $ tox -e app_flake8
     $ tox -e tests_flake8
 
-All important tests also run on https://travis-ci.org/bechtoldt/tabellarius.
+All important tests also run on `Travis CI <https://travis-ci.org/bechtoldt/tabellarius>`_.
+
+
+Configuring
+-----------
+
+All you need to know to configure Tabellarius is `YAML <http://www.yaml.org/>`_ and the configuration scheme that can also be found in files from the ``tests/configs/`` directory.
 
 
 Operating
@@ -78,7 +177,7 @@ Tabellarius requires Python 3 and a few additional modules (see ``requirements/`
 
 Run in Docker container:
 
-.. code-block:: sh
+::
 
     $ docker run -it -v /path/to/config:/config:ro bechtoldt/tabellarius:<VERSION> python /tabellarius/tabellarius.py --confdir=/config
 
