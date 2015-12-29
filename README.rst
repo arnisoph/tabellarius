@@ -57,13 +57,9 @@ Integration tests require a running Docker daemon with Internet connection. The 
 
 Run integration tests:
 
-    ::
-
     $ tox -e app_tests_min
 
 Check code style (pep8/flake8) of the main/test code:
-
-    ::
 
     $ tox -e app_flake8
     $ tox -e tests_flake8
@@ -77,8 +73,6 @@ Operating
 Tabellarius requires Python 3 and a few additional modules (see ``requirements/`` directory).
 
 Run in Docker container:
-
-    ::
 
     $ docker run -it -v /path/to/config:/config:ro bechtoldt/tabellarius:<VERSION> python /tabellarius/tabellarius.py --confdir=/config
 
