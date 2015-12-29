@@ -40,7 +40,7 @@ A mail-sorting tool that is less annoying
 Contributing
 ------------
 
-Bug reports and pull requests are welcome! If you plan to work on the code, please assure that you have basic understanding of `RFC822 <http://www.rfcreader.com/#rfc822>`_, `RFC3501 <http://www.rfcreader.com/#rfc3501>`_, `RFC4551 <http://www.rfcreader.com/#rfc4551>`_ and `RFC681 <http://www.rfcreader.com/#rfc6851>`_
+Bug reports and pull requests are welcome! If you plan to work on the code, please assure that you have basic understanding of `RFC822 <http://www.rfcreader.com/#rfc822>`_, `RFC3501 <http://www.rfcreader.com/#rfc3501>`_, `RFC4551 <http://www.rfcreader.com/#rfc4551>`_ and `RFC681 <http://www.rfcreader.com/#rfc6851>`_.
 
 In general:
 
@@ -49,3 +49,37 @@ In general:
 3. Submit your pull request (PR) on Github, wait for feedback
 
 But it’s better to `file an issue <https://github.com/bechtoldt/tabellarius/issues/new>`_ with your idea first.
+
+Testing
+-------
+
+Integration tests require a running Docker daemon with Internet connection. The `container image <https://hub.docker.com/r/bechtoldt/tabellarius_tests-docker/>`_ that is beeing downloaded contains Dovecot and Redis.
+
+Run integration tests:
+
+```
+$ tox -e app_tests_min
+```
+
+Check code style (pep8/flake8) of the main/test code:
+
+```
+$ tox -e app_flake8
+$ tox -e tests_flake8
+```
+
+All important tests also run on https://travis-ci.org/bechtoldt/tabellarius.
+
+
+Operating
+---------
+
+Tabellarius requires Python 3 and a few additional modules (see ``requirements/`` directory).
+
+Run in Docker container:
+
+```
+$ docker run -it -v /path/to/config:/config:ro bechtoldt/tabellarius:<VERSION> python /tabellarius/tabellarius.py --confdir=/config
+```
+
+If you prefer running Tabellarius on arbitrary computers you should consider using `virtualenv <https://pypi.python.org/pypi/virtualenv>`_ with or without `virtualenvwrapper <https://pypi.python.org/pypi/virtualenvwrapper/>`_.
