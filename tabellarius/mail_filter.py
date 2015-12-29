@@ -90,8 +90,8 @@ class MailFilter():
         # RegEx match
         pattern_re = regex_compile(pattern)
         if pattern_re.match(string):
-            return True
             self.logger.debug('Pattern matches!')
+            return True
         else:
             self.logger.debug('Pattern does NOT match!')
             return False

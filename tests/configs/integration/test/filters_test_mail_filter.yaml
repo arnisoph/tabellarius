@@ -43,10 +43,11 @@ filters:
           target: MailFilterTest-TestUnicodeFrom
       rules:
         - AND:
-          - from: tuifeideyaozi@gmail.com
-          - from: 梦龙周 <tuifeideyaozi@gmail.com>
-          - from: 梦龙周
-          - from: '梦龙周'
+          - from:
+              - tuifeideyaozi@gmail.com
+              - 梦龙周 <tuifeideyaozi@gmail.com>
+              - 梦龙周
+              - '梦龙周'
     TestUnicodeSubject:
       commands:
         - type: move
