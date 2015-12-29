@@ -62,6 +62,7 @@ class MailFilter():
         if field_value is None:
             return False
 
+        self.logger.debug('Process rule with field name \'{}\' matches patterns \'{}\''.format(field_name, field_pattern))
         if isinstance(field_pattern, list):
             for pattern in field_pattern:
                 match = self.check_match(field_value, pattern)
@@ -79,15 +80,20 @@ class MailFilter():
         if string is None or len(string) == 0:
             return False
 
+        self.logger.debug('Checking whether string pattern \'{}\' matches to string \'{}\''.format(pattern, string))
+
         # Basic match
         if pattern in string:
+            self.logger.debug('Pattern matches!')
             return True
 
         # RegEx match
         pattern_re = regex_compile(pattern)
         if pattern_re.match(string):
             return True
+            self.logger.debug('Pattern matches!')
         else:
+            self.logger.debug('Pattern does NOT match!')
             return False
 
     def apply_commands(self, commands):

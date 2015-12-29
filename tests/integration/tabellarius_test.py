@@ -76,13 +76,13 @@ class TabellariusTest(unittest.TestCase):
 
         file_names = os.listdir(directory)
 
-        emails = []
+        emails = {}
         for file_name in misc.Helper().natural_sort(file_names):
             if '.msg' in file_name or '.txt' in file_name:
                 fh = open(directory + os.sep + file_name, 'rb')
                 raw_mail = fh.read()
                 mail_native = email.message_from_bytes(raw_mail)
-                emails.append(mail_native)
+                emails[file_name] = mail_native
 
         return emails
 

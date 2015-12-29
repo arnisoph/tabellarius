@@ -3,6 +3,8 @@
 
 from .tabellarius_test import TabellariusTest
 
+import misc
+
 
 class MailTest(TabellariusTest):
     def test_set_header(self):
@@ -80,7 +82,7 @@ class MailTest(TabellariusTest):
         self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
         uid_no = 1
 
-        for native_email in native_test_emails:
+        for source_filename, native_email in misc.Helper().sort_dict(native_test_emails).items():
             self.assertTrue(imapconn.add_mail(mailbox='ParsedMessages', message=native_email)[0])
 
             self.assertEqual(len(imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages')[1]), 1)
