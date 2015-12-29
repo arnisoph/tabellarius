@@ -10,14 +10,6 @@ from .tabellarius_test import TabellariusTest
 
 
 class IMAPTest(TabellariusTest):
-    #imap_users = {'test@example.com': 'test'}
-
-    #def setUp(self):
-    #    for username, password in sorted(self.imap_users.items()):
-    #        self.create_imap_user(username, password)
-    #def tearDown(self):
-    #    for username, password in sorted(self.imap_users.items()):  # TODO
-    #        self.remove_imap_user(username)
     def test_noop(self):
         username, password = self.create_imap_user()
         imapconn = self.create_basic_imap_object(username, password)

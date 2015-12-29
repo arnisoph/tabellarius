@@ -5,7 +5,7 @@ from setuptools import setup
 
 
 setup(name='tabellarius',
-      version='0.2.0',
+      version='0.9.0',
       description='A mail-sorting tool that is less annoying',
       author='Arnold Bechtoldt',
       author_email='mail@arnoldbechtoldt.com',

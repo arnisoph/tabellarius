@@ -15,7 +15,7 @@ from misc import ConfigParser, Helper
 
 
 def main():
-    version = '0.2.0'
+    version = '0.9.0'
     program_name = 'tabellarius'
     allowed_log_levels = ['DEBUG', 'ERROR', 'INFO']
 
