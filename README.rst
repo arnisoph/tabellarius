@@ -192,3 +192,16 @@ Run in Docker container:
     $ docker run -it -v /path/to/config:/config:ro bechtoldt/tabellarius:<VERSION> python /tabellarius/tabellarius.py --confdir=/config
 
 If you prefer running Tabellarius on arbitrary computers you should consider using `virtualenv <https://pypi.python.org/pypi/virtualenv>`_ with or without `virtualenvwrapper <https://pypi.python.org/pypi/virtualenvwrapper/>`_.
+
+``virtualenv`` example for Debian Wheezy:
+
+::
+
+    # apt-get install libffi5 libffi-dev gnupg2 python3 python3-pip python3-dev gcc g++
+    # pip install virtualenv virtualenvwrapper
+    $ export WORKON_HOME=~/.virtualenvs/
+    $ mkdir -p $WORKON_HOME
+    $ source /usr/local/bin/virtualenvwrapper.sh
+    $ mkvirtualenv tabellarius-py32 --python=python3.2
+    $ pip install tabellarius
+    $ python ${VIRTUAL_ENV}/lib/python3.2/site-packages/tabellarius/tabellarius.py --config=...
