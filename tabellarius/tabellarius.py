@@ -4,7 +4,6 @@
 
 from argparse import ArgumentParser
 from getpass import getpass
-from logging import DEBUG as loglevel_DEBUG
 from sys import stderr, exc_info, version_info as python_version
 from time import sleep
 from traceback import print_exception
