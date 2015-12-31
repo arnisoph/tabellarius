@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
+from collections import namedtuple
 from imapclient import IMAPClient
 from imapclient.fixed_offset import FixedOffset
 from logging import DEBUG as loglevel_DEBUG
@@ -20,6 +21,7 @@ class IMAP():
     """
     Central class for IMAP server communication
     """
+    Retval = namedtuple('Retval', 'code data')
 
     def __init__(self, logger, username, password,
                  server='localhost',
@@ -70,8 +72,8 @@ class IMAP():
                 raise KeyError('Unable to SELECT a mailbox, kwargs "{0}" doesn\'t contain a mailbox name'.format(kwargs))
 
             result = args[0].select_mailbox(mailbox)
-            if not result[0]:
-                raise RuntimeError(result[1])
+            if not result.code:
+                raise RuntimeError(result.data)
             return func(*args, **kwargs)
 
         return wrapper
@@ -95,7 +97,7 @@ class IMAP():
         if simple_return:
             return exception
         else:
-            return (False, err_msg)
+            return self.Retval(False, err_msg)
 
     def connect(self, retry=True, logout=False):
         """
@@ -127,20 +129,20 @@ class IMAP():
             # Test login/auth status
             login_success = False
             noop = self.noop()
-            if noop[0] and noop[1]:
+            if noop.code and noop.data:
                 login_success = True
 
             if logout:
                 return self.disconnect()
             elif login_success:
-                return (True, login_response)
+                return self.Retval(True, login_response)
             else:
-                return (False, login_response)  # pragma: no cover
+                return self.Retval(False, login_response)  # pragma: no cover
 
         except Exception as e:
             err_return = self.process_error(e)
 
-            if err_return[1] == '[AUTHENTICATIONFAILED] Authentication failed.':
+            if err_return.data == '[AUTHENTICATIONFAILED] Authentication failed.':
                 return err_return
 
             if retry:
@@ -158,7 +160,7 @@ class IMAP():
             noop_response = Helper().byte_to_str(noop[0])
             noop_resp_pattern_re = regex_compile('(Success|NOOP completed\.)')
             login_success = noop_resp_pattern_re.match(noop_response)
-            return (True, login_success)
+            return self.Retval(True, login_success)
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -168,7 +170,7 @@ class IMAP():
         """
         result = self.conn.logout()
         response = Helper().byte_to_str(result)
-        return (response == 'Logging out', response)
+        return self.Retval(response == 'Logging out', response)
 
     def list_mailboxes(self, directory='', pattern='*'):
         """
@@ -184,7 +186,7 @@ class IMAP():
                     flags.append(flag.decode('utf-8'))
 
                 nice_list.append({'name': mailbox[2], 'flags': flags, 'delimiter': mailbox[1].decode("utf-8")})
-            return (True, nice_list)
+            return self.Retval(True, nice_list)
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -205,7 +207,7 @@ class IMAP():
                     response[unicode_key] = tuple(flags)
                 else:
                     response[unicode_key] = value
-            return (True, response)
+            return self.Retval(True, response)
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -223,9 +225,9 @@ class IMAP():
             self._append(mailbox, str(message_native), flags, msg_time)
 
             # According to rfc4315 we must not return the UID from the response, so we are fetching it ourselves
-            uids = self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{0}"'.format(message.get_header('Message-Id')))[1]
+            uids = self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{0}"'.format(message.get_header('Message-Id'))).data[0]
 
-            return (True, uids[0])
+            return self.Retval(True, uids)
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -236,7 +238,7 @@ class IMAP():
         """
         self.logger.debug('Searching for mails in mailbox %s and criteria=\'%s\'', mailbox, criteria)
         try:
-            return (True, list(self.conn.search(criteria=criteria)))
+            return self.Retval(True, list(self.conn.search(criteria=criteria)))
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -265,7 +267,7 @@ class IMAP():
                 else:
                     #mails[uid] = Mail(logger=self.logger, uid=uid, mail_native=email.message_from_bytes(result[uid][b'RFC822']))
                     mails[uid] = Mail(logger=self.logger, mail_native=email.message_from_bytes(result[uid][b'RFC822']))
-            return (True, mails)
+            return self.Retval(True, mails)
 
         except IMAPClient.Error as e:
             return self.process_error(e)
@@ -283,10 +285,10 @@ class IMAP():
                 flags[uid] = []
                 if uid not in result.keys():
                     self.logger.error('Failed to get flags for mail with uid=%s: %s', uid, result)
-                    return (False, None)
+                    return self.Retval(False, None)
                 for flag in result[uid]:
                     flags[uid].append(flag.decode('utf-8'))
-            return (True, flags)
+            return self.Retval(True, flags)
 
         except IMAPClient.Error as e:
             return self.process_error(e)
@@ -298,7 +300,7 @@ class IMAP():
         """
         if self.test:
             self.logger.info('Would have set mail flags on message uids "%s"', str(uids))
-            return (True, None)
+            return self.Retval(True, None)
         else:
             self.logger.debug('Setting flags=%s on mails uid=%s', flags, uids)
             try:
@@ -309,10 +311,10 @@ class IMAP():
                     _flags[uid] = []
                     if uid not in result.keys():
                         self.logger.error('Failed to set and get flags for mail with uid=%s: %s', uid, result)
-                        return (False, None)
+                        return self.Retval(False, None)
                     for flag in result[uid]:
                         _flags[uid].append(flag.decode('utf-8'))
-                return (True, _flags)
+                return self.Retval(True, _flags)
             except IMAPClient.Error as e:
                 return self.process_error(e)
 
@@ -323,7 +325,7 @@ class IMAP():
         """
         if self.test:
             self.logger.info('Would have added mail flags on message uids "%s"', str(uids))
-            return (True, None)
+            return self.Retval(True, None)
         else:
             self.logger.debug('Adding flags=%s on mails uid=%s', flags, uids)
             try:
@@ -334,10 +336,10 @@ class IMAP():
                     _flags[uid] = []
                     if uid not in result.keys():
                         self.logger.error('Failed to add and get flags for mail with uid=%s: %s', uid, result)
-                        return (False, None)
+                        return self.Retval(False, None)
                     for flag in result[uid]:
                         _flags[uid].append(flag.decode('utf-8'))
-                return (True, _flags)
+                return self.Retval(True, _flags)
             except IMAPClient.Error as e:
                 return self.process_error(e)
 
@@ -366,7 +368,7 @@ class IMAP():
             else:
                 self.logger.info('Would have copied mails with Message-Ids="%s" from "%s" to "%s", skipping because of beeing in testmode',
                                  message_ids, source, destination)
-            return (True, None)
+            return self.Retval(True, None)
         else:
             try:
                 if delete_old:
@@ -377,62 +379,62 @@ class IMAP():
                 #if message_ids is None:
                 #    message_ids = []
                 #    result = self.fetch_mails(uids=uids, mailbox=source)
-                #    if not result[0]:
+                #    if not result.code:
                 #        self.logger.error('Failed to determine Message-Id by uids for mail with uids "%s"', uids)
                 #        return result
-                #    message_ids.append(result[1].keys())
+                #    message_ids.append(result.data.keys())
 
-                if not self.mailbox_exists(destination)[1]:
+                if not self.mailbox_exists(destination).data:
                     self.logger.info('Destination mailbox %s doesn\'t exist, creating it for you', destination)
 
                     result = self.create_mailbox(mailbox=destination)
-                    if not result[0]:
-                        self.logger.error('Failed to create the mailbox %s: %s', source, result[1])  # pragma: no cover
+                    if not result.code:
+                        self.logger.error('Failed to create the mailbox %s: %s', source, result.data)  # pragma: no cover
                         return result  # pragma: no cover
 
                 uids = []
                 for message_id in message_ids:
                     result = self.search_mails(mailbox=source, criteria='HEADER Message-Id "{0}"'.format(message_id))
 
-                    if not result[0] or len(result[1]) == 0:
+                    if not result.code or len(result.data) == 0:
                         self.logger.error('Failed to determine uid by Message-Id for mail with Message-Id "%s"', message_id)
-                        return (False, result[1])
-                    uids.append(result[1][0])
+                        return self.Retval(False, result.data)
+                    uids.append(result.data[0])
 
                 result = self.select_mailbox(source)
-                if not result[0]:
+                if not result.code:
                     return result  # pragma: no cover
 
                 self.conn.copy(uids, destination)
 
                 if delete_old:
                     result = self.delete_mails(uids=uids, mailbox=source)
-                    if not result[0]:
+                    if not result.code:
                         self.logger.error('Failed to remove old mail with Message-Id="%s"/uids="%s": %s', message_ids, uids,
-                                          result[1])  # pragma: no cover
+                                          result.data)  # pragma: no cover
                         return result  # pragma: no cover
 
                     if expunge:  # TODO don't expunge by default
                         result = self.expunge(mailbox=source)
-                        if not result[0]:
-                            self.logger.error('Failed to expunge on mailbox %s: %s', source, result[1])  # pragma: no cover
+                        if not result.code:
+                            self.logger.error('Failed to expunge on mailbox %s: %s', source, result.data)  # pragma: no cover
                             return result  # pragma: no cover
 
                 dest_uids = []
                 for message_id in message_ids:
                     result = self.search_mails(mailbox=destination, criteria='HEADER Message-Id "{0}"'.format(message_id))
-                    if not result[0]:
+                    if not result.code:
                         self.logger.error('Failed to determine uid by Message-Id for mail with Message-Id "%s"',
                                           message_id)  # pragma: no cover
                         return result  # pragma: no cover
-                    dest_uids.append(result[1][0])
+                    dest_uids.append(result.data[0])
 
                 if isinstance(set_flags, list):
                     self.set_mailflags(uids=dest_uids, mailbox=destination, flags=set_flags)
                 if add_flags:
                     self.add_mailflags(uids=dest_uids, mailbox=destination, flags=add_flags)
 
-                return (True, dest_uids)
+                return self.Retval(True, dest_uids)
 
             except IMAPClient.Error as e:
                 return self.process_error(e)
@@ -461,7 +463,7 @@ class IMAP():
         """
         self.logger.debug('Expunge mails from mailbox %s', mailbox)
         try:
-            return (True, b'Expunge completed.' in self.conn.expunge())
+            return self.Retval(True, b'Expunge completed.' in self.conn.expunge())
         except IMAPClient.Error as e:  # pragma: no cover
             return self.process_error(e)  # pragma: no cover
 
@@ -471,7 +473,7 @@ class IMAP():
         """
         self.logger.debug('Creating mailbox %s', mailbox)
         try:
-            return (True, self.conn.create_folder(mailbox) == b'Create completed.')
+            return self.Retval(True, self.conn.create_folder(mailbox) == b'Create completed.')
         except IMAPClient.Error as e:
             return self.process_error(e)
 
@@ -480,7 +482,7 @@ class IMAP():
         Check whether a mailbox exists
         """
         try:
-            return (True, self.conn.folder_exists(mailbox))
+            return self.Retval(True, self.conn.folder_exists(mailbox))
         except IMAPClient.Error as e:  # pragma: no cover
             return self.process_error(e)  # pragma: no cover
 
@@ -498,9 +500,9 @@ class IMAP():
                 flags[uid] = []
                 if uid not in result.keys():
                     self.logger.error('Failed to get flags for mail with uid=%s after deleting it: %s', uid, result)
-                    return (False, None)
+                    return self.Retval(False, None)
                 for flag in result[uid]:
                     flags[uid].append(flag.decode('utf-8'))
-            return (True, flags)
+            return self.Retval(True, flags)
         except IMAPClient.Error as e:
             return self.process_error(e)

@@ -15,7 +15,7 @@ class IMAPTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(logout=False), (True, 'Logged in'))
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
-        self.assertFalse(imapconn.noop()[0])
+        self.assertFalse(imapconn.noop().code)
 
     def test_connect_simple_plaintext(self):
         username, password = self.create_imap_user()
@@ -113,7 +113,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 
         result = imapconn.select_mailbox(mailbox='INBOX')
-        self.assertEqual(result[1]['FLAGS'], ('\\Answered', '\\Flagged', '\\Deleted', '\\Seen', '\\Draft'))
+        self.assertEqual(result.data['FLAGS'], ('\\Answered', '\\Flagged', '\\Deleted', '\\Seen', '\\Draft'))
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -135,13 +135,13 @@ class IMAPTest(TabellariusTest):
         example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=self.create_email(headers={'Subject': 'Testmäil'}),
-                                          flags=['FLAG', 'WAVE'])[0])
+                                          flags=['FLAG', 'WAVE']).code)
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=self.create_email(headers={'Subject': 'Testmäil'}).get_native(),
-                                          flags=['\\Seen'])[0])
+                                          flags=['\\Seen']).code)
 
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Subject'), 'Testmäil')
-        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Subject'), 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX').data[2].get_header('Subject'), 'Testmäil')
 
         self.assertEqual(
             imapconn.add_mail(mailbox='DoesNotExist',
@@ -158,9 +158,9 @@ class IMAPTest(TabellariusTest):
 
         # Adding some mails to search for
         example_date = datetime.datetime(2009, 4, 5, 11, 0, 5, 0, imapclient.fixed_offset.FixedOffset(2 * 60))
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'])[0])
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen'])[0])
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'], msg_time=example_date)[0])
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE']).code)
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']).code)
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['FLAG', 'WAVE'], msg_time=example_date).code)
 
         self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='ALL'), (True, [1, 2, 3]))
         self.assertEqual(imapconn.search_mails(mailbox='INBOX', criteria='UNSEEN'), (True, [1, 3]))
@@ -197,9 +197,9 @@ class IMAPTest(TabellariusTest):
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date), (True, 3))
 
-        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1][2])
-        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
-        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
+        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822']).data[2])
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX').data[2].get_header('Subject'), 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX').data[2].get_header('Subject'), 'Testmäil')
         self.assertEqual(imapconn.fetch_mails(uids=[1337], mailbox='INBOX'), (True, {}))
         self.assertEqual(imapconn.fetch_mails(uids=[-1337],
                                               mailbox='INBOX'),
@@ -220,17 +220,17 @@ class IMAPTest(TabellariusTest):
 
         result = imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen', '\Answered', '\Flagged', '\Deleted', '\Draft', 'CUSTOM'])
 
-        self.assertTrue(result[0])
-        self.assertIn('\\Seen', result[1][1])
-        self.assertIn('\\Answered', result[1][1])
-        self.assertIn('\\Flagged', result[1][1])
-        self.assertIn('\\Deleted', result[1][1])
-        self.assertIn('\\Draft', result[1][1])
-        self.assertIn('CUSTOM', result[1][1])
+        self.assertTrue(result.code)
+        self.assertIn('\\Seen', result.data[1])
+        self.assertIn('\\Answered', result.data[1])
+        self.assertIn('\\Flagged', result.data[1])
+        self.assertIn('\\Deleted', result.data[1])
+        self.assertIn('\\Draft', result.data[1])
+        self.assertIn('CUSTOM', result.data[1])
 
         result = imapconn.add_mailflags(uids=[1], mailbox='INBOX', flags=['CUSTOM2', 'CUSTOM42'])
-        self.assertIn('CUSTOM2', result[1][1])
-        self.assertIn('CUSTOM42', result[1][1])
+        self.assertIn('CUSTOM2', result.data[1])
+        self.assertIn('CUSTOM42', result.data[1])
 
     def test_get_and_set_mailflags_testmode(self):
         username, password = self.create_imap_user()
@@ -280,9 +280,9 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=self.create_email(headers={'Subject': 'Moved Mäil'},
                                                                     reset_message_id=True),
-                                          flags=['FLAG', 'WAVE'])[0])
+                                          flags=['FLAG', 'WAVE']).code)
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Move
@@ -293,7 +293,7 @@ class IMAPTest(TabellariusTest):
 
         # Check old and copied
         self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX'), (True, {}))
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash')[1][1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash').data[1].get_header('Message-Id'), message_id)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -306,9 +306,9 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=self.create_email(headers={'Subject': 'Moved Mäil'},
                                                                     reset_message_id=True),
-                                          flags=['FLAG', 'WAVE'])[0])
+                                          flags=['FLAG', 'WAVE']).code)
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Move
@@ -326,7 +326,7 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=self.create_email(headers={'Subject': 'Copied Mäil'},
                                                                     reset_message_id=True),
-                                          flags=['FLAG', 'WAVE'])[0])
+                                          flags=['FLAG', 'WAVE']).code)
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
         self.assertEqual(imapconn.get_mailflags(uids=[2], mailbox='INBOX'), (True, {2: ['\\Seen']}))
         self.assertEqual(imapconn.add_mail(mailbox='INBOX',
@@ -334,16 +334,16 @@ class IMAPTest(TabellariusTest):
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date), (True, 3))
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
-        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash', set_flags=['\Flagged'])[0])
+        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash', set_flags=['\Flagged']).code)
         self.assertEqual(imapconn.copy_mails(message_ids=['<w00t>'], source='INBOX', destination='Trash'), (False, []))
 
         # Check old and copied
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Message-Id'), message_id)
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash')[1][1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash').data[1].get_header('Message-Id'), message_id)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -357,22 +357,22 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=self.create_email(headers={'Subject': 'Copied Mäil'},
                                                                     reset_message_id=True),
-                                          flags=['FLAG', 'WAVE'])[0])
+                                          flags=['FLAG', 'WAVE']).code)
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
         self.assertEqual(imapconn.add_mail(mailbox='INBOX',
                                            message=self.create_email(),
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date), (True, 3))
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
         self.assertEqual(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='CustomMailbox'), (True, [1]))
 
         # Check old and copied
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Message-Id'), message_id)
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='CustomMailbox')[1][1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='CustomMailbox').data[1].get_header('Message-Id'), message_id)
 
         self.assertEqual(imapconn.copy_mails(message_ids=[message_id],
                                              source='INBOX',
@@ -390,14 +390,14 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(imapconn.add_mail(mailbox='INBOX',
                                           message=self.create_email(headers={'Subject': 'Copied Mäil'},
                                                                     reset_message_id=True),
-                                          flags=['FLAG', 'WAVE'])[0])
+                                          flags=['FLAG', 'WAVE']).code)
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
         self.assertEqual(imapconn.add_mail(mailbox='INBOX',
                                            message=self.create_email(),
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date), (True, 3))
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
@@ -434,21 +434,21 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
 
         # Test fetching works
-        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1][2])
-        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
-        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
+        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822']).data[2])
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX').data[2].get_header('Subject'), 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX').data[2].get_header('Subject'), 'Testmäil')
 
         # Delete mails
         self.assertTrue(imapconn.delete_mails(uids=[1], mailbox='INBOX'))
         self.assertTrue(imapconn.delete_mails(uids=[2], mailbox='INBOX'))
 
         # Check their flags
-        self.assertIn('\\Deleted', imapconn.get_mailflags(uids=[1], mailbox='INBOX')[1][1])
-        self.assertIn('FLAG', imapconn.get_mailflags(uids=[1], mailbox='INBOX')[1][1])
-        self.assertIn('WAVE', imapconn.get_mailflags(uids=[1], mailbox='INBOX')[1][1])
+        self.assertIn('\\Deleted', imapconn.get_mailflags(uids=[1], mailbox='INBOX').data[1])
+        self.assertIn('FLAG', imapconn.get_mailflags(uids=[1], mailbox='INBOX').data[1])
+        self.assertIn('WAVE', imapconn.get_mailflags(uids=[1], mailbox='INBOX').data[1])
 
-        self.assertIn('\\Deleted', imapconn.get_mailflags(uids=[2], mailbox='INBOX')[1][2])
-        self.assertIn('\\Seen', imapconn.get_mailflags(uids=[2], mailbox='INBOX')[1][2])
+        self.assertIn('\\Deleted', imapconn.get_mailflags(uids=[2], mailbox='INBOX').data[2])
+        self.assertIn('\\Seen', imapconn.get_mailflags(uids=[2], mailbox='INBOX').data[2])
 
         # Expuuuuunge
         self.assertEqual(imapconn.expunge(mailbox='INBOX'), (True, True))
@@ -470,9 +470,9 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email(), flags=['\\Seen']), (True, 2))
 
         # Test fetching works
-        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1][2])
-        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
-        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1][2].get_header('Subject'), 'Testmäil')
+        self.assertIn(b'RFC822', imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822']).data[2])
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX').data[2].get_header('Subject'), 'Testmäil')
+        self.assertEqual(imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX').data[2].get_header('Subject'), 'Testmäil')
 
         # Delete mails
         self.assertEqual(imapconn.delete_mails(uids=[42], mailbox='INBOX'), (False, None))
@@ -484,8 +484,8 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.expunge(mailbox='INBOX'), (True, True))
 
         # Check whether they are still there
-        self.assertIn(2, imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822'])[1])
-        self.assertIn(2, imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1])
-        self.assertIn(1, imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX')[1])
+        self.assertIn(2, imapconn.fetch_mails(uids=[2], mailbox='INBOX', return_fields=[b'RFC822']).data)
+        self.assertIn(2, imapconn.fetch_mails(uids=[2], mailbox='INBOX').data)
+        self.assertIn(1, imapconn.fetch_mails(uids=[1, 2], mailbox='INBOX').data)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))

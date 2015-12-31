@@ -18,7 +18,7 @@ class MailTest(TabellariusTest):
         mail.set_header('Subject', subject)
 
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=mail), (True, 1))
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Subject'), subject)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Subject'), subject)
 
         # Unicode
         subject = 'The sübject is the sübject'
@@ -26,7 +26,7 @@ class MailTest(TabellariusTest):
         mail.set_header('Subject', subject)
 
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=mail), (True, 2))
-        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('Subject'), subject)
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX').data[2].get_header('Subject'), subject)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -40,7 +40,7 @@ class MailTest(TabellariusTest):
         mail.update_headers({'Subject': subject})
 
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=mail), (True, 1))
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('Subject'), subject)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Subject'), subject)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -55,7 +55,7 @@ class MailTest(TabellariusTest):
         mail.set_body(body)
 
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=mail), (True, 1))
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_body(), body)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_body(), body)
 
         # Unicode
         body = 'Testmäil Bödy!'
@@ -63,7 +63,7 @@ class MailTest(TabellariusTest):
         mail.set_body(body)
 
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=mail), (True, 2))
-        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_body(), body)
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX').data[2].get_body(), body)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -73,21 +73,21 @@ class MailTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email())[0])
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX')[1][1].get_header('subject'), 'Testmäil')
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email()).code)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('subject'), 'Testmäil')
 
-        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email().get_native())[0])
-        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX')[1][2].get_header('subject'), 'Testmäil')
+        self.assertTrue(imapconn.add_mail(mailbox='INBOX', message=self.create_email().get_native()).code)
+        self.assertEqual(imapconn.fetch_mails(uids=[2], mailbox='INBOX').data[2].get_header('subject'), 'Testmäil')
 
         self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
         uid_no = 1
 
         for source_filename, native_email in misc.Helper().sort_dict(native_test_emails).items():
-            self.assertTrue(imapconn.add_mail(mailbox='ParsedMessages', message=native_email)[0])
+            self.assertTrue(imapconn.add_mail(mailbox='ParsedMessages', message=native_email).code)
 
-            self.assertEqual(len(imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages')[1]), 1)
+            self.assertEqual(len(imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages').data), 1)
 
-            mail = imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages')[1][uid_no]
+            mail = imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages').data[uid_no]
 
             if uid_no == 1:
                 self.assertEqual(mail.get_header('Subject'), 'Your Registration at www.youth4work.com')

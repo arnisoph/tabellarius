@@ -113,7 +113,7 @@ class MailFilter():
                                           source=self.mailbox,
                                           destination=cmd_target,
                                           add_flags=cmd_flags_add,
-                                          set_flags=cmd_flags_set)[0]
+                                          set_flags=cmd_flags_set).data
             else:
                 raise NotImplementedError('Sorry, command \'{0}\' isn\'t supported yet!'.format(command))
 

@@ -127,8 +127,8 @@ def main():
                                  test=test)
         connect = imap_pool[acc_id].connect()
 
-        if not connect[0]:
-            logger.error('%s: Failed to login, please check your account credentials: %s', acc_settings.get('username'), connect[1])
+        if not connect.code:
+            logger.error('%s: Failed to login, please check your account credentials: %s', acc_settings.get('username'), connect.data)
             exit(127)
         else:
             logger.info('%s: Sucessfully logged in!', acc_settings.get('username'))
@@ -141,22 +141,22 @@ def main():
             sort_mailbox = acc_settings.get('sort_mailbox', None)
 
             try:
-                if not imap_pool[acc_id].mailbox_exists(pre_inbox)[1]:
+                if not imap_pool[acc_id].mailbox_exists(pre_inbox).data:
                     imap_pool[acc_id].logger.info('%s: Destination mailbox %s doesn\'t exist, creating it for you',
                                                   acc_settings.get('username'), pre_inbox)
 
                     result = imap_pool[acc_id].create_mailbox(mailbox=pre_inbox)
-                    if not result[0]:
+                    if not result.code:
                         imap_pool[acc_id].logger.error('%s: Failed to create the mailbox %s: %s', acc_settings.get('username'), pre_inbox,
-                                                       result[1])
+                                                       result.data)
                         return result
 
-                mail_uids = imap_pool[acc_id].search_mails(mailbox=pre_inbox, criteria=pre_inbox_search, autocreate_mailbox=True)[1]
+                mail_uids = imap_pool[acc_id].search_mails(mailbox=pre_inbox, criteria=pre_inbox_search, autocreate_mailbox=True).data
                 if not mail_uids:
                     logger.debug('%s: No mails found to sort', acc_settings.get('username'))
                     continue
 
-                mails = imap_pool[acc_id].fetch_mails(uids=mail_uids, mailbox=pre_inbox)[1]
+                mails = imap_pool[acc_id].fetch_mails(uids=mail_uids, mailbox=pre_inbox).data
                 mails_without_match = []
                 for uid, mail in mails.items():
                     match = False

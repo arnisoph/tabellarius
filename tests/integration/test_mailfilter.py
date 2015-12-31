@@ -41,13 +41,13 @@ class MailFilterTest(TabellariusTest):
 
         for source_filename, native_email in misc.Helper().sort_dict(native_test_emails).items():
             add_mail_result = imapconn.add_mail(mailbox='ParsedMessages', message=native_email)
-            uid_no = add_mail_result[1]
-            self.assertTrue(add_mail_result[0])
+            uid_no = add_mail_result.data
+            self.assertTrue(add_mail_result.code)
 
             fetch_result = imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages')
-            self.assertEqual(len(fetch_result[1]), 1)
-            self.assertIn(uid_no, fetch_result[1])
-            mail = fetch_result[1][uid_no]
+            self.assertEqual(len(fetch_result.data), 1)
+            self.assertIn(uid_no, fetch_result.data)
+            mail = fetch_result.data[uid_no]
             message_id = mail.get_header('message-id')
 
             match = False
@@ -72,12 +72,12 @@ class MailFilterTest(TabellariusTest):
 
             # Check whether the mail is found its destination
             search_result = imapconn.search_mails(mailbox=cmd_target, criteria='HEADER Message-Id "{0}"'.format(message_id))
-            self.assertTrue(len(search_result[1]) == 1)
+            self.assertTrue(len(search_result.data) == 1)
 
-            uid_no = search_result[1][0]
+            uid_no = search_result.data[0]
             fetch_result = imapconn.fetch_mails(uids=[uid_no], mailbox=cmd_target)
 
-            self.assertEqual(fetch_result[1][uid_no].get_header('message-id'), message_id)
+            self.assertEqual(fetch_result.data[uid_no].get_header('message-id'), message_id)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -94,13 +94,13 @@ class MailFilterTest(TabellariusTest):
 
         for source_filename, native_email in misc.Helper().sort_dict(native_test_emails).items():
             add_mail_result = imapconn.add_mail(mailbox='ParsedMessages', message=native_email)
-            uid_no = add_mail_result[1]
-            self.assertTrue(add_mail_result[0])
+            uid_no = add_mail_result.data
+            self.assertTrue(add_mail_result.code)
 
             fetch_result = imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages')
-            self.assertEqual(len(fetch_result[1]), 1)
-            self.assertIn(uid_no, fetch_result[1])
-            mail = fetch_result[1][uid_no]
+            self.assertEqual(len(fetch_result.data), 1)
+            self.assertIn(uid_no, fetch_result.data)
+            mail = fetch_result.data[uid_no]
 
             mailfilter = mail_filter.MailFilter(logger=self.logger,
                                                 imap=imapconn,
