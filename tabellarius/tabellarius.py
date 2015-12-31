@@ -4,7 +4,6 @@
 
 from argparse import ArgumentParser
 from getpass import getpass
-from logging import DEBUG as loglevel_DEBUG
 from sys import stderr, exc_info, version_info as python_version
 from time import sleep
 from traceback import print_exception
@@ -205,8 +204,7 @@ def main():
                 trace_info = exc_info()
                 logger.error('%s: Catching unknown exception: %s. Showing stack trace and going to die..', acc_settings.get('username'), e)
 
-                if logger.isEnabledFor(loglevel_DEBUG):
-                    print_exception(*trace_info)
+                print_exception(*trace_info)
                 del trace_info
 
                 exit(1)
