@@ -12,9 +12,10 @@ from imap import IMAP
 from mail_filter import MailFilter
 from misc import ConfigParser, Helper
 
+__version__ = '0.9.1'
+
 
 def main():
-    version = '0.9.0'
     program_name = 'tabellarius'
     allowed_log_levels = ['DEBUG', 'ERROR', 'INFO']
 
@@ -24,7 +25,7 @@ def main():
     parser = ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 
     # General args
-    parser.add_argument('-V', action='version', version='%(prog)s {version}'.format(version=version))
+    parser.add_argument('-V', action='version', version='%(prog)s {version}'.format(version=__version__))
     parser.add_argument('-t', '--test',
                         action='store_true',
                         dest='test',
