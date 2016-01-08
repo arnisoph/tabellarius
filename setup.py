@@ -11,6 +11,7 @@ setup(name='tabellarius',
       author_email='mail@arnoldbechtoldt.com',
       url='https://github.com/bechtoldt/tabellarius',
       packages=['tabellarius'],
+      license='Apache 2.0',
       install_requires=[
           'PyYAML==3.11',
           'gnupg==2.0.2',
@@ -18,9 +19,11 @@ setup(name='tabellarius',
           'backports.ssl==0.0.9',
       ],
       classifiers=[
+          'License :: OSI Approved :: Apache Software License',
           'Programming Language :: Python',
           'Programming Language :: Python :: 3',
           'Programming Language :: Python :: 3.2',
           'Programming Language :: Python :: 3.3',
           'Programming Language :: Python :: 3.4',
-          'Programming Language :: Python :: 3.5',])
+          'Programming Language :: Python :: 3.5',
+          'Topic :: Communications :: Email :: Filters',])
