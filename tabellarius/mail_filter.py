@@ -47,7 +47,9 @@ class MailFilter():
         if match:
             self.logger.info('Found rule match for mail with message-id={0}, going to apply desired commands now'.format(
                 self.mail.get_header('message-id')))
-            self.apply_commands(commands)
+            result = self.apply_commands(commands)
+            if not result:
+                raise RuntimeError('Failed to apply commands \'%s\'', commands)
         return match
 
     def check_rule_match(self, rule):
@@ -106,15 +108,15 @@ class MailFilter():
             cmd_flags_set = command.get('set_flags', [])
             cmd_flags_add = command.get('add_flags', None)
 
-            uid = None
+            result = None
             if cmd_type == 'move':
                 cmd_target = command.get('target')
-                uid = self.imap.move_mail(message_ids=[self.mail.get_header('message-id')],
-                                          source=self.mailbox,
-                                          destination=cmd_target,
-                                          add_flags=cmd_flags_add,
-                                          set_flags=cmd_flags_set).data
+                result = self.imap.move_mail(message_ids=[self.mail.get_header('message-id')],
+                                             source=self.mailbox,
+                                             destination=cmd_target,
+                                             add_flags=cmd_flags_add,
+                                             set_flags=cmd_flags_set)
             else:
                 raise NotImplementedError('Sorry, command \'{0}\' isn\'t supported yet!'.format(command))
 
-        return uid
+        return result[0]
