@@ -12,9 +12,9 @@ import unittest
 
 sys.path.insert(0, './tabellarius')
 
-import imap
-import mail
-import misc
+import imap  # noqa  # TODO can we fix this?
+import mail  # noqa
+import misc  # noqa
 
 
 class TabellariusTest(unittest.TestCase):
