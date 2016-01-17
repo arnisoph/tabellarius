@@ -4,8 +4,6 @@ language: python
 
 matrix:
   include:
-    - sudo: required
-      dist: precise
     - python: '3.5'
       env: TOX_ENV=app_tests_cov_upload
       services:
