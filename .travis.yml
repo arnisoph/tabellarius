@@ -3,26 +3,32 @@ language: python
 
 matrix:
   include:
-    - python: '3.5'
-      env: TOX_ENV=app_tests_cov_upload
+    - python: '3.3'
+      env:
+        - TOX_ENV=app_tests_min
+        - START_INTEGRATION_SERVERS=yes
       services:
         - docker
     - python: '3.4'
-      env: TOX_ENV=app_tests_min
-      services:
-        - docker
-    - python: '3.3'
-      env: TOX_ENV=app_tests_min
-      services:
-        - docker
-    - python: '3.2'
-      env: TOX_ENV=app_tests_min
+      env:
+        - TOX_ENV=app_tests_min
+        - START_INTEGRATION_SERVERS=yes
       services:
         - docker
     - python: '3.5'
-      env: TOX_ENV=app_flake8
+      env:
+        - TOX_ENV=app_tests_cov_upload
+        - START_INTEGRATION_SERVERS=yes
+      services:
+        - docker
+
     - python: '3.5'
-      env: TOX_ENV=tests_flake8
+      env:
+        - TOX_ENV=app_flake8
+    - python: '3.5'
+      env:
+        - TOX_ENV=tests_flake8
+
     #- python: '3.5'
     #  env: TOX_ENV=app_todo
     #- python: '3.5'
@@ -35,4 +41,12 @@ addons:
 install:
   - pip install tox
 script:
-  - tox -e $TOX_ENV
+  - |
+    if [ "${START_INTEGRATION_SERVERS}" = 'yes' ]; then
+      CID_IMAPSERVER=$(docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random bechtoldt/tabellarius_tests-docker)
+      export INTEGRATION_PORT_IMAP=10143
+      export INTEGRATION_PORT_IMAPS=10993
+      export INTEGRATION_ADDR_IMAPSERVER=127.0.0.1
+    fi
+
+    tox -e ${TOX_ENV}
