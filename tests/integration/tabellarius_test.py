@@ -46,8 +46,8 @@ class TabellariusTest(unittest.TestCase):
 
     def create_basic_imap_object(self, username, password, starttls=False, imaps=True, test=None):
         imapconn = imap.IMAP(logger=self.logger,
-                             server='127.0.0.1',
-                             port=10993,
+                             server=self.INTEGRATION_ADDR_IMAPSERVER,
+                             port=self.INTEGRATION_PORT_IMAPS,
                              starttls=starttls,
                              imaps=imaps,
                              tlsverify=False,  # TODO
@@ -86,8 +86,12 @@ class TabellariusTest(unittest.TestCase):
 
         return emails
 
+    INTEGRATION_ADDR_IMAPSERVER = os.getenv('INTEGRATION_ADDR_IMAPSERVER')
+    INTEGRATION_PORT_IMAP = os.getenv('INTEGRATION_PORT_IMAP', 143)
+    INTEGRATION_PORT_IMAPS = os.getenv('INTEGRATION_PORT_IMAPS', 993)
+    INTEGRATION_PORT_REDIS = os.getenv('INTEGRATION_PORT_REDIS', 6379)
     logger = LoggerDummy()
-    rconn = redis.StrictRedis(host='127.0.0.1', port=6379)
+    rconn = redis.StrictRedis(host=INTEGRATION_ADDR_IMAPSERVER, port=INTEGRATION_PORT_REDIS)
 
 
 if __name__ == "__main__":

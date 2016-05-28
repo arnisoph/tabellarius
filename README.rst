@@ -202,6 +202,6 @@ If you prefer running Tabellarius on arbitrary computers you should consider usi
     $ export WORKON_HOME=~/.virtualenvs/
     $ mkdir -p $WORKON_HOME
     $ source /usr/local/bin/virtualenvwrapper.sh
-    $ mkvirtualenv tabellarius-py32 --python=python3.2
+    $ mkvirtualenv tabellarius-py35 --python=python3.5
     $ pip install tabellarius
-    $ python ${VIRTUAL_ENV}/lib/python3.2/site-packages/tabellarius/tabellarius.py --config=...
+    $ python ${VIRTUAL_ENV}/lib/python3.5/site-packages/tabellarius/tabellarius.py --config=...
