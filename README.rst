@@ -3,10 +3,6 @@ tabellarius
 ===========
 
 
-.. image:: https://img.shields.io/badge/donate-flattr-red.svg
-    :alt: Donate via flattr
-    :target: https://flattr.com/profile/bechtoldt
-
 .. image:: https://img.shields.io/badge/license-Apache--2.0-blue.svg
     :alt: Apache-2.0-licensed
     :target: https://github.com/bechtoldt/tabellarius/blob/master/LICENSE
@@ -25,10 +21,6 @@ tabellarius
 
 .. image:: https://coveralls.io/repos/bechtoldt/tabellarius/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/bechtoldt/tabellarius?branch=master
-
-.. image:: https://img.shields.io/pypi/dm/tabellarius.svg
-    :target: https://pypi.python.org/pypi/tabellarius
-    :alt: Number of Pypi package downloads
 
 A mail-sorting tool that is less annoying
 
