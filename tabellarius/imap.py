@@ -158,7 +158,7 @@ class IMAP():
         try:
             noop = self.conn.noop()
             noop_response = Helper().byte_to_str(noop[0])
-            noop_resp_pattern_re = regex_compile('(Success|NOOP completed\.)')
+            noop_resp_pattern_re = regex_compile('^(Success|NOOP completed)')
             login_success = noop_resp_pattern_re.match(noop_response)
             return self.Retval(True, login_success)
         except IMAPClient.Error as e:
