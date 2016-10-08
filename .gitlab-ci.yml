@@ -33,14 +33,6 @@ check-code-style:
     TOX_ENV: app_flake8
   <<: *test_template
 
-test-integration:py3.3:
-  stage: test
-  variables:
-    DOCKER_IMAGE: python:3.3
-    START_INTEGRATION_SERVERS: 'yes'
-    TOX_ENV: app_tests_min
-  <<: *test_template
-
 test-integration:py3.4:
   stage: test
   variables:
