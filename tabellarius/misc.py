@@ -31,7 +31,7 @@ class ConfigParser():
             for file_name in files:
                 file_path = '{0}/{1}'.format(dirname, file_name)
                 if file_name.endswith('.yaml'):
-                    with open(file_path, 'r') as stream:
+                    with open(file_path, 'rb') as stream:
                         data = yaml.load(stream)
                     if data:
                         for root, value in data.items():
