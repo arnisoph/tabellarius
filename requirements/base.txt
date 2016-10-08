@@ -1,5 +1,4 @@
 IMAPClient==1.0.0
 PyYAML==3.11
 backports.ssl==0.0.9
-pyopenssl==0.15.1
 gnupg==2.0.2
