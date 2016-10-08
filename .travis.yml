@@ -37,7 +37,7 @@ install:
 script:
   - |
     if [ "${START_INTEGRATION_SERVERS}" = 'yes' ]; then
-      CID_IMAPSERVER=$(docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random bechtoldt/tabellarius_tests-docker)
+      CID_IMAPSERVER=$(docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro bechtoldt/tabellarius_tests-docker)
       export INTEGRATION_PORT_IMAP=10143
       export INTEGRATION_PORT_IMAPS=10993
       export INTEGRATION_ADDR_IMAPSERVER=127.0.0.1

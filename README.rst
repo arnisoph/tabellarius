@@ -58,6 +58,15 @@ Testing
 
 Integration tests require a running Docker daemon with Internet connection. The `container image <https://hub.docker.com/r/bechtoldt/tabellarius_tests-docker/>`_ that is beeing downloaded contains Dovecot and Redis.
 
+Start the Docker container:
+
+::
+
+    $ docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro bechtoldt/tabellarius_tests-docker
+    $ export INTEGRATION_PORT_IMAP=10143 INTEGRATION_PORT_IMAPS=10993 INTEGRATION_ADDR_IMAPSERVER=$(docker-machine ip docker-dev)
+
+Notice: I'm gathering the IP addr via docker-machine, your own process may vary.
+
 Run integration tests:
 
 ::

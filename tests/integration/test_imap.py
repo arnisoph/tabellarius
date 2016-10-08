@@ -65,14 +65,15 @@ class IMAPTest(TabellariusTest):
 
     def test_connect_error_refused(self):
         username, password = self.create_imap_user()
-        self.assertEqual(imap.IMAP(logger=self.logger,
-                                   server=self.INTEGRATION_ADDR_IMAPSERVER,
-                                   port=1337,
-                                   starttls=False,
-                                   imaps=True,
-                                   tlsverify=False,  # TODO test tls verification?
-                                   username=username,
-                                   password=password).connect(), (False, '[Errno 111] Connection refused'))
+        self.assertIn(imap.IMAP(logger=self.logger,
+                                server=self.INTEGRATION_ADDR_IMAPSERVER,
+                                port=1337,
+                                starttls=False,
+                                imaps=True,
+                                tlsverify=False,  # TODO test tls verification?
+                                username=username,
+                                password=password).connect(), [(False, '[Errno 111] Connection refused'),
+                                                               (False, '[Errno 61] Connection refused')])
 
     def test_process_error(self):
         try:

@@ -11,7 +11,7 @@ stages:
     echo -e "FROM ${DOCKER_IMAGE}\nCOPY . /code" > Dockerfile.tmp
 
     if [ "${START_INTEGRATION_SERVERS}" = 'yes' ]; then
-      CID_IMAPSERVER=$(docker run -d -p 143 -p 993 -p 6379 -v /dev/random:/dev/random bechtoldt/tabellarius_tests-docker)
+      CID_IMAPSERVER=$(docker run -d -p 143 -p 993 -p 6379 -v /dev/random:/dev/random:ro bechtoldt/tabellarius_tests-docker)
       INTEGRATION_ADDR_IMAPSERVER=$(docker inspect -f '{{ .NetworkSettings.IPAddress }}' ${CID_IMAPSERVER})
       echo -e "\nENV INTEGRATION_ADDR_IMAPSERVER=${INTEGRATION_ADDR_IMAPSERVER}" >> Dockerfile.tmp
     fi
