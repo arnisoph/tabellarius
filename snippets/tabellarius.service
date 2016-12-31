@@ -1,0 +1,10 @@
+[Unit]
+Description=tabellarius
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/lib/python3.4/site-packages/tabellarius/tabellarius.py --confdir=/var/games/tabellarius/mailfilter-settings/config/ --sleep=10
+ExecStop=/usr/bin/pkill tabellarius
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
