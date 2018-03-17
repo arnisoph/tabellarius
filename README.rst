@@ -190,7 +190,7 @@ Run in Docker container:
 
 ::
 
-    $ docker run -it -v /path/to/config:/config:ro bechtoldt/tabellarius:<VERSION> python /tabellarius/tabellarius.py --confdir=/config
+    $ docker run -it -v /path/to/config:/config:ro bechtoldt/tabellarius:<VERSION> --confdir=/config
 
 If you prefer running Tabellarius on arbitrary computers you should consider using `virtualenv <https://pypi.python.org/pypi/virtualenv>`_ with or without `virtualenvwrapper <https://pypi.python.org/pypi/virtualenvwrapper/>`_.
 
