@@ -14,7 +14,12 @@ COPY requirements/base.txt /tmp/requirements.txt
 COPY tabellarius/ /tabellarius
 
 RUN \
+  pip install --upgrade pip && \
   pip install -r /tmp/requirements.txt && \
   rm -rf \
     /tmp/* \
     /var/tmp/*
+
+ENTRYPOINT ["python", "/tabellarius/tabellarius.py"]
+
+CMD ["-V"]
