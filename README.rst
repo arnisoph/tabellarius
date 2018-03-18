@@ -15,6 +15,10 @@ tabellarius
     :alt: Travis CI
     :target: https://travis-ci.org/bechtoldt/tabellarius
 
+.. image:: https://img.shields.io/docker/pulls/bechtoldt/tabellarius.svg
+    :alt: Docker image pulls
+    :target: https://hub.docker.com/r/bechtoldt/tabellarius/
+
 .. image:: https://img.shields.io/pypi/pyversions/tabellarius.svg
     :alt: Python versions supported
     :target: https://pypi.python.org/pypi/tabellarius
