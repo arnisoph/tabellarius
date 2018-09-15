@@ -17,6 +17,7 @@ class MailFilterTest(TabellariusTest):
         self.assertTrue(mailfilter.check_match('foo', 'foo'))
         self.assertTrue(mailfilter.check_match('Sönderzäichen', 'nderz'))
         self.assertTrue(mailfilter.check_match('Sönderzäichen', 'Sönder'))
+        self.assertTrue(mailfilter.check_match('UPPERCASE', 'Uppercase'))
 
     def test_check_match_regex(self):
         mailfilter = mail_filter.MailFilter(logger=self.logger, imap=None, mail=None, config=None, mailbox=None)
@@ -27,6 +28,7 @@ class MailFilterTest(TabellariusTest):
         self.assertTrue(mailfilter.check_match('foo@example.com', '^.*@example.(com|net)$'))
         self.assertTrue(mailfilter.check_match('Sönderzäichen', '^Sönder.*'))
         self.assertFalse(mailfilter.check_match('foo', '^fo+!$'))
+        self.assertTrue(mailfilter.check_match('UPPERCASE', '^Uppercase$'))
 
     def test_mail_filter_matching(self):
         username, password = self.create_imap_user()
