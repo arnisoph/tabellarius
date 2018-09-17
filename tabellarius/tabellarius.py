@@ -12,7 +12,7 @@ from imap import IMAP
 from mail_filter import MailFilter
 from misc import ConfigParser, Helper
 
-__version__ = '1.0.3'
+__version__ = '1.1.0'
 
 
 def main():
