@@ -2,6 +2,7 @@ doveot auth dict redis
 
 set dovecot/userdb/test '{"uid":"65534","gid":"65534","home":"/tmp/test","username":"test","password":"test"}'
 
-python setup.py sdist upload
+#python setup.py sdist upload
+twine upload -u bechtoldt dist/*
 
 python ./tabellarius.py --confdir=${HOME}/.../config/  --loglevel=info --sleep=20
