@@ -5,15 +5,15 @@ tabellarius
 
 .. image:: https://img.shields.io/badge/license-Apache--2.0-blue.svg
     :alt: Apache-2.0-licensed
-    :target: https://github.com/bechtoldt/tabellarius/blob/master/LICENSE
+    :target: https://github.com/arnoldbechtoldt/tabellarius/blob/master/LICENSE
 
 .. image:: https://img.shields.io/badge/chat-gitter-brightgreen.svg
     :alt: Join Gitter Chat
     :target: https://gitter.im/bechtoldt/tabellarius?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-.. image:: https://travis-ci.org/bechtoldt/tabellarius.svg?branch=master
+.. image:: https://travis-ci.org/arnoldbechtoldt/tabellarius.svg?branch=master
     :alt: Travis CI
-    :target: https://travis-ci.org/bechtoldt/tabellarius
+    :target: https://travis-ci.org/arnoldbechtoldt/tabellarius
 
 .. image:: https://img.shields.io/docker/pulls/bechtoldt/tabellarius.svg
     :alt: Docker image pulls
@@ -23,8 +23,8 @@ tabellarius
     :alt: Python versions supported
     :target: https://pypi.python.org/pypi/tabellarius
 
-.. image:: https://coveralls.io/repos/bechtoldt/tabellarius/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/bechtoldt/tabellarius?branch=master
+.. image:: https://coveralls.io/repos/arnoldbechtoldt/tabellarius/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/arnoldbechtoldt/tabellarius?branch=master
 
 A mail-sorting tool that is less annoying
 
@@ -54,7 +54,7 @@ In general:
 2. Add changes, test them, update docs (README.rst) if possible
 3. Submit your pull request (PR) on Github, wait for feedback
 
-But it’s better to `file an issue <https://github.com/bechtoldt/tabellarius/issues/new>`_ with your idea first.
+But it’s better to `file an issue <https://github.com/arnoldbechtoldt/tabellarius/issues/new>`_ with your idea first.
 
 
 Testing
@@ -84,7 +84,7 @@ Check code style (pep8/flake8) of the main/test code:
     $ tox -e app_flake8
     $ tox -e tests_flake8
 
-All important tests also run on `Travis CI <https://travis-ci.org/bechtoldt/tabellarius>`_.
+All important tests also run on `Travis CI <https://travis-ci.org/arnoldbechtoldt/tabellarius>`_.
 
 
 Configuring
