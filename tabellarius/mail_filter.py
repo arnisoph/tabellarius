@@ -40,7 +40,7 @@ class MailFilter():
                         if not match:
                             break
                 else:
-                    raise NotImplementedError('Sorry, operator \'{0}\' isn\'t supported yet!'.format(left))
+                    raise NotImplementedError('Sorry, operator \'{0}\' isn\'t supported yet!'.format(left.lower()))
             if match:
                 break
 
@@ -56,13 +56,15 @@ class MailFilter():
         """
         Check a particular filter rule against a mail
         """
-        field_name = next(iter(rule))
+        field_name = next(iter(rule)).lower()
         field_pattern = rule[next(iter(rule))]
         field_value = self.mail.get_header(field_name, None)
 
         # Skip if that header doesn't exist in the mail
         if field_value is None:
             return False
+
+        field_value = field_value.lower()
 
         self.logger.debug('Process rule with field name \'{}\' matches patterns \'{}\''.format(field_name, field_pattern))
         if isinstance(field_pattern, list):
@@ -81,6 +83,9 @@ class MailFilter():
         """
         if string is None or len(string) == 0:
             return False
+
+        string = string.lower()
+        pattern = pattern.lower()
 
         self.logger.debug('Checking whether string pattern \'{}\' matches to string \'{}\''.format(pattern, string))
 
