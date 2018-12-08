@@ -5,15 +5,15 @@ tabellarius
 
 .. image:: https://img.shields.io/badge/license-Apache--2.0-blue.svg
     :alt: Apache-2.0-licensed
-    :target: https://github.com/arnoldbechtoldt/tabellarius/blob/master/LICENSE
+    :target: https://github.com/arnisoph/tabellarius/blob/master/LICENSE
 
 .. image:: https://img.shields.io/badge/chat-gitter-brightgreen.svg
     :alt: Join Gitter Chat
     :target: https://gitter.im/bechtoldt/tabellarius?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-.. image:: https://travis-ci.org/arnoldbechtoldt/tabellarius.svg?branch=master
+.. image:: https://travis-ci.org/arnisoph/tabellarius.svg?branch=master
     :alt: Travis CI
-    :target: https://travis-ci.org/arnoldbechtoldt/tabellarius
+    :target: https://travis-ci.org/arnisoph/tabellarius
 
 .. image:: https://img.shields.io/docker/pulls/bechtoldt/tabellarius.svg
     :alt: Docker image pulls
@@ -23,8 +23,8 @@ tabellarius
     :alt: Python versions supported
     :target: https://pypi.python.org/pypi/tabellarius
 
-.. image:: https://coveralls.io/repos/arnoldbechtoldt/tabellarius/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/arnoldbechtoldt/tabellarius?branch=master
+.. image:: https://coveralls.io/repos/arnisoph/tabellarius/badge.svg?branch=master&service=github
+    :target: https://coveralls.io/github/arnisoph/tabellarius?branch=master
 
 A mail-sorting tool that is less annoying
 
