@@ -38,21 +38,20 @@ class IMAP():
         self.starttls = starttls
         self.timeout = timeout
 
-        self.sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)  # TODO add proto arg
+        self.sslcontext = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
         if tlsverify:
             self.sslcontext.verify_mode = ssl.CERT_REQUIRED
         else:
-            self.sslcontext.verify_mode = ssl.CERT_NONE  # TODO improve?
+            self.sslcontext.check_hostname = False
+            self.sslcontext.verify_mode = ssl.CERT_NONE
 
         self.test = test
-
         self.conn = None
 
     def do_select_mailbox(func):
         """
         Decorator to do a fresh mailbox SELECT
         """
-
         def wrapper(*args, **kwargs):
             if len(args) != 1:
                 raise AttributeError(
@@ -107,9 +106,6 @@ class IMAP():
         elif self.imaps:
             self.logger.debug('Establishing IMAP connection using SSL/{} (imaps) to {} and logging in with user {}'.format(self.port, self.server,
                                                                                                                            self.username))
-
-        login = ''
-        err_return = None
         try:
             self.conn = IMAPClient(host=self.server,
                                    port=self.port,
