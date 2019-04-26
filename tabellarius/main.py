@@ -184,7 +184,7 @@ def main():
                     else:
                         imap_pool[acc_id].set_mailflags(uids=[uid],
                                                         mailbox=pre_inbox,
-                                                        flags=acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
+                                                        flags=acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))  # noqa
 
                 if sort_mailbox and mails_without_match:
                     logger.info('%s: Moving mails that did not match any filter to %s', acc_settings.get('username'), sort_mailbox)
@@ -196,7 +196,7 @@ def main():
                                                     destination=sort_mailbox,
                                                     set_flags=[])
 
-            #except IMAPClient.Error as e:
+            # except IMAPClient.Error as e:
             #    logger.error('%s: Catching exception: %s. This is bad and I am sad. Going to sleep for a few seconds and trying again..',
             #                 acc_settings.get('username'), e)
             #    sleep(10)

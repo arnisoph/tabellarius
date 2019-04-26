@@ -3,7 +3,6 @@
 
 from collections import namedtuple
 from imapclient import IMAPClient, exceptions
-from imapclient.fixed_offset import FixedOffset
 from logging import DEBUG as loglevel_DEBUG
 from re import compile as regex_compile
 from sys import exc_info
@@ -104,10 +103,10 @@ class IMAP():
         """
         if self.starttls:
             self.logger.debug('Establishing IMAP connection using STARTTLS/{} to {} and logging in with user {}'.format(self.port, self.server,
-                              self.username))
+                                                                                                                        self.username))
         elif self.imaps:
             self.logger.debug('Establishing IMAP connection using SSL/{} (imaps) to {} and logging in with user {}'.format(self.port, self.server,
-                              self.username))
+                                                                                                                           self.username))
 
         login = ''
         err_return = None
@@ -262,7 +261,7 @@ class IMAP():
                 if return_raw:
                     mails[uid] = result[uid]
                 else:
-                    #mails[uid] = Mail(logger=self.logger, uid=uid, mail_native=email.message_from_bytes(result[uid][b'RFC822']))
+                    # mails[uid] = Mail(logger=self.logger, uid=uid, mail_native=email.message_from_bytes(result[uid][b'RFC822']))
                     mails[uid] = Mail(logger=self.logger, mail_native=email.message_from_bytes(result[uid][b'RFC822']))
             return self.Retval(True, mails)
 
@@ -361,19 +360,19 @@ class IMAP():
         if self.test:
             if delete_old:
                 self.logger.info('Would have moved mail Message-Ids="{}" from "{}" to "{}", skipping because of beeing in testmode'.format(
-                                 message_ids, source, destination))
+                    message_ids, source, destination))
             else:
                 self.logger.info('Would have copied mails with Message-Ids="{}" from "{}" to "{}", skipping because of beeing in testmode'.format(
-                                 message_ids, source, destination))
+                    message_ids, source, destination))
             return self.Retval(True, None)
         else:
             try:
                 if delete_old:
-                    self.logger.debug('Moving mail Message-Ids="{}" from "{}" to "{}"'.format( message_ids, source, destination))
+                    self.logger.debug('Moving mail Message-Ids="{}" from "{}" to "{}"'.format(message_ids, source, destination))
                 else:
-                    self.logger.debug('Copying mail Message-Ids="{}" from "{}" to "{}"'.format( message_ids, source, destination))
+                    self.logger.debug('Copying mail Message-Ids="{}" from "{}" to "{}"'.format(message_ids, source, destination))
 
-                #if message_ids is None:
+                # if message_ids is None:
                 #    message_ids = []
                 #    result = self.fetch_mails(uids=uids, mailbox=source)
                 #    if not result.code:
@@ -382,11 +381,11 @@ class IMAP():
                 #    message_ids.append(result.data.keys())
 
                 if not self.mailbox_exists(destination).data:
-                    self.logger.info('Destination mailbox {} doesn\'t exist, creating it for you'.format( destination))
+                    self.logger.info('Destination mailbox {} doesn\'t exist, creating it for you'.format(destination))
 
                     result = self.create_mailbox(mailbox=destination)
                     if not result.code:
-                        self.logger.error('Failed to create the mailbox {}: {}'.format( source, result.data))  # pragma: no cover
+                        self.logger.error('Failed to create the mailbox {}: {}'.format(source, result.data))  # pragma: no cover
                         return result  # pragma: no cover
 
                 uids = []
@@ -408,7 +407,7 @@ class IMAP():
                     result = self.delete_mails(uids=uids, mailbox=source)
                     if not result.code:
                         self.logger.error('Failed to remove old mail with Message-Id="{}"/uids="{}": {}'.format(message_ids, uids,
-                                          result.data))  # pragma: no cover
+                                                                                                                result.data))  # pragma: no cover
                         return result  # pragma: no cover
 
                     if expunge:  # TODO don't expunge by default
@@ -422,7 +421,7 @@ class IMAP():
                     result = self.search_mails(mailbox=destination, criteria='HEADER Message-Id "{}"'.format(message_id))
                     if not result.code:
                         self.logger.error('Failed to determine uid by Message-Id for mail with Message-Id "{}"'.format(
-                                          message_id))  # pragma: no cover
+                            message_id))  # pragma: no cover
                         return result  # pragma: no cover
                     dest_uids.append(result.data[0])
 
@@ -435,7 +434,6 @@ class IMAP():
 
             except IMAPClient.Error as e:
                 return self.process_error(e)
-
 
     @do_select_mailbox
     def expunge(self, mailbox):
