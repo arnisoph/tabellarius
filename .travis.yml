@@ -9,13 +9,13 @@ matrix:
         - START_INTEGRATION_SERVERS=yes
       services:
         - docker
+
     - python: '3.5'
       env:
         - TOX_ENV=app_tests_cov_upload
         - START_INTEGRATION_SERVERS=yes
       services:
         - docker
-
     - python: '3.5'
       env:
         - TOX_ENV=app_flake8
@@ -23,10 +23,30 @@ matrix:
       env:
         - TOX_ENV=tests_flake8
 
-    #- python: '3.5'
-    #  env: TOX_ENV=app_todo
-    #- python: '3.5'
-    #  env: TOX_ENV=tests_todo
+    - python: '3.6'
+      env:
+        - TOX_ENV=app_tests_min
+        - START_INTEGRATION_SERVERS=yes
+    - python: '3.6'
+      env:
+        - TOX_ENV=app_flake8
+    - python: '3.6'
+      env:
+        - TOX_ENV=tests_flake8
+
+    - python: '3.7'
+      dist: xenial
+      env:
+        - TOX_ENV=app_tests_min
+        - START_INTEGRATION_SERVERS=yes
+    - python: '3.7'
+      dist: xenial
+      env:
+        - TOX_ENV=app_flake8
+    - python: '3.7'
+      dist: xenial
+      env:
+        - TOX_ENV=tests_flake8
 
 addons:
   apt:
@@ -35,9 +55,5 @@ addons:
 install:
   - pip install tox
 script:
-  - |
-    if [ "${START_INTEGRATION_SERVERS}" = 'yes' ]; then
-      docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro --name tabellarius_tests bechtoldt/tabellarius_tests-docker
-    fi
-
-    tox -e ${TOX_ENV}
+  - test "${START_INTEGRATION_SERVERS}" = 'yes' && docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro --name tabellarius_tests bechtoldt/tabellarius_tests-docker || true
+  - tox -e ${TOX_ENV}
