@@ -7,7 +7,7 @@ accounts:
     username: imap@account.de
     password: secure_password
     sort_mailbox: INBOX
-    passsword_enc: | #echo pass | gpg2 --encrypt -r ID --armor
+    password_enc: | #echo pass | gpg2 --encrypt -r ID --armor
       -----BEGIN PGP MESSAGE-----
       ...
       -----END PGP MESSAGE-----

@@ -1,0 +1,9 @@
+filters:
+  test_errors:
+    test_broken_white_space:
+      commands:
+        - type: move
+          target: Trash
+      rules:
+        - or:
+            - x-originatororg:⁨abc@example.net

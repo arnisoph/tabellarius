@@ -1,0 +1,85 @@
+type: object
+properties:
+  accounts:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^[a-z0-9_-]+$":
+        type: object
+        additionalProperties: false
+        properties:
+          enabled:
+            type: boolean
+          server:
+            type: string
+          port:
+            type: integer
+          username:
+            type: string
+          password:
+            type: string
+          sort_mailbox:
+            type: string
+          password_enc:
+            type: string
+          imaps:
+            type: boolean
+          starttls:
+            type: boolean
+          tlsverify:
+            type: boolean
+  filters:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^[a-z0-9_-]+$":
+        type: object
+        additionalProperties: false
+        patternProperties:
+          "^[a-z0-9_-]+$":
+            type: object
+            additionalProperties: false
+            properties:
+              commands:
+                type: array
+                items:
+                  "$ref": "#/definitions/command"
+              rules:
+                type: array
+                items:
+                  "$ref": "#/definitions/rule"
+  settings:
+    type: object
+    additionalProperties: false
+    properties:
+      logging:
+        type: object
+definitions:
+  command:
+    type: object
+    additionalProperties: false
+    properties:
+      type:
+        type: string
+        pattern: "^(move)$"
+      target:
+        type: string
+      add_flags:
+        type: array
+        items:
+          type: string
+          enum:
+            - '\Flagged'
+  rule:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^(or|and)$":
+        type: array
+        items:
+          - type: object
+            patternProperties:
+              "^[a-z0-9_-]+$":
+                type: array
+                contains:
+                  type: string

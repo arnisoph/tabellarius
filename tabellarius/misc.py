@@ -3,55 +3,34 @@
 
 import os
 import collections
+import jsonschema
 import logging
 import logging.config
 import re
 import yaml
+from pathlib import Path
 
 
 class ConfigParser():
+    config = {'settings': {}, 'accounts': {}, 'filters': {}}
+
     """
-    Recursive YAML file parsing for Tabellarius configuration
+    Recursive YAML file parsing for tabellarius configuration
     """
-
-    def __init__(self, confdir, config=None):
-        self.confdir = confdir
-
-        if not config:
-            config = {'settings': {}, 'accounts': {}, 'filters': {}}
-        self.config = config
-
-        self.parse_directory()
-
-    def parse_directory(self):
+    def load(self, path):
         """
-        Recursively parse a directory of YAML files and generate runtime configuration
+        Recursively parse a path (directory or/of YAML files) and generate runtime configuration
         """
-        for dirname, subdirectories, files in os.walk(self.confdir):
-            for file_name in files:
-                file_path = '{0}/{1}'.format(dirname, file_name)
-                if file_name.endswith('.yaml'):
-                    with open(file_path, 'rb') as stream:
-                        data = yaml.load(stream, yaml.FullLoader)
-                    if data:
-                        for root, value in data.items():
-                            if root == 'settings':
-                                self.config[root] = value
-                            elif root == 'accounts':
-                                for account, settings in value.items():
-                                    # Ignore disabled accounts
-                                    if 'enabled' in settings.keys() and not settings.get('enabled'):
-                                        continue
+        if path.endswith('.yaml'):  # TODO simply check whether path is a file (ignore extension)
+            with open(path, 'rb') as stream:
+                data = yaml.load(stream, yaml.FullLoader)
+            if data:
+                self.config = Helper().merge_dict(data, self.config)
+        else:
+            for dirname, subdirectories, files in os.walk(path):
+                for file_name in files:
+                    self.load('{0}/{1}'.format(dirname, file_name))
 
-                                    if account not in self.config[root].keys():
-                                        self.config[root][account] = {}
-                                    self.config[root][account].update(settings)
-                            elif root == 'filters':
-                                for account, filter_set in value.items():
-                                    for filterset_name, filterset_data in filter_set.items():
-                                        if account not in self.config[root].keys():
-                                            self.config[root][account] = {}
-                                        self.config[root][account].update({filterset_name: filterset_data})
         return self.config
 
     def dump(self):
@@ -60,8 +39,22 @@ class ConfigParser():
         """
         return self.config
 
+    def validate(self):
+        """
+        Validate config against config schema
+        """
+        with open('{}/config/schema.yaml'.format(Path(__file__).parent), 'rb') as stream:
+            schema = yaml.load(stream, yaml.FullLoader)
 
-class Helper():
+        try:
+            jsonschema.validate(self.config, schema)
+        except Exception as err:
+            return err
+
+        return None
+
+
+class Helper:
     """
     Contains helper functions
     """
@@ -108,6 +101,28 @@ class Helper():
         Convert string to bytes
         """
         return text.encode(encoding)
+
+    @staticmethod
+    def merge_dict(a, b, path=None):
+        """"
+        Merges b into a (based on https://stackoverflow.com/questions/7204805/dictionaries-of-dictionaries-merge/7205107#7205107)
+        """
+        if path is None:
+            path = []
+
+        for key in b:
+            if key in a:
+                if isinstance(a[key], dict) and isinstance(b[key], dict):
+                    Helper().merge_dict(a[key], b[key], path + [str(key)])
+                elif a[key] == b[key]:
+                    pass  # same leaf value
+                elif isinstance(a[key], list):
+                    pass  # ignore lists
+                else:
+                    raise Exception('Conflict at {}'.format('.'.join(path + [str(key)])))
+            else:
+                a[key] = b[key]
+        return a
 
 
 class CaseInsensitiveDict(dict):

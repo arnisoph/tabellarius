@@ -1,0 +1,73 @@
+# vim: ts=2 sw=2 et
+
+filters:
+  test:
+    simple:
+      commands:
+        - type: move
+          target: MailFilterTest-Simple
+      rules:
+        - and:
+          - from:
+            - '@youth4work.com'
+    test_and:
+      commands:
+        - type: move
+          target: MailFilterTest-TestAND
+      rules:
+        - and:
+          - from:
+            - '"BigRock.com Sales Team" <automail@bigrock.com>'
+          - delivered-to:
+            - cyberzonec.in
+    test_regex:
+      commands:
+        - type: move
+          target: MailFilterTest-TestRegex
+      rules:
+        - and:
+          - from:
+            - '^.*@bigrock\.com.*$'
+          - delivered-to:
+            - cyberzonec.in
+          - content-type:
+            - ^(?:text/html|text/plain).*$
+    tes_misc:
+      commands:
+        - type: move
+          target: MailFilterTest-TestMisc
+      rules:
+        - or:
+          - subject:
+            - Thanks For Your Application
+          - reply-to:
+            - news.websummit.net
+          - list-id:
+            - ^.*$ # Match if List-ID exists
+          - x-virus-scanned:
+            - orionsmtp-123.s7.exacttarget.com
+          - X-Received:
+            - 10.52.3.166
+    test_unicode_from:
+      commands:
+        - type: move
+          target: MailFilterTest-TestUnicodeFrom
+      rules:
+        - and:
+          - from:
+              - tuifeideyaozi@gmail.com
+              - 梦龙周 <tuifeideyaozi@gmail.com>
+              - 梦龙周
+              - '梦龙周'
+    test_unicode_subject:
+      commands:
+        - type: move
+          target: MailFilterTest-TestUnicodeSubject
+      rules:
+        - and:
+          - subject:
+            - 'AW: Account öfters mal reaktivieren'
+          - subject:
+            - '^AW: Account öfters mal reaktivieren$'
+          - subject:
+            - '^.*ö.*$'
