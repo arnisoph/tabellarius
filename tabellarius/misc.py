@@ -32,7 +32,7 @@ class ConfigParser():
                 file_path = '{0}/{1}'.format(dirname, file_name)
                 if file_name.endswith('.yaml'):
                     with open(file_path, 'rb') as stream:
-                        data = yaml.load(stream)
+                        data = yaml.load(stream, yaml.FullLoader)
                     if data:
                         for root, value in data.items():
                             if root == 'settings':
