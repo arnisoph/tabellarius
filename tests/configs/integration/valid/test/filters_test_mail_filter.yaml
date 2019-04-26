@@ -2,7 +2,7 @@
 
 filters:
   test:
-    Simple:
+    simple:
       commands:
         - type: move
           target: MailFilterTest-Simple
@@ -10,7 +10,7 @@ filters:
         - and:
           - from:
             - '@youth4work.com'
-    TestAND:
+    test_and:
       commands:
         - type: move
           target: MailFilterTest-TestAND
@@ -20,7 +20,7 @@ filters:
             - '"BigRock.com Sales Team" <automail@bigrock.com>'
           - delivered-to:
             - cyberzonec.in
-    TestRegex:
+    test_regex:
       commands:
         - type: move
           target: MailFilterTest-TestRegex
@@ -32,7 +32,7 @@ filters:
             - cyberzonec.in
           - content-type:
             - ^(?:text/html|text/plain).*$
-    TestMisc:
+    tes_misc:
       commands:
         - type: move
           target: MailFilterTest-TestMisc
@@ -48,7 +48,7 @@ filters:
             - orionsmtp-123.s7.exacttarget.com
           - X-Received:
             - 10.52.3.166
-    TestUnicodeFrom:
+    test_unicode_from:
       commands:
         - type: move
           target: MailFilterTest-TestUnicodeFrom
@@ -59,7 +59,7 @@ filters:
               - 梦龙周 <tuifeideyaozi@gmail.com>
               - 梦龙周
               - '梦龙周'
-    TestUnicodeSubject:
+    test_unicode_subject:
       commands:
         - type: move
           target: MailFilterTest-TestUnicodeSubject

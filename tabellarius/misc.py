@@ -121,7 +121,7 @@ class Helper:
                 else:
                     raise Exception('Conflict at {}'.format('.'.join(path + [str(key)])))
             else:
-                a[key.lower()] = b[key]  # TODO make lowering configurable?
+                a[key] = b[key]
         return a
 
 

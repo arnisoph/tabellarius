@@ -1,7 +1,7 @@
 # vim: ts=2 sw=2 et
 
 accounts:
-  LOCAL_imap_server:
+  local_imap_server:
     enabled: true
     server: 127.0.0.1
     port: 10143
