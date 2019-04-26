@@ -4,7 +4,7 @@ properties:
     type: object
     additionalProperties: false
     patternProperties:
-      "^[A-Za-z_0-9]+$":
+      "^[A-Za-z0-9_-]+$":
         type: object
         additionalProperties: false
         properties:
@@ -32,11 +32,11 @@ properties:
     type: object
     additionalProperties: false
     patternProperties:
-      "^[A-Za-z_0-9]+$":
+      "^[A-Za-z0-9_-]+$":
         type: object
         additionalProperties: false
         patternProperties:
-          "^[A-Za-z_0-9]+$":
+          "^[A-Za-z0-9_-]+$":
             type: object
             additionalProperties: false
             properties:
@@ -77,8 +77,9 @@ definitions:
       "^(or|and)$":
         type: array
         items:
-          "$ref": "#/definitions/rule"
-      "^[A-Za-z0-9-_]+$":
-        type:
-          - array
-          - string
+          - type: object
+            patternProperties:
+              "^[A-Za-z0-9_-]+$":
+                type: array
+                contains:
+                  type: string

@@ -9,21 +9,27 @@ filters:
           add_flags:
             - '\Flagged'
       rules:
-        - OR:
+        - or:
           - from:
             - ebay
             - paypal
             - google
             - amazon
-          - from: '.*@amazon.com'
-        - OR:
-          - from: example.
-        - AND:
-          - from: amazon
-          - to: example.com
-        - AND:
-          - from: google
-          - subject: Your order
+          - from:
+            - '.*@amazon.com'
+        - or:
+          - from:
+            - example.
+        - and:
+          - from:
+            - amazon
+          - to:
+            - example.com
+        - and:
+          - from:
+            - google
+          - subject:
+            - Your order
     #B: {}
     #C: {}
     #10_foo: {}
