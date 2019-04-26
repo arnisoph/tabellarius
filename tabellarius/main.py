@@ -184,7 +184,7 @@ def main():
                     else:
                         imap_pool[acc_id].set_mailflags(uids=[uid],
                                                         mailbox=pre_inbox,
-                                                        flags=acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))  # noqa
+                                                        flags=acc_settings.get('unmatched_mail_flags', ['\\FLAGGED']))
 
                 if sort_mailbox and mails_without_match:
                     logger.info('%s: Moving mails that did not match any filter to %s', acc_settings.get('username'), sort_mailbox)
