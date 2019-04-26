@@ -94,7 +94,7 @@ class MailTest(TabellariusTest):
                 self.assertEqual(mail.get_header('from'), '"Youth4work" <admin@youth4work.com>')
                 self.assertEqual(mail.get_header('x-Priority'), '1')
                 self.assertEqual(mail.get_header('Content-Type'), 'text/html; charset=us-ascii')
-                self.assertEqual(mail.get_header('Message-Id'), '<72EA803C0B6343E6860E74E31AF8437F.MAI@jagbros.in>')
+                self.assertEqual(mail.get_message_id(), '<72EA803C0B6343E6860E74E31AF8437F.MAI@jagbros.in>')
                 self.assertEqual(mail.get_header('Delivered-to'), '<shubham@cyberzonec.in>')
             elif uid_no == 10:
                 self.assertEqual(mail.get_header('Received'), [

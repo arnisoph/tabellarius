@@ -289,7 +289,7 @@ class IMAPTest(TabellariusTest):
                                                                     reset_message_id=True),
                                           flags=['FLAG', 'WAVE']).code)
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_message_id()
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Move
@@ -300,7 +300,7 @@ class IMAPTest(TabellariusTest):
 
         # Check old and copied
         self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX'), (True, {}))
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash').data[1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash').data[1].get_message_id(), message_id)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -315,7 +315,7 @@ class IMAPTest(TabellariusTest):
                                                                     reset_message_id=True),
                                           flags=['FLAG', 'WAVE']).code)
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_message_id()
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Move
@@ -341,7 +341,7 @@ class IMAPTest(TabellariusTest):
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date), (True, 3))
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_message_id()
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
@@ -349,8 +349,8 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.copy_mails(message_ids=['<w00t>'], source='INBOX', destination='Trash'), (False, []))
 
         # Check old and copied
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id'), message_id)
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash').data[1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_message_id(), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='Trash').data[1].get_message_id(), message_id)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
 
@@ -371,15 +371,15 @@ class IMAPTest(TabellariusTest):
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date), (True, 3))
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_message_id()
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
         self.assertEqual(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='CustomMailbox'), (True, [1]))
 
         # Check old and copied
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id'), message_id)
-        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='CustomMailbox').data[1].get_header('Message-Id'), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_message_id(), message_id)
+        self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='CustomMailbox').data[1].get_message_id(), message_id)
 
         self.assertEqual(imapconn.copy_mails(message_ids=[message_id],
                                              source='INBOX',
@@ -404,7 +404,7 @@ class IMAPTest(TabellariusTest):
                                            flags=['FLAG', 'WAVE'],
                                            msg_time=example_date), (True, 3))
 
-        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_header('Message-Id')
+        message_id = imapconn.fetch_mails(uids=[1], mailbox='INBOX').data[1].get_message_id()
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy

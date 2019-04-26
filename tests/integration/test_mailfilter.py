@@ -53,7 +53,7 @@ class MailFilterTest(TabellariusTest):
             self.assertEqual(len(fetch_result.data), 1)
             self.assertIn(uid_no, fetch_result.data)
             mail = fetch_result.data[uid_no]
-            message_id = mail.get_header('message-id')
+            message_id = mail.get_message_id()
 
             match = False
             self.logger.debug('TEST: Check filters for mail with message-id=\'{}\' source-file=\'{}\''.format(message_id, source_filename))
@@ -82,6 +82,6 @@ class MailFilterTest(TabellariusTest):
             uid_no = search_result.data[0]
             fetch_result = imapconn.fetch_mails(uids=[uid_no], mailbox=cmd_target)
 
-            self.assertEqual(fetch_result.data[uid_no].get_header('message-id'), message_id)
+            self.assertEqual(fetch_result.data[uid_no].get_message_id(), message_id)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))

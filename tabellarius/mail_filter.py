@@ -46,7 +46,7 @@ class MailFilter():
 
         if match:
             self.logger.info('Found rule match for mail with message-id={0}, going to apply desired commands now'.format(
-                self.mail.get_header('message-id')))
+                self.mail.get_message_id()))
             result = self.apply_commands(commands)
             if not result:
                 raise RuntimeError('Failed to apply commands \'%s\'', commands)
@@ -107,7 +107,7 @@ class MailFilter():
         """
         Apply commands to mails
         """
-        self.logger.info('Applying commands (%s) to mail message-id="%s"', commands, self.mail.get_header('message-id'))
+        self.logger.info('Applying commands (%s) to mail message-id="%s"', commands, self.mail.get_message_id())
         for command in commands:
             cmd_type = command.get('type')
             cmd_flags_set = command.get('set_flags', [])
@@ -116,7 +116,7 @@ class MailFilter():
             result = None
             if cmd_type == 'move':
                 cmd_target = command.get('target')
-                result = self.imap.move_mail(message_ids=[self.mail.get_header('message-id')],
+                result = self.imap.move_mail(message_ids=[self.mail.get_message_id()],
                                              source=self.mailbox,
                                              destination=cmd_target,
                                              add_flags=cmd_flags_add,

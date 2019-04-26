@@ -217,7 +217,7 @@ class IMAP():
             self.conn.append(mailbox, str(message.get_native()), flags, msg_time)
 
             # According to rfc4315 we must not return the UID from the response, so we are fetching it ourselves
-            uids = self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{}"'.format(message.get_header('Message-Id'))).data[0]
+            uids = self.search_mails(mailbox=mailbox, criteria='HEADER Message-Id "{}"'.format(message.get_message_id())).data[0]
 
             return self.Retval(True, uids)
         except IMAPClient.Error as e:
