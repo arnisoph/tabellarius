@@ -37,7 +37,7 @@ install:
 script:
   - |
     if [ "${START_INTEGRATION_SERVERS}" = 'yes' ]; then
-      CID_IMAPSERVER=$(docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro bechtoldt/tabellarius_tests-docker)
+      docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro --name tabellarius_tests bechtoldt/tabellarius_tests-docker
     fi
 
     tox -e ${TOX_ENV}

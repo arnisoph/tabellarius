@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-import sys
-
-sys.path.insert(0, './')
 from tabellarius.misc import Helper
 
 from .tabellarius_test import TabellariusTest

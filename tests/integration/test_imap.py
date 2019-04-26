@@ -3,9 +3,7 @@
 
 import datetime
 import imapclient.fixed_offset
-import sys
 
-sys.path.insert(0, './')
 from tabellarius.imap import IMAP
 
 from .tabellarius_test import TabellariusTest
@@ -185,7 +183,8 @@ class IMAPTest(TabellariusTest):
             IMAP.Retval(False, 'SEARCH command error: BAD [b\'Error in IMAP command UID SEARCH: Unknown argument DOESNOTEXIST\']'),
             IMAP.Retval(False, 'b\'Error in IMAP command UID SEARCH: Unknown argument THISCOMMANDDOESNOTEXIST\'\n\n'
                                'This error may have been caused by a syntax error in the criteria: "ThisCommandDoesNotExist"\n'
-                               'Please refer to the documentation for more information about search criteria syntax..\nhttps://imapclient.readthedocs.io/en/master/#imapclient.IMAPClient.search'),
+                               'Please refer to the documentation for more information about search criteria syntax..\n'
+                               'https://imapclient.readthedocs.io/en/master/#imapclient.IMAPClient.search'),
         ]
         self.assertIn(imapconn.search_mails(mailbox='INBOX', criteria='ThisCommandDoesNotExist'), errors)
 
@@ -223,10 +222,10 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email()), (True, 1))
         self.assertEqual(imapconn.get_mailflags(uids=[1], mailbox='INBOX'), (True, {1: []}))
 
-        self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen']), (True, {1: ['\\Seen']}))
+        self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\\Seen']), (True, {1: ['\\Seen']}))
         self.assertEqual(imapconn.get_mailflags(uids=[1], mailbox='INBOX'), (True, {1: ['\\Seen']}))
 
-        result = imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen', '\Answered', '\Flagged', '\Deleted', '\Draft', 'CUSTOM'])
+        result = imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\\Seen', '\\Answered', '\\Flagged', '\\Deleted', '\\Draft', 'CUSTOM'])
 
         self.assertTrue(result.code)
         self.assertIn('\\Seen', result.data[1])
@@ -245,7 +244,7 @@ class IMAPTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password, test=True)
         self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 
-        self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\Seen']), (True, None))
+        self.assertEqual(imapconn.set_mailflags(uids=[1], mailbox='INBOX', flags=['\\Seen']), (True, None))
         self.assertEqual(imapconn.add_mailflags(uids=[1], mailbox='INBOX', flags=['CUSTOM23']), (True, None))
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
@@ -258,7 +257,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.add_mail(mailbox='INBOX', message=self.create_email()), (True, 1))
         self.assertEqual(imapconn.set_mailflags(uids=[1],
                                                 mailbox='INBOX',
-                                                flags=['\S!een']),
+                                                flags=['\\S!een']),
                          (False, 'UID command error: BAD [b\'Error in IMAP command UID STORE: Invalid system flag \\\\S!EEN\']'))
 
         self.assertEqual(imapconn.set_mailflags(uids=[1337], mailbox='INBOX'), (False, None))
@@ -270,7 +269,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.add_mailflags(uids=[1337], mailbox='INBOX', flags='F OO'), (False, None))
         self.assertEqual(imapconn.add_mailflags(uids=[1337],
                                                 mailbox='INBOX',
-                                                flags='\F OO'),
+                                                flags='\\F OO'),
                          (False, 'UID command error: BAD [b\'Error in IMAP command UID STORE: Invalid system flag \\\\F\']'))
         self.assertEqual(imapconn.get_mailflags(uids=[1337], mailbox='INBOX'), (False, None))
         self.assertEqual(imapconn.get_mailflags(uids=['INVALID'],
@@ -297,7 +296,7 @@ class IMAPTest(TabellariusTest):
         self.assertEqual(imapconn.move_mail(message_ids=[message_id],
                                             source='INBOX',
                                             destination='Trash',
-                                            add_flags='\FLAGGED'), (True, [1]))
+                                            add_flags='\\FLAGGED'), (True, [1]))
 
         # Check old and copied
         self.assertEqual(imapconn.fetch_mails(uids=[1], mailbox='INBOX'), (True, {}))
@@ -346,7 +345,7 @@ class IMAPTest(TabellariusTest):
         self.assertTrue(message_id.startswith('<very_unique_id_'))
 
         # Copy
-        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash', set_flags=['\Flagged']).code)
+        self.assertTrue(imapconn.copy_mails(message_ids=[message_id], source='INBOX', destination='Trash', set_flags=['\\Flagged']).code)
         self.assertEqual(imapconn.copy_mails(message_ids=['<w00t>'], source='INBOX', destination='Trash'), (False, []))
 
         # Check old and copied

@@ -2,9 +2,7 @@
 # vim: ts=4 sw=4 et
 
 import collections
-import sys
 
-sys.path.insert(0, './')
 from tabellarius.misc import CaseInsensitiveDict, ConfigParser, Helper
 
 from .tabellarius_test import TabellariusTest

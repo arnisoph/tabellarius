@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-import sys
-
 from tabellarius.mail_filter import MailFilter
 from tabellarius.misc import ConfigParser, Helper
 
@@ -58,10 +56,10 @@ class MailFilterTest(TabellariusTest):
             self.logger.debug('TEST: Check filters for mail with message-id=\'{}\' source-file=\'{}\''.format(message_id, source_filename))
             for filter_name, filter_settings in Helper().sort_dict(config.get('filters').get('test')).items():
                 mailfilter = MailFilter(logger=self.logger,
-                                                    imap=imapconn,
-                                                    mail=mail,
-                                                    config=filter_settings,
-                                                    mailbox='ParsedMessages')
+                                        imap=imapconn,
+                                        mail=mail,
+                                        config=filter_settings,
+                                        mailbox='ParsedMessages')
                 match = mailfilter.check_rules_match()
 
                 if match:
@@ -107,17 +105,17 @@ class MailFilterTest(TabellariusTest):
             mail = fetch_result.data[uid_no]
 
             mailfilter = MailFilter(logger=self.logger,
-                                                imap=imapconn,
-                                                mail=mail,
-                                                config=config.get('filters').get('test_errors').get('TestInvalidOperator'),
-                                                mailbox='ParsedMessages')
+                                    imap=imapconn,
+                                    mail=mail,
+                                    config=config.get('filters').get('test_errors').get('TestInvalidOperator'),
+                                    mailbox='ParsedMessages')
             self.assertRaises(NotImplementedError, mailfilter.check_rules_match)
 
             mailfilter = MailFilter(logger=self.logger,
-                                                imap=imapconn,
-                                                mail=mail,
-                                                config=config.get('filters').get('test_errors').get('TestInvalidCommand'),
-                                                mailbox='ParsedMessages')
+                                    imap=imapconn,
+                                    mail=mail,
+                                    config=config.get('filters').get('test_errors').get('TestInvalidCommand'),
+                                    mailbox='ParsedMessages')
             self.assertRaises(NotImplementedError, mailfilter.check_rules_match)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))

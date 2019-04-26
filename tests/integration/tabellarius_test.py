@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-from __future__ import print_function
-
 import email
 import os
 import redis
-import sys
 import time
 import unittest
-
-sys.path.insert(0, './')
 
 from tabellarius.imap import IMAP
 from tabellarius.mail import Mail
@@ -46,18 +41,16 @@ class TabellariusTest(unittest.TestCase):
 
     def create_basic_imap_object(self, username, password, starttls=False, imaps=True, test=None):
 
-
-
         imapconn = IMAP(logger=self.logger,
-                             server=self.INTEGRATION_ADDR_IMAPSERVER,
-                             port=self.INTEGRATION_PORT_IMAPS,
-                             starttls=starttls,
-                             imaps=imaps,
-                             tlsverify=False,  # TODO
-                             username=username,
-                             password=password,
-                             test=test,
-                             timeout=5)
+                        server=self.INTEGRATION_ADDR_IMAPSERVER,
+                        port=self.INTEGRATION_PORT_IMAPS,
+                        starttls=starttls,
+                        imaps=imaps,
+                        tlsverify=False,  # TODO
+                        username=username,
+                        password=password,
+                        test=test,
+                        timeout=5)
         return imapconn
 
     def create_email(self, headers=None, body='This is a test mäil.', reset_message_id=False):
@@ -95,7 +88,6 @@ class TabellariusTest(unittest.TestCase):
     INTEGRATION_PORT_REDIS = os.getenv('INTEGRATION_PORT_REDIS', 6379)
     logger = LoggerDummy()
     rconn = redis.StrictRedis(host=INTEGRATION_ADDR_IMAPSERVER, port=INTEGRATION_PORT_REDIS)
-
 
 
 if __name__ == "__main__":
