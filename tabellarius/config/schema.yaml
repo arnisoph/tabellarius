@@ -75,7 +75,12 @@ definitions:
         items:
           type: string
           enum:
+            - '\Answered'
+            - '\Deleted'
+            - '\Draft'
             - '\Flagged'
+            - '\Recent'
+            - '\Seen'
   rule:
     type: object
     additionalProperties: false
