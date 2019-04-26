@@ -29,6 +29,7 @@ setup(name='tabellarius',
       packages=['tabellarius'],
       license='Apache 2.0',
       install_requires=required_packages,
+      include_package_data=True,
       classifiers=[
           'License :: OSI Approved :: Apache Software License',
           'Programming Language :: Python',

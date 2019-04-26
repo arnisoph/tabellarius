@@ -1,0 +1,54 @@
+type: object
+properties:
+  accounts:
+    type: object
+  filters:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^[A-Za-z_0-9]+$":
+        type: object
+        additionalProperties: false
+        patternProperties:
+          "^[A-Za-z_0-9]+$":
+            type: object
+            additionalProperties: false
+            properties:
+              commands:
+                type: array
+                items:
+                  "$ref": "#/definitions/command"
+              rules:
+                type: array
+                items:
+                  "$ref": "#/definitions/rule"
+  settings:
+    type: object
+definitions:
+  command:
+    type: object
+    additionalProperties: false
+    properties:
+      type:
+        type: string
+        pattern: "^(move)$"
+      target:
+        type: string
+      add_flags:
+        type: array
+        items:
+          type: string
+          enum:
+            - '\Flagged'
+  rule:
+    type: object
+    additionalProperties: false
+    patternProperties:
+      "^(or|and)$":
+        type: array
+        items:
+          "$ref": "#/definitions/rule"
+      "^[A-Za-z0-9-_]+$":
+        type:
+          - array
+          - string

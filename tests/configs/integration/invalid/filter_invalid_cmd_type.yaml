@@ -1,0 +1,9 @@
+filters:
+  test_errors:
+    TestBrokenWhiteSpace:
+      commands:
+        - type: InvalidCmdType
+          target: Trash
+      rules:
+        - or:
+            - X-Originatororg: foo

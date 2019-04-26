@@ -15,19 +15,38 @@ class HelperTest(TabellariusTest):
 
 
 class ConfigParserTest(TabellariusTest):
-    def test_configparser(self):
-        cfg_parser = ConfigParser('tests/configs/integration')
-        config = cfg_parser.dump()
+    def test_configparser_valid(self):
+        cfg_parser = ConfigParser()
+        config = cfg_parser.load('tests/configs/integration/valid/')
+        validation_error = cfg_parser.validate()
+
+        # Check successfully parsing/validation
+        self.assertIsNone(validation_error)
 
         # Check accounts
-        self.assertTrue(config.get('accounts', {}).get('local_imap_server', {}).get('starttls'))
-        self.assertEqual(config.get('accounts', {}).get('local_imap_server', {}).get('username'), 'test')
+        self.assertIn('accounts', config)
+        self.assertIn('local_imap_server', config.get('accounts'))
+        self.assertTrue(config.get('accounts').get('local_imap_server').get('starttls'))
+        self.assertEqual(config.get('accounts').get('local_imap_server').get('username'), 'test')
 
         # Check settings
         self.assertIn('settings', config)
 
         # Check filters
         self.assertIn('Twitter', config.get('filters', {}).get('test', {}))
+
+    def test_configparser_invalid(self):
+        cfg_parser = ConfigParser()
+
+        cfg_parser.load('tests/configs/integration/invalid/filter_broken_whitespace.yaml')
+        validation_error = cfg_parser.validate()
+        self.assertIsNotNone(validation_error)
+        self.assertEqual(validation_error.message, '\'X-Originatororg:\\u2068abc@example.net\' is not of type \'object\'')
+
+        cfg_parser.load('tests/configs/integration/invalid/filter_invalid_cmd_type.yaml')
+        validation_error = cfg_parser.validate()
+        self.assertIsNotNone(validation_error)
+        self.assertTrue('\'InvalidCmdType\' does not match' in validation_error.message)
 
     def test_sorted_dict(self):
         config = {'55': 0, '42': 0, '11': 0, '10': 0, '1': 0, '111': 0, '110': 0}

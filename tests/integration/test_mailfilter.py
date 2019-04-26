@@ -36,8 +36,11 @@ class MailFilterTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 
-        cfg_parser = ConfigParser('tests/configs/integration')
-        config = cfg_parser.dump()
+        cfg_parser = ConfigParser()
+        config = cfg_parser.load('tests/configs/integration/valid/')
+
+        validation_error_error = cfg_parser.validate()
+        self.assertIsNone(validation_error_error)
 
         self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
 
@@ -80,42 +83,5 @@ class MailFilterTest(TabellariusTest):
             fetch_result = imapconn.fetch_mails(uids=[uid_no], mailbox=cmd_target)
 
             self.assertEqual(fetch_result.data[uid_no].get_header('message-id'), message_id)
-
-        self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))
-
-    def test_mail_filter_matching_error(self):
-        username, password = self.create_imap_user()
-        native_test_emails = self.parse_message_files()
-        imapconn = self.create_basic_imap_object(username, password)
-        self.assertEqual(imapconn.connect(), (True, 'Logged in'))
-
-        cfg_parser = ConfigParser('tests/configs/integration')
-        config = cfg_parser.dump()
-
-        self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
-
-        for source_filename, native_email in Helper().sort_dict(native_test_emails).items():
-            add_mail_result = imapconn.add_mail(mailbox='ParsedMessages', message=native_email)
-            uid_no = add_mail_result.data
-            self.assertTrue(add_mail_result.code)
-
-            fetch_result = imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages')
-            self.assertEqual(len(fetch_result.data), 1)
-            self.assertIn(uid_no, fetch_result.data)
-            mail = fetch_result.data[uid_no]
-
-            mailfilter = MailFilter(logger=self.logger,
-                                    imap=imapconn,
-                                    mail=mail,
-                                    config=config.get('filters').get('test_errors').get('TestInvalidOperator'),
-                                    mailbox='ParsedMessages')
-            self.assertRaises(NotImplementedError, mailfilter.check_rules_match)
-
-            mailfilter = MailFilter(logger=self.logger,
-                                    imap=imapconn,
-                                    mail=mail,
-                                    config=config.get('filters').get('test_errors').get('TestInvalidCommand'),
-                                    mailbox='ParsedMessages')
-            self.assertRaises(NotImplementedError, mailfilter.check_rules_match)
 
         self.assertEqual(imapconn.disconnect(), (True, 'Logging out'))

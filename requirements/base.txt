@@ -1,3 +1,4 @@
 IMAPClient==2.1.0
 PyYAML==5.1
 gnupg==2.3.1
+jsonschema==3.0.1

@@ -67,7 +67,14 @@ def main():
     imap_sleep_time = parser_results.imap_sleep_time
 
     # Config Parsing
-    cfg_parser = ConfigParser(confdir)
+    cfg_parser = ConfigParser()
+    cfg_parser.load(confdir)
+    validation_error = cfg_parser.validate()
+
+    if validation_error:
+        print('Failed to parse config directory. Config is invalid: {}', validation_error.message)
+        exit(127)
+
     config = cfg_parser.dump()
     if test is not None:
         config['settings']['test'] = test
