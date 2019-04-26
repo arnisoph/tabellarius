@@ -168,7 +168,7 @@ def main():
                 for uid, mail in mails.items():
                     match = False
 
-                    if mail.get_header('message-id') is None:
+                    if mail.get_message_id() is None:
                         logger.error('Mail with uid={} and subject=\'{}\' doesn\'t have a message-id! Abort..'.format(
                             uid, mail.get_header('subject')))
                         exit(1)
@@ -198,7 +198,7 @@ def main():
 
                     for uid in mails_without_match:
                         mail = mails[uid]
-                        imap_pool[acc_id].move_mail(message_ids=[mail.get_header('message-id')],
+                        imap_pool[acc_id].move_mail(message_ids=[mail.get_message_id()],
                                                     source=pre_inbox,
                                                     destination=sort_mailbox,
                                                     set_flags=[])

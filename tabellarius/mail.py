@@ -96,6 +96,15 @@ class Mail():
             self.mail_native.set_payload(self._body, charset=self.charset)
         return self.mail_native
 
+    def get_message_id(self):
+        """
+        Safe way to get message id
+        """
+        id = self.get_header('message-id')
+        if id is None:
+            return id
+        return id.strip()
+
     def reset_message_id(self, target='self'):
         """
         Reset the Message-Id or add it if missing
@@ -103,9 +112,9 @@ class Mail():
         message_id = email.utils.make_msgid()
 
         if target == 'native':
-            self.mail_native['Message-Id'] = message_id
+            self.mail_native['message-id'] = message_id
 
-        return self.set_header('Message-Id', message_id)
+        return self.set_header('message-id', message_id)
 
     def __parse_native_mail(self):
         """
