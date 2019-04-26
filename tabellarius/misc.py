@@ -105,9 +105,11 @@ class Helper:
     @staticmethod
     def merge_dict(a, b, path=None):
         """"
-        Merges b into a (Source: https://stackoverflow.com/questions/7204805/dictionaries-of-dictionaries-merge/7205107#7205107)
+        Merges b into a (based on https://stackoverflow.com/questions/7204805/dictionaries-of-dictionaries-merge/7205107#7205107)
         """
-        if path is None: path = []
+        if path is None:
+            path = []
+
         for key in b:
             if key in a:
                 if isinstance(a[key], dict) and isinstance(b[key], dict):
@@ -119,7 +121,7 @@ class Helper:
                 else:
                     raise Exception('Conflict at {}'.format('.'.join(path + [str(key)])))
             else:
-                a[key] = b[key]
+                a[key.lower()] = b[key]  # TODO make lowering configurable?
         return a
 
 
