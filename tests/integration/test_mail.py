@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-from .tabellarius_test import TabellariusTest
+import sys
 
-import misc
+sys.path.insert(0, './')
+from tabellarius.misc import Helper
+
+from .tabellarius_test import TabellariusTest
 
 
 class MailTest(TabellariusTest):
@@ -82,7 +85,7 @@ class MailTest(TabellariusTest):
         self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
         uid_no = 1
 
-        for source_filename, native_email in misc.Helper().sort_dict(native_test_emails).items():
+        for source_filename, native_email in Helper().sort_dict(native_test_emails).items():
             self.assertTrue(imapconn.add_mail(mailbox='ParsedMessages', message=native_email).code)
 
             self.assertEqual(len(imapconn.fetch_mails(uids=[uid_no], mailbox='ParsedMessages').data), 1)

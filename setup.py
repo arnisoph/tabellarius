@@ -10,7 +10,7 @@ with open('requirements/base.txt') as f:
 
 # Get the version (borrowed from hyper)
 version_regex = r'__version__ = ["\']([^"\']*)["\']'
-with open('tabellarius/tabellarius.py', 'r') as f:
+with open('tabellarius/main.py', 'r') as f:
     text = f.read()
     match = re.search(version_regex, text)
 

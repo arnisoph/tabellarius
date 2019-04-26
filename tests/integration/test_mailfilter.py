@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-import mail_filter
-import misc
+import sys
+
+from tabellarius.mail_filter import MailFilter
+from tabellarius.misc import ConfigParser, Helper
 
 from .tabellarius_test import TabellariusTest
 
 
 class MailFilterTest(TabellariusTest):
     def test_check_match_basic(self):
-        mailfilter = mail_filter.MailFilter(logger=self.logger, imap=None, mail=None, config=None, mailbox=None)
+        mailfilter = MailFilter(logger=self.logger, imap=None, mail=None, config=None, mailbox=None)
 
         self.assertTrue(mailfilter.check_match('foo@example.com', '@example.com'))
         self.assertTrue(mailfilter.check_match('foo@example.com', 'foo@example.com'))
@@ -20,7 +22,7 @@ class MailFilterTest(TabellariusTest):
         self.assertTrue(mailfilter.check_match('UPPERCASE', 'Uppercase'))
 
     def test_check_match_regex(self):
-        mailfilter = mail_filter.MailFilter(logger=self.logger, imap=None, mail=None, config=None, mailbox=None)
+        mailfilter = MailFilter(logger=self.logger, imap=None, mail=None, config=None, mailbox=None)
 
         self.assertTrue(mailfilter.check_match('foo', '^.*$'))
         self.assertTrue(mailfilter.check_match('foo', '^fo+$'))
@@ -36,12 +38,12 @@ class MailFilterTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 
-        cfg_parser = misc.ConfigParser('tests/configs/integration')
+        cfg_parser = ConfigParser('tests/configs/integration')
         config = cfg_parser.dump()
 
         self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
 
-        for source_filename, native_email in misc.Helper().sort_dict(native_test_emails).items():
+        for source_filename, native_email in Helper().sort_dict(native_test_emails).items():
             add_mail_result = imapconn.add_mail(mailbox='ParsedMessages', message=native_email)
             uid_no = add_mail_result.data
             self.assertTrue(add_mail_result.code)
@@ -54,8 +56,8 @@ class MailFilterTest(TabellariusTest):
 
             match = False
             self.logger.debug('TEST: Check filters for mail with message-id=\'{}\' source-file=\'{}\''.format(message_id, source_filename))
-            for filter_name, filter_settings in misc.Helper().sort_dict(config.get('filters').get('test')).items():
-                mailfilter = mail_filter.MailFilter(logger=self.logger,
+            for filter_name, filter_settings in Helper().sort_dict(config.get('filters').get('test')).items():
+                mailfilter = MailFilter(logger=self.logger,
                                                     imap=imapconn,
                                                     mail=mail,
                                                     config=filter_settings,
@@ -89,12 +91,12 @@ class MailFilterTest(TabellariusTest):
         imapconn = self.create_basic_imap_object(username, password)
         self.assertEqual(imapconn.connect(), (True, 'Logged in'))
 
-        cfg_parser = misc.ConfigParser('tests/configs/integration')
+        cfg_parser = ConfigParser('tests/configs/integration')
         config = cfg_parser.dump()
 
         self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
 
-        for source_filename, native_email in misc.Helper().sort_dict(native_test_emails).items():
+        for source_filename, native_email in Helper().sort_dict(native_test_emails).items():
             add_mail_result = imapconn.add_mail(mailbox='ParsedMessages', message=native_email)
             uid_no = add_mail_result.data
             self.assertTrue(add_mail_result.code)
@@ -104,14 +106,14 @@ class MailFilterTest(TabellariusTest):
             self.assertIn(uid_no, fetch_result.data)
             mail = fetch_result.data[uid_no]
 
-            mailfilter = mail_filter.MailFilter(logger=self.logger,
+            mailfilter = MailFilter(logger=self.logger,
                                                 imap=imapconn,
                                                 mail=mail,
                                                 config=config.get('filters').get('test_errors').get('TestInvalidOperator'),
                                                 mailbox='ParsedMessages')
             self.assertRaises(NotImplementedError, mailfilter.check_rules_match)
 
-            mailfilter = mail_filter.MailFilter(logger=self.logger,
+            mailfilter = MailFilter(logger=self.logger,
                                                 imap=imapconn,
                                                 mail=mail,
                                                 config=config.get('filters').get('test_errors').get('TestInvalidCommand'),

@@ -8,9 +8,9 @@ from sys import stderr, exc_info, version_info as python_version
 from time import sleep
 from traceback import print_exception
 
-from imap import IMAP
-from mail_filter import MailFilter
-from misc import ConfigParser, Helper
+from tabellarius.imap import IMAP
+from tabellarius.mail_filter import MailFilter
+from tabellarius.misc import ConfigParser, Helper
 
 __version__ = '1.1.0'
 

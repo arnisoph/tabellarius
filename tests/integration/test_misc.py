@@ -2,8 +2,10 @@
 # vim: ts=4 sw=4 et
 
 import collections
+import sys
 
-import misc
+sys.path.insert(0, './')
+from tabellarius.misc import CaseInsensitiveDict, ConfigParser, Helper
 
 from .tabellarius_test import TabellariusTest
 
@@ -11,12 +13,12 @@ from .tabellarius_test import TabellariusTest
 class HelperTest(TabellariusTest):
     def test_logger(self):
         import logging
-        self.assertIsInstance(misc.Helper().create_logger('program_name', {}), logging.Logger)
+        self.assertIsInstance(Helper().create_logger('program_name', {}), logging.Logger)
 
 
 class ConfigParserTest(TabellariusTest):
     def test_configparser(self):
-        cfg_parser = misc.ConfigParser('tests/configs/integration')
+        cfg_parser = ConfigParser('tests/configs/integration')
         config = cfg_parser.dump()
 
         # Check accounts
@@ -31,7 +33,7 @@ class ConfigParserTest(TabellariusTest):
 
     def test_sorted_dict(self):
         config = {'55': 0, '42': 0, '11': 0, '10': 0, '1': 0, '111': 0, '110': 0}
-        sorted_dict = misc.Helper().sort_dict(config)
+        sorted_dict = Helper().sort_dict(config)
 
         self.assertEqual(sorted_dict, collections.OrderedDict([('1', 0), ('10', 0), ('11', 0), ('42', 0), ('55', 0), ('110', 0),
                                                                ('111', 0)]))
@@ -41,7 +43,7 @@ class CaseInsensitiveDictTest(TabellariusTest):
     def test_case_insensitive_dict(self):
         headers = {'From': '<test@example.com>', 'To': '<test2@example.com>', }
 
-        header_insensitive = misc.CaseInsensitiveDict(headers)
+        header_insensitive = CaseInsensitiveDict(headers)
 
         self.assertEqual(header_insensitive['From'], '<test@example.com>')
         self.assertEqual(header_insensitive['FrOm'], '<test@example.com>')

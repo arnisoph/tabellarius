@@ -7,7 +7,7 @@ import email.message
 import email.utils
 from sys import version_info as python_version
 
-from misc import CaseInsensitiveDict
+from tabellarius.misc import CaseInsensitiveDict
 
 
 class Mail():
