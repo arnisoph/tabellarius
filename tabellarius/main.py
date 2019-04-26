@@ -20,7 +20,7 @@ def main():
     allowed_log_levels = ['DEBUG', 'ERROR', 'INFO']
 
     if python_version[0] < 3:
-        print('Your need to use Python 3 to run {0}! Your version: {1}'.format(program_name, python_version))
+        print('ERROR: Your need to use Python 3 to run {0}! Your version: {1}'.format(program_name, python_version))
 
     parser = ArgumentParser(prog=program_name, description='A mail-sorting tool that is less annoying')
 
@@ -60,7 +60,7 @@ def main():
 
     log_level = parser_results.log_level.upper()
     if log_level and log_level not in allowed_log_levels:
-        print('LOG_LEVEL {0} is not supported, supported log levels are: {1}'.format(log_level, ', '.join(allowed_log_levels)))
+        print('ERROR: LOG_LEVEL {0} is not supported, supported log levels are: {1}'.format(log_level, ', '.join(allowed_log_levels)))
         exit(127)
 
     gpg_homedir = parser_results.gpg_homedir
@@ -72,7 +72,7 @@ def main():
     validation_error = cfg_parser.validate()
 
     if validation_error:
-        print('Failed to parse config directory. Config is invalid: {}', validation_error.message)
+        print('ERROR: Failed to parse config directory. Config is invalid: {}'.format(validation_error.message))
         exit(127)
 
     config = cfg_parser.dump()
