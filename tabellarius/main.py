@@ -8,9 +8,9 @@ from sys import stderr, exc_info, version_info as python_version
 from time import sleep
 from traceback import print_exception
 
-from imap import IMAP
-from mail_filter import MailFilter
-from misc import ConfigParser, Helper
+from tabellarius.imap import IMAP
+from tabellarius.mail_filter import MailFilter
+from tabellarius.misc import ConfigParser, Helper
 
 __version__ = '1.1.0'
 
@@ -184,7 +184,7 @@ def main():
                     else:
                         imap_pool[acc_id].set_mailflags(uids=[uid],
                                                         mailbox=pre_inbox,
-                                                        flags=acc_settings.get('unmatched_mail_flags', ['\FLAGGED']))
+                                                        flags=acc_settings.get('unmatched_mail_flags', ['\\FLAGGED']))
 
                 if sort_mailbox and mails_without_match:
                     logger.info('%s: Moving mails that did not match any filter to %s', acc_settings.get('username'), sort_mailbox)
@@ -196,7 +196,7 @@ def main():
                                                     destination=sort_mailbox,
                                                     set_flags=[])
 
-            #except IMAPClient.Error as e:
+            # except IMAPClient.Error as e:
             #    logger.error('%s: Catching exception: %s. This is bad and I am sad. Going to sleep for a few seconds and trying again..',
             #                 acc_settings.get('username'), e)
             #    sleep(10)

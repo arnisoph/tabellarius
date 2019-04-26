@@ -63,3 +63,4 @@ docs/_build
 MANIFEST
 tabellarius.egg-info
 .coverage
+.python-version

@@ -1,20 +1,15 @@
 # -*- coding: utf-8 -*-
 # vim: ts=4 sw=4 et
 
-from __future__ import print_function
-
 import email
 import os
 import redis
-import sys
 import time
 import unittest
 
-sys.path.insert(0, './tabellarius')
-
-import imap  # noqa  # TODO can we fix this?
-import mail  # noqa
-import misc  # noqa
+from tabellarius.imap import IMAP
+from tabellarius.mail import Mail
+from tabellarius.misc import Helper
 
 
 class TabellariusTest(unittest.TestCase):
@@ -45,16 +40,17 @@ class TabellariusTest(unittest.TestCase):
             self.rconn.delete('dovecot/{0}/{1}'.format(authdb, username))  # TODO
 
     def create_basic_imap_object(self, username, password, starttls=False, imaps=True, test=None):
-        imapconn = imap.IMAP(logger=self.logger,
-                             server=self.INTEGRATION_ADDR_IMAPSERVER,
-                             port=self.INTEGRATION_PORT_IMAPS,
-                             starttls=starttls,
-                             imaps=imaps,
-                             tlsverify=False,  # TODO
-                             username=username,
-                             password=password,
-                             test=test,
-                             timeout=5)
+
+        imapconn = IMAP(logger=self.logger,
+                        server=self.INTEGRATION_ADDR_IMAPSERVER,
+                        port=self.INTEGRATION_PORT_IMAPS,
+                        starttls=starttls,
+                        imaps=imaps,
+                        tlsverify=False,  # TODO
+                        username=username,
+                        password=password,
+                        test=test,
+                        timeout=5)
         return imapconn
 
     def create_email(self, headers=None, body='This is a test mäil.', reset_message_id=False):
@@ -65,7 +61,7 @@ class TabellariusTest(unittest.TestCase):
         if reset_message_id:
             _headers['Message-Id'] = '<very_unique_id_{0}@example.com>'.format(int(round(time.time() * 1000)))
 
-        return mail.Mail(logger=self.logger, headers=_headers, body=body)
+        return Mail(logger=self.logger, headers=_headers, body=body)
 
     def parse_message_files(self, directory='tests/mails/'):
         """
@@ -77,7 +73,7 @@ class TabellariusTest(unittest.TestCase):
         file_names = os.listdir(directory)
 
         emails = {}
-        for file_name in misc.Helper().natural_sort(file_names):
+        for file_name in Helper().natural_sort(file_names):
             if '.msg' in file_name or '.txt' in file_name:
                 fh = open(directory + os.sep + file_name, 'rb')
                 raw_mail = fh.read()
@@ -86,9 +82,9 @@ class TabellariusTest(unittest.TestCase):
 
         return emails
 
-    INTEGRATION_ADDR_IMAPSERVER = os.getenv('INTEGRATION_ADDR_IMAPSERVER')
-    INTEGRATION_PORT_IMAP = os.getenv('INTEGRATION_PORT_IMAP', 143)
-    INTEGRATION_PORT_IMAPS = os.getenv('INTEGRATION_PORT_IMAPS', 993)
+    INTEGRATION_ADDR_IMAPSERVER = os.getenv('INTEGRATION_ADDR_IMAPSERVER', '127.0.0.1')
+    INTEGRATION_PORT_IMAP = os.getenv('INTEGRATION_PORT_IMAP', 10143)
+    INTEGRATION_PORT_IMAPS = os.getenv('INTEGRATION_PORT_IMAPS', 10993)
     INTEGRATION_PORT_REDIS = os.getenv('INTEGRATION_PORT_REDIS', 6379)
     logger = LoggerDummy()
     rconn = redis.StrictRedis(host=INTEGRATION_ADDR_IMAPSERVER, port=INTEGRATION_PORT_REDIS)
