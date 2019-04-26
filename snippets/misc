@@ -1,5 +1,4 @@
 doveot auth dict redis
-
 set dovecot/userdb/test '{"uid":"65534","gid":"65534","home":"/tmp/test","username":"test","password":"test"}'
 
 rm -f dist/* && mython setup.py sdist && twine upload -u bechtoldt dist/*
