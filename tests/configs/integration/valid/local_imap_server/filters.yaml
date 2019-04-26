@@ -2,7 +2,7 @@
 
 filters:
   local_imap_server:
-    Shops:
+    shops:
       commands:
         - type: move
           target: Shops

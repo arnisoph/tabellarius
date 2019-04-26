@@ -2,7 +2,7 @@
 
 filters:
   test:
-    Arnold:
+    arnold:
       commands:
         - type: move
           target: w00t
@@ -12,7 +12,7 @@ filters:
         - and:
           - from:
             - '.*arnoldbechtoldt.com'
-    Twitter:
+    twitter:
       commands:
         - type: move
           target: w00t
@@ -28,7 +28,7 @@ filters:
         - or:
           - subject:
             - w00t
-    Test:
+    test:
       commands:
         - type: move
           target: test
@@ -36,7 +36,7 @@ filters:
         - or:
           - subject:
             - test
-    Template:
+    template:
       commands:
         - type: move
           target: w00t
@@ -44,7 +44,7 @@ filters:
         - or:
           - subject:
             - template
-    Spam:
+    spam:
       commands:
         - type: move
           target: Test

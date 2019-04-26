@@ -1,6 +1,6 @@
 filters:
   test_errors:
-    TestBrokenWhiteSpace:
+    test_invalid_cmd_type:
       commands:
         - type: InvalidCmdType
           target: Trash

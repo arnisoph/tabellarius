@@ -33,7 +33,7 @@ class ConfigParserTest(TabellariusTest):
         self.assertIn('settings', config)
 
         # Check filters
-        self.assertIn('Twitter', config.get('filters', {}).get('test', {}))
+        self.assertIn('twitter', config.get('filters', {}).get('test', {}))
 
     def test_configparser_invalid(self):
         cfg_parser = ConfigParser()
@@ -41,7 +41,7 @@ class ConfigParserTest(TabellariusTest):
         cfg_parser.load('tests/configs/integration/invalid/filter_broken_whitespace.yaml')
         validation_error = cfg_parser.validate()
         self.assertIsNotNone(validation_error)
-        self.assertEqual(validation_error.message, '\'X-Originatororg:\\u2068abc@example.net\' is not of type \'object\'')
+        self.assertEqual(validation_error.message, '\'x-originatororg:\\u2068abc@example.net\' is not of type \'object\'')
 
         cfg_parser.load('tests/configs/integration/invalid/filter_invalid_cmd_type.yaml')
         validation_error = cfg_parser.validate()

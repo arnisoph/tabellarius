@@ -1,9 +1,9 @@
 filters:
   test_errors:
-    TestBrokenWhiteSpace:
+    test_broken_white_space:
       commands:
         - type: move
           target: Trash
       rules:
         - or:
-            - X-Originatororg:⁨abc@example.net
+            - x-originatororg:⁨abc@example.net

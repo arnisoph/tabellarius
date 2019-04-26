@@ -4,7 +4,7 @@ properties:
     type: object
     additionalProperties: false
     patternProperties:
-      "^[A-Za-z0-9_-]+$":
+      "^[a-z0-9_-]+$":
         type: object
         additionalProperties: false
         properties:
@@ -32,11 +32,11 @@ properties:
     type: object
     additionalProperties: false
     patternProperties:
-      "^[A-Za-z0-9_-]+$":
+      "^[a-z0-9_-]+$":
         type: object
         additionalProperties: false
         patternProperties:
-          "^[A-Za-z0-9_-]+$":
+          "^[a-z0-9_-]+$":
             type: object
             additionalProperties: false
             properties:
@@ -79,7 +79,7 @@ definitions:
         items:
           - type: object
             patternProperties:
-              "^[A-Za-z0-9_-]+$":
+              "^[a-z0-9_-]+$":
                 type: array
                 contains:
                   type: string
