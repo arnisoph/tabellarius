@@ -55,5 +55,5 @@ addons:
 install:
   - pip install tox
 script:
-  - test "${START_INTEGRATION_SERVERS}" = 'yes' && docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro --name tabellarius_tests bechtoldt/tabellarius_tests-docker
+  - test "${START_INTEGRATION_SERVERS}" = 'yes' && docker run -d -p 10143:143 -p 10993:993 -p 6379:6379 -v /dev/random:/dev/random:ro --name tabellarius_tests bechtoldt/tabellarius_tests-docker || true
   - tox -e ${TOX_ENV}
