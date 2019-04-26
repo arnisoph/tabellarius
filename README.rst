@@ -23,7 +23,7 @@ tabellarius
     :alt: Python versions supported
     :target: https://pypi.python.org/pypi/tabellarius
 
-.. image:: https://coveralls.io/repos/arnisoph/tabellarius/badge.svg?branch=master&service=github
+.. image:: https://coveralls.io/repos/github/arnisoph/tabellarius/badge.svg?branch=master
     :target: https://coveralls.io/github/arnisoph/tabellarius?branch=master
 
 A mail-sorting tool that is less annoying
