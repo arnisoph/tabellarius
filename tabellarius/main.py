@@ -12,7 +12,7 @@ from tabellarius.imap import IMAP
 from tabellarius.mail_filter import MailFilter
 from tabellarius.misc import ConfigParser, Helper
 
-__version__ = '2.0.0'
+__version__ = '2.0.1'
 
 
 def main():
