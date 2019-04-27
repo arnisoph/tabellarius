@@ -17,8 +17,6 @@ filters:
             - amazon
           - from:
             - '.*@amazon.com'
-        - or:
-          - from:
             - example.
         - and:
           - from:
@@ -30,7 +28,3 @@ filters:
             - google
           - subject:
             - Your order
-    #B: {}
-    #C: {}
-    #10_foo: {}
-    #1_foo: {}

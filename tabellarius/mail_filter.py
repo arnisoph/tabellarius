@@ -5,75 +5,75 @@ from re import compile as regex_compile
 
 
 class MailFilter():
-    def __init__(self, logger, imap, mail, config, mailbox):
+    def __init__(self, logger, imap, mail, config, mailbox, test=False):
         self.logger = logger
         self.imap = imap
         self.mail = mail
         self.config = config
         self.mailbox = mailbox
+        self.test = test
 
-    def check_rules_match(self, rules=None, commands=None, apply_commands=True):
+    def check_rules_match(self):
         """
         Check filter rules against a mail
         """
-        if rules is None:
-            rules = self.config.get('rules', {})
-
-        if commands is None:
-            commands = self.config.get('commands')
-
         match = False
-        for row in rules:
+        for row in self.config.get('rules'):
             for left, right in row.items():
-                if left.lower() == 'or':
+                if left == 'or':
                     match = False
                     for rule in right:
                         match = self.check_rule_match(rule)
-
                         if match:
                             break
-                elif left.lower() == 'and':
+
+                elif left == 'and':
                     match = False
                     for rule in right:
                         match = self.check_rule_match(rule)
-
                         if not match:
                             break
                 else:
-                    raise NotImplementedError('Sorry, operator \'{0}\' isn\'t supported yet!'.format(left.lower()))
+                    raise NotImplementedError('Sorry, operator \'{0}\' isn\'t supported yet!'.format(left))
             if match:
                 break
 
         if match:
-            self.logger.info('Found rule match for mail with message-id={0}, going to apply desired commands now'.format(
-                self.mail.get_message_id()))
-            result = self.apply_commands(commands)
-            if not result:
-                raise RuntimeError('Failed to apply commands \'%s\'', commands)
+            if not self.test:
+                log_suffix = 'going to apply configured commands now.'
+            else:
+                log_suffix = 'not going to apply configured commands now (disabled).'
+            self.logger.info('Found rule match for mail with message-id={}, {}'.format(self.mail.get_message_id(), log_suffix))
+
+            if not self.test:
+                commands = self.config.get('commands')
+                result = self.apply_commands(commands)
+                if not result:
+                    raise RuntimeError('Failed to apply commands \'%s\'', commands)
         return match
 
     def check_rule_match(self, rule):
         """
         Check a particular filter rule against a mail
         """
-        field_name = next(iter(rule)).lower()
-        field_pattern = rule[next(iter(rule))]
-        field_value = self.mail.get_header(field_name, None)
+        header_name = next(iter(rule)).lower()
+        header_pattern_list = rule[next(iter(rule))]
+        header_value = self.mail.get_header(header_name, None)
 
         # Skip if that header doesn't exist in the mail
-        if field_value is None:
+        if header_value is None:
             return False
 
-        field_value = field_value.lower()
+        self.logger.debug('Process rule with field name \'{}\' matches patterns \'{}\''.format(header_name, header_pattern_list))
 
-        self.logger.debug('Process rule with field name \'{}\' matches patterns \'{}\''.format(field_name, field_pattern))
-        if isinstance(field_pattern, list):
-            for pattern in field_pattern:
-                match = self.check_match(field_value, pattern)
-                if match:
+        for pattern in header_pattern_list:
+            if isinstance(header_value, list):
+                for single_header_value in header_value:
+                    if self.check_match(single_header_value, pattern):
+                        return True
+            else:
+                if self.check_match(header_value, pattern):
                     return True
-        else:
-            return self.check_match(field_value, field_pattern)
 
         return False
 

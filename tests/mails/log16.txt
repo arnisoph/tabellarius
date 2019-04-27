@@ -1,0 +1,110 @@
+X-Custom-Mail-Id: 16
+X-Notes-Item: 1;
+ name=$RefOptions
+X-Notes-Item: 1;
+ name=$SMTPKeepNotesItems
+X-Notes-Item: C;
+ name=$CSMemoFrom
+X-Notes-Item: en;
+ name=$NameLanguageTags
+Return-Path: <bounce-11045_HTML-44842668-18161-7218422-50839@bounce.s7.exacttarget.com>
+Delivered-To: <shubham@cyber.in>
+Received: from mail-storage-2.main-hosting.eu
+	by mail-storage-2 (Dovecot) with LMTP id VUviDhaNmVV5BgAA7jq/7w
+	for <shubham@cyberzonec.in>; Sun, 05 Jul 2015 20:01:38 +0000
+Received: from mx2.main-hosting.eu (mx-mailgw [10.0.25.254])
+	by mail-storage-2.main-hosting.eu (Postfix) with ESMTP id 70AFF2069084
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 20:01:38 +0000 (UTC)
+Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=136.147.176.80; helo=cr80.mta.exacttarget.com; envelope-from=bounce-11045_html-44842668-18161-7218422-50839@bounce.s7.exacttarget.com; receiver=shubham@cyberzonec.in
+Authentication-Results: mx2.main-hosting.eu;
+	dkim=pass (1024-bit key) header.d=cilabs.com header.i=jenny@cilabs.com header.b=xZwjU+IA
+Received: from cr80.mta.exacttarget.com (cr80.mta.exacttarget.com [136.147.176.80])
+	by mx2.main-hosting.eu ([Main-Hosting.eu Mail System]) with ESMTPS id 2CC8A2EF425
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 20:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=200608; d=cilabs.com;
+ h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type:List-Unsubscribe; i=jenny@cilabs.com;
+ bh=lqdW4vAzs5kA8TqgSMvofKdFAoM=;
+ b=xZwjU+IAgihVwUcTHqtQUQliPdyv5r+hFS99u4YFWirkvQhlz9yntyDQ9Mi+q/RsT4MQ0iUeeoFG
+   /EnSuP4Q5z2luC223Zn10NOAnUcWfDd0deHTn/ruyMb7m7yca1sxPRAN/0djHUa/b6z1SuMMuAjW
+   Yqn0lYpeeFBDeUgZfS4=
+Received: by cr80.mta.exacttarget.com id hj66i4163hst for <shubham@cyberzonec.in>; Sun, 5 Jul 2015 20:01:37 +0000 (envelope-from <bounce-11045_HTML-44842668-18161-7218422-50839@bounce.s7.exacttarget.com>)
+x-sender: undelivered+65682+82324388@pd25.com
+x-receiver: shubham@cyberzonec.in
+Received: from orionsmtp-120.s7.exacttarget.com (172.28.29.14) by QANV1IMS01.qa.local id hj66e41l1h0c for <shubham@cyberzonec.in>; Sun, 5 Jul 2015 14:00:34 -0600 (envelope-from <undelivered+65682+82324388@pd25.com>)
+Received: from localhost (localhost [127.0.0.1])
+	by orionsmtp-120.s7.exacttarget.com (Postfix) with ESMTP id B6A25122FB3
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 20:00:34 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at orionsmtp-120.s7.exacttarget.com
+Received: from orionsmtp-120.s7.exacttarget.com ([127.0.0.1])
+	by localhost (orionsmtp-120.s7.exacttarget.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id d1LXB36iDR2H for <shubham@cyberzonec.in>;
+	Sun,  5 Jul 2015 20:00:34 +0000 (UTC)
+Received: from [127.0.0.1] (unknown [75.126.66.62])
+	(Authenticated sender: pardot@s7)
+	by orionsmtp-120.s7.exacttarget.com (Postfix) with ESMTPSA id 8BF3D122F3D
+	for <shubham@cyberzonec.in>; Sun,  5 Jul 2015 20:00:34 +0000 (UTC)
+X-BeenThere: salt-users@googlegroups.com
+Date: Thu, 8 Oct 2015 02:32:45 -0700 (PDT)
+From: =?UTF-8?B?5qKm6b6Z5ZGo?= <tuifeideyaozi@gmail.com>
+To: Salt-users <salt-users@googlegroups.com>
+Message-Id: <c87099e3-2e46-4861-83cf-cf76558ba60a@googlegroups.com>
+Subject: [salt-users] Does Tornado not support the wheel client requests?
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+    boundary="----=_Part_947_707548232.1444296765139"
+X-Original-Sender: tuifeideyaozi@gmail.com
+Reply-To: salt-users@googlegroups.com
+Precedence: list
+Mailing-list: list salt-users@googlegroups.com; contact salt-users+owners@googlegroups.com
+_List-ID: <salt-users.googlegroups.com>
+X-Spam-Checked-In-Group: salt-users@googlegroups.com
+X-Google-Group-Id: 473711971974
+List-Post: <http://groups.google.com/group/salt-users/post>, <mailto:salt-users@googlegroups.com>
+List-Help: <http://groups.google.com/support/>, <mailto:salt-users+help@googlegroups.com>
+List-Archive: <http://groups.google.com/group/salt-users
+Sender: salt-users@googlegroups.com
+List-Subscribe: <http://groups.google.com/group/salt-users/subscribe>, <mailto:salt-users+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+473711971974+unsubscribe@googlegroups.com>,
+ <http://groups.google.com/group/salt-users/subscribe>
+
+------=_Part_947_707548232.1444296765139
+Content-Type: multipart/alternative;
+    boundary="----=_Part_948_457812281.1444296765139"
+
+------=_Part_948_457812281.1444296765139
+Content-Type: text/plain; charset=UTF-8
+
+
+
+Works fine under Cherry but I get a 400 when using Tornado. Does Tornado not support the wheel client requests?
+
+thanks
+
+--
+You received this message because you are subscribed to the Google Groups "Salt-users" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to salt-users+unsubscribe@googlegroups.com.
+For more options, visit https://groups.google.com/d/optout.
+
+------=_Part_948_457812281.1444296765139
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><pre style=3D"line-height: 24px; text-align: justify;">Wor=
+ks fine under Cherry but I get a 400 when using Tornado. Does Tornado not s=
+upport the wheel client requests? </pre><pre style=3D"line-height: 24px; te=
+xt-align: justify;">thanks</pre></div>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;Salt-users&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:salt-users+unsubscribe@googlegroups.com">salt-use=
+rs+unsubscribe@googlegroups.com</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+------=_Part_948_457812281.1444296765139--
+------=_Part_947_707548232.1444296765139--
+

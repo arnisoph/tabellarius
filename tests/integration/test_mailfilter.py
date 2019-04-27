@@ -39,8 +39,8 @@ class MailFilterTest(TabellariusTest):
         cfg_parser = ConfigParser()
         config = cfg_parser.load('tests/configs/integration/valid/')
 
-        validation_error_error = cfg_parser.validate()
-        self.assertIsNone(validation_error_error)
+        validation_error = cfg_parser.validate()
+        self.assertIsNone(validation_error)
 
         self.assertEqual(imapconn.create_mailbox(mailbox='ParsedMessages'), (True, True))
 

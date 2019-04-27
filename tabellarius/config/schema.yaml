@@ -89,8 +89,10 @@ definitions:
         type: array
         items:
           - type: object
+            additionalProperties: false
             patternProperties:
-              "^[a-z0-9_-]+$":
+              "^[A-Za-z0-9_-]+$":
                 type: array
-                contains:
+                additionalItems: false
+                items:
                   type: string

@@ -38,7 +38,7 @@ General
 
 Tabellarius is a mail-sorting IMAP client that depends on IMAP only. Unlike others it uses the `same IMAP connection accross multiple IMAP commands <https://github.com/lefcha/imapfilter>`_ and `simple markup language <http://www.rfcreader.com/#rfc5228>`_ instead of a complex scripting language though it isn't that feature-rich as the well-known Sieve standard. It became necessary because of missing features in the ManageSieve protocol and service providers that don't even provide a ManageSieve service or any other *human-friendly* filter techniques.
 
-It is written in Python 3 compatible source code that uses the Python modules ``IMAPClient``, ``PyYAML``, ``backports.ssl`` and optionally ``gnupg`` to parse config files and operate on e-mails via IMAP.
+It is written in Python 3 compatible source code that uses the Python modules ``IMAPClient``, ``PyYAML``, ``jsonschema`` and optionally ``gnupg`` to parse config files and operate on e-mails via IMAP.
 
 What it actually does is to parse a directory structure containing YAML config files, setup a IMAP connection pool to one or more IMAP servers/accounts, check whether a subset of e-mails match to user-defined rule sets and apply IMAP commands like copy or move to them.
 
