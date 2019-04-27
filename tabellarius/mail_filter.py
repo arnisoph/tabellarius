@@ -25,28 +25,26 @@ class MailFilter():
         match = False
         for row in rules:
             for left, right in row.items():
-                if left.lower() == 'or':
+                if left == 'or':
                     match = False
                     for rule in right:
                         match = self.check_rule_match(rule)
-
                         if match:
                             break
-                elif left.lower() == 'and':
+
+                elif left == 'and':
                     match = False
                     for rule in right:
                         match = self.check_rule_match(rule)
-
                         if not match:
                             break
                 else:
-                    raise NotImplementedError('Sorry, operator \'{0}\' isn\'t supported yet!'.format(left.lower()))
+                    raise NotImplementedError('Sorry, operator \'{0}\' isn\'t supported yet!'.format(left))
             if match:
                 break
 
         if match:
-            self.logger.info('Found rule match for mail with message-id={0}, going to apply desired commands now'.format(
-                self.mail.get_message_id()))
+            self.logger.info('Found rule match for mail with message-id={0}, going to apply desired commands now'.format(self.mail.get_message_id()))
             result = self.apply_commands(commands)
             if not result:
                 raise RuntimeError('Failed to apply commands \'%s\'', commands)
@@ -69,12 +67,10 @@ class MailFilter():
         for pattern in header_pattern_list:
             if isinstance(header_value, list):
                 for single_header_value in header_value:
-                    match = self.check_match(single_header_value.lower(), pattern)
-                    if match:
+                    if self.check_match(single_header_value, pattern):
                         return True
             else:
-                match = self.check_match(header_value.lower(), pattern)
-                if match:
+                if self.check_match(header_value, pattern):
                     return True
 
         return False
