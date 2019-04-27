@@ -5,25 +5,20 @@ from re import compile as regex_compile
 
 
 class MailFilter():
-    def __init__(self, logger, imap, mail, config, mailbox):
+    def __init__(self, logger, imap, mail, config, mailbox, test=False):
         self.logger = logger
         self.imap = imap
         self.mail = mail
         self.config = config
         self.mailbox = mailbox
+        self.test = test
 
-    def check_rules_match(self, rules=None, commands=None, apply_commands=True):
+    def check_rules_match(self):
         """
         Check filter rules against a mail
         """
-        if rules is None:
-            rules = self.config.get('rules', {})
-
-        if commands is None:
-            commands = self.config.get('commands')
-
         match = False
-        for row in rules:
+        for row in self.config.get('rules'):
             for left, right in row.items():
                 if left == 'or':
                     match = False
@@ -44,10 +39,17 @@ class MailFilter():
                 break
 
         if match:
-            self.logger.info('Found rule match for mail with message-id={0}, going to apply desired commands now'.format(self.mail.get_message_id()))
-            result = self.apply_commands(commands)
-            if not result:
-                raise RuntimeError('Failed to apply commands \'%s\'', commands)
+            if not self.test:
+                log_suffix = 'going to apply configured commands now.'
+            else:
+                log_suffix = 'not going to apply configured commands now (disabled).'
+            self.logger.info('Found rule match for mail with message-id={}, {}'.format(self.mail.get_message_id(), log_suffix))
+
+            if not self.test:
+                commands = self.config.get('commands')
+                result = self.apply_commands(commands)
+                if not result:
+                    raise RuntimeError('Failed to apply commands \'%s\'', commands)
         return match
 
     def check_rule_match(self, rule):
