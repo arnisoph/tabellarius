@@ -38,11 +38,6 @@ class ConfigParserTest(TabellariusTest):
     def test_configparser_invalid(self):
         cfg_parser = ConfigParser()
 
-        cfg_parser.load('tests/configs/integration/invalid/filter_broken_whitespace.yaml')
-        validation_error = cfg_parser.validate()
-        self.assertIsNotNone(validation_error)
-        self.assertEqual(validation_error.message, '\'x-originatororg:\\u2068abc@example.net\' is not of type \'object\'')
-
         cfg_parser.load('tests/configs/integration/invalid/filter_invalid_cmd_type.yaml')
         validation_error = cfg_parser.validate()
         self.assertIsNotNone(validation_error)

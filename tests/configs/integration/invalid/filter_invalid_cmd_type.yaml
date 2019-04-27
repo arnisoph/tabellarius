@@ -6,4 +6,5 @@ filters:
           target: Trash
       rules:
         - or:
-            - X-Originatororg: foo
+            - foo:
+              - bar
