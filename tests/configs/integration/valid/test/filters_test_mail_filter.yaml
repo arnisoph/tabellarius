@@ -71,3 +71,23 @@ filters:
             - '^AW: Account öfters mal reaktivieren$'
           - subject:
             - '^.*ö.*$'
+    test_mail16:
+      commands:
+        - type: move
+          target: MailFilterTest-16
+      rules:
+        - and:
+          - X-Custom-Mail-Id:
+            - '16'
+          - X-Notes-Item:
+            - CSMemoFrom
+    test_mail17:
+      commands:
+        - type: move
+          target: MailFilterTest-17
+      rules:
+        - and:
+          - X-Custom-Mail-Id:
+            - '17'
+          - Received:
+            - 75.126.66.62

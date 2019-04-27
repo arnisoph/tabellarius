@@ -56,24 +56,26 @@ class MailFilter():
         """
         Check a particular filter rule against a mail
         """
-        field_name = next(iter(rule)).lower()
-        field_pattern = rule[next(iter(rule))]
-        field_value = self.mail.get_header(field_name, None)
+        header_name = next(iter(rule)).lower()
+        header_pattern_list = rule[next(iter(rule))]
+        header_value = self.mail.get_header(header_name, None)
 
         # Skip if that header doesn't exist in the mail
-        if field_value is None:
+        if header_value is None:
             return False
 
-        field_value = field_value.lower()
+        self.logger.debug('Process rule with field name \'{}\' matches patterns \'{}\''.format(header_name, header_pattern_list))
 
-        self.logger.debug('Process rule with field name \'{}\' matches patterns \'{}\''.format(field_name, field_pattern))
-        if isinstance(field_pattern, list):
-            for pattern in field_pattern:
-                match = self.check_match(field_value, pattern)
+        for pattern in header_pattern_list:
+            if isinstance(header_value, list):
+                for single_header_value in header_value:
+                    match = self.check_match(single_header_value.lower(), pattern)
+                    if match:
+                        return True
+            else:
+                match = self.check_match(header_value.lower(), pattern)
                 if match:
                     return True
-        else:
-            return self.check_match(field_value, field_pattern)
 
         return False
 
